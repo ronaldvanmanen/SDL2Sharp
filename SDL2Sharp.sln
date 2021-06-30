@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL", "sources\SDL\SDL.csproj", "{648556E3-AFD4-4432-8424-89EED2126F82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp", "sources\SDL2Sharp\SDL2Sharp.csproj", "{648556E3-AFD4-4432-8424-89EED2126F82}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL.UnitTests", "tests\SDL.UnitTests\SDL.UnitTests.csproj", "{0EA1CB52-0E1E-4EEC-80B5-5EA37F436EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.UnitTests", "tests\SDL2Sharp.UnitTests\SDL2Sharp.UnitTests.csproj", "{0EA1CB52-0E1E-4EEC-80B5-5EA37F436EAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}"
 EndProject
