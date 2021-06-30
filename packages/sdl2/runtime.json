@@ -1,0 +1,14 @@
+{
+  "runtimes": {
+    "win-x64": {
+      "SDL2": {
+        "SDL2.runtime.win-x64": "2.0.14"
+      }
+    },
+    "win-x86": {
+      "SDL2": {
+        "SDL2.runtime.win-x86": "2.0.14"
+      }
+    }
+  }
+}

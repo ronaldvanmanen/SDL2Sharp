@@ -7,8 +7,8 @@ namespace SDL2Sharp.Samples
         private static int Main(string[] args)
         {
             SDL.LibraryDirectory = (Environment.Is64BitProcess)
-                ? @"..\..\..\..\packages\sdl2-2.0.14-win32-x64"
-                : @"..\..\..\..\packages\sdl2-2.0.14-win32-x86";
+                ? @"..\..\..\..\packages\sdl2.runtime.win-x64"
+                : @"..\..\..\..\packages\sdl2.runtime.win-x86";
 
             if (SDL.Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO) != 0)
             {
@@ -16,7 +16,7 @@ namespace SDL2Sharp.Samples
                 return 1;
             }
 
-            /* ... */
+            SDL.Log("Hello World!");
 
             SDL.Quit();
 
