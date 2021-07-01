@@ -274,6 +274,139 @@ namespace SDL2Sharp
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Error", ExactSpelling = true)]
         public static extern int Error(SDL_errorcode code);
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PumpEvents", ExactSpelling = true)]
+        public static extern void PumpEvents();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PeepEvents", ExactSpelling = true)]
+        public static extern int PeepEvents(SDL_Event* events, int numevents, SDL_eventaction action, [NativeTypeName("Uint32")] uint minType, [NativeTypeName("Uint32")] uint maxType);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasEvent", ExactSpelling = true)]
+        public static extern SDL_bool HasEvent([NativeTypeName("Uint32")] uint type);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasEvents", ExactSpelling = true)]
+        public static extern SDL_bool HasEvents([NativeTypeName("Uint32")] uint minType, [NativeTypeName("Uint32")] uint maxType);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FlushEvent", ExactSpelling = true)]
+        public static extern void FlushEvent([NativeTypeName("Uint32")] uint type);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FlushEvents", ExactSpelling = true)]
+        public static extern void FlushEvents([NativeTypeName("Uint32")] uint minType, [NativeTypeName("Uint32")] uint maxType);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PollEvent", ExactSpelling = true)]
+        public static extern int PollEvent(SDL_Event* @event);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WaitEvent", ExactSpelling = true)]
+        public static extern int WaitEvent(SDL_Event* @event);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WaitEventTimeout", ExactSpelling = true)]
+        public static extern int WaitEventTimeout(SDL_Event* @event, int timeout);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PushEvent", ExactSpelling = true)]
+        public static extern int PushEvent(SDL_Event* @event);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetEventFilter", ExactSpelling = true)]
+        public static extern void SetEventFilter([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetEventFilter", ExactSpelling = true)]
+        public static extern SDL_bool GetEventFilter([NativeTypeName("SDL_EventFilter *")] IntPtr* filter, void** userdata);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddEventWatch", ExactSpelling = true)]
+        public static extern void AddEventWatch([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelEventWatch", ExactSpelling = true)]
+        public static extern void DelEventWatch([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FilterEvents", ExactSpelling = true)]
+        public static extern void FilterEvents([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_EventState", ExactSpelling = true)]
+        [return: NativeTypeName("Uint8")]
+        public static extern byte EventState([NativeTypeName("Uint32")] uint type, int state);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RegisterEvents", ExactSpelling = true)]
+        [return: NativeTypeName("Uint32")]
+        public static extern uint RegisterEvents(int numevents);
+
+        [NativeTypeName("#define SDL_RELEASED 0")]
+        public const int SDL_RELEASED = 0;
+
+        [NativeTypeName("#define SDL_PRESSED 1")]
+        public const int SDL_PRESSED = 1;
+
+        [NativeTypeName("#define SDL_TEXTEDITINGEVENT_TEXT_SIZE (32)")]
+        public const int SDL_TEXTEDITINGEVENT_TEXT_SIZE = (32);
+
+        [NativeTypeName("#define SDL_TEXTINPUTEVENT_TEXT_SIZE (32)")]
+        public const int SDL_TEXTINPUTEVENT_TEXT_SIZE = (32);
+
+        [NativeTypeName("#define SDL_QUERY -1")]
+        public const int SDL_QUERY = -1;
+
+        [NativeTypeName("#define SDL_IGNORE 0")]
+        public const int SDL_IGNORE = 0;
+
+        [NativeTypeName("#define SDL_DISABLE 0")]
+        public const int SDL_DISABLE = 0;
+
+        [NativeTypeName("#define SDL_ENABLE 1")]
+        public const int SDL_ENABLE = 1;
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyboardFocus", ExactSpelling = true)]
+        public static extern SDL_Window* GetKeyboardFocus();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyboardState", ExactSpelling = true)]
+        [return: NativeTypeName("const Uint8 *")]
+        public static extern byte* GetKeyboardState(int* numkeys);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetModState", ExactSpelling = true)]
+        public static extern SDL_Keymod GetModState();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetModState", ExactSpelling = true)]
+        public static extern void SetModState(SDL_Keymod modstate);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyFromScancode", ExactSpelling = true)]
+        [return: NativeTypeName("SDL_Keycode")]
+        public static extern int GetKeyFromScancode(SDL_Scancode scancode);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetScancodeFromKey", ExactSpelling = true)]
+        public static extern SDL_Scancode GetScancodeFromKey([NativeTypeName("SDL_Keycode")] int key);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetScancodeName", ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern sbyte* GetScancodeName(SDL_Scancode scancode);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetScancodeFromName", ExactSpelling = true)]
+        public static extern SDL_Scancode GetScancodeFromName([NativeTypeName("const char *")] sbyte* name);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyName", ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern sbyte* GetKeyName([NativeTypeName("SDL_Keycode")] int key);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetKeyFromName", ExactSpelling = true)]
+        [return: NativeTypeName("SDL_Keycode")]
+        public static extern int GetKeyFromName([NativeTypeName("const char *")] sbyte* name);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_StartTextInput", ExactSpelling = true)]
+        public static extern void StartTextInput();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_IsTextInputActive", ExactSpelling = true)]
+        public static extern SDL_bool IsTextInputActive();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_StopTextInput", ExactSpelling = true)]
+        public static extern void StopTextInput();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetTextInputRect", ExactSpelling = true)]
+        public static extern void SetTextInputRect(SDL_Rect* rect);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_HasScreenKeyboardSupport", ExactSpelling = true)]
+        public static extern SDL_bool HasScreenKeyboardSupport();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_IsScreenKeyboardShown", ExactSpelling = true)]
+        public static extern SDL_bool IsScreenKeyboardShown(SDL_Window* window);
+
+        [NativeTypeName("#define SDLK_SCANCODE_MASK (1<<30)")]
+        public const int SDLK_SCANCODE_MASK = (1 << 30);
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LogSetAllPriority", ExactSpelling = true)]
         public static extern void LogSetAllPriority(SDL_LogPriority priority);
 
