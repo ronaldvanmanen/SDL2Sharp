@@ -52,6 +52,208 @@ namespace SDL2Sharp
         [NativeTypeName("#define SDL_INIT_EVERYTHING ( \\\n                SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS | \\\n                SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER | SDL_INIT_SENSOR \\\n            )")]
         public const uint SDL_INIT_EVERYTHING = (0x00000001U | 0x00000010U | 0x00000020U | 0x00004000U | 0x00000200U | 0x00001000U | 0x00002000U | 0x00008000U);
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumAudioDrivers", ExactSpelling = true)]
+        public static extern int GetNumAudioDrivers();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetAudioDriver", ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern sbyte* GetAudioDriver(int index);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioInit", ExactSpelling = true)]
+        public static extern int AudioInit([NativeTypeName("const char *")] sbyte* driver_name);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioQuit", ExactSpelling = true)]
+        public static extern void AudioQuit();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetCurrentAudioDriver", ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern sbyte* GetCurrentAudioDriver();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OpenAudio", ExactSpelling = true)]
+        public static extern int OpenAudio(SDL_AudioSpec* desired, SDL_AudioSpec* obtained);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumAudioDevices", ExactSpelling = true)]
+        public static extern int GetNumAudioDevices(int iscapture);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetAudioDeviceName", ExactSpelling = true)]
+        [return: NativeTypeName("const char *")]
+        public static extern sbyte* GetAudioDeviceName(int index, int iscapture);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_OpenAudioDevice", ExactSpelling = true)]
+        [return: NativeTypeName("SDL_AudioDeviceID")]
+        public static extern uint OpenAudioDevice([NativeTypeName("const char *")] sbyte* device, int iscapture, [NativeTypeName("const SDL_AudioSpec *")] SDL_AudioSpec* desired, SDL_AudioSpec* obtained, int allowed_changes);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetAudioStatus", ExactSpelling = true)]
+        public static extern SDL_AudioStatus GetAudioStatus();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetAudioDeviceStatus", ExactSpelling = true)]
+        public static extern SDL_AudioStatus GetAudioDeviceStatus([NativeTypeName("SDL_AudioDeviceID")] uint dev);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PauseAudio", ExactSpelling = true)]
+        public static extern void PauseAudio(int pause_on);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PauseAudioDevice", ExactSpelling = true)]
+        public static extern void PauseAudioDevice([NativeTypeName("SDL_AudioDeviceID")] uint dev, int pause_on);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadWAV_RW", ExactSpelling = true)]
+        public static extern SDL_AudioSpec* LoadWAV_RW(SDL_RWops* src, int freesrc, SDL_AudioSpec* spec, [NativeTypeName("Uint8 **")] byte** audio_buf, [NativeTypeName("Uint32 *")] uint* audio_len);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FreeWAV", ExactSpelling = true)]
+        public static extern void FreeWAV([NativeTypeName("Uint8 *")] byte* audio_buf);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_BuildAudioCVT", ExactSpelling = true)]
+        public static extern int BuildAudioCVT(SDL_AudioCVT* cvt, [NativeTypeName("SDL_AudioFormat")] ushort src_format, [NativeTypeName("Uint8")] byte src_channels, int src_rate, [NativeTypeName("SDL_AudioFormat")] ushort dst_format, [NativeTypeName("Uint8")] byte dst_channels, int dst_rate);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ConvertAudio", ExactSpelling = true)]
+        public static extern int ConvertAudio(SDL_AudioCVT* cvt);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_NewAudioStream", ExactSpelling = true)]
+        [return: NativeTypeName("SDL_AudioStream *")]
+        public static extern _SDL_AudioStream* NewAudioStream([NativeTypeName("const SDL_AudioFormat")] ushort src_format, [NativeTypeName("const Uint8")] byte src_channels, [NativeTypeName("const int")] int src_rate, [NativeTypeName("const SDL_AudioFormat")] ushort dst_format, [NativeTypeName("const Uint8")] byte dst_channels, [NativeTypeName("const int")] int dst_rate);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioStreamPut", ExactSpelling = true)]
+        public static extern int AudioStreamPut([NativeTypeName("SDL_AudioStream *")] _SDL_AudioStream* stream, [NativeTypeName("const void *")] void* buf, int len);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioStreamGet", ExactSpelling = true)]
+        public static extern int AudioStreamGet([NativeTypeName("SDL_AudioStream *")] _SDL_AudioStream* stream, void* buf, int len);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioStreamAvailable", ExactSpelling = true)]
+        public static extern int AudioStreamAvailable([NativeTypeName("SDL_AudioStream *")] _SDL_AudioStream* stream);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioStreamFlush", ExactSpelling = true)]
+        public static extern int AudioStreamFlush([NativeTypeName("SDL_AudioStream *")] _SDL_AudioStream* stream);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AudioStreamClear", ExactSpelling = true)]
+        public static extern void AudioStreamClear([NativeTypeName("SDL_AudioStream *")] _SDL_AudioStream* stream);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FreeAudioStream", ExactSpelling = true)]
+        public static extern void FreeAudioStream([NativeTypeName("SDL_AudioStream *")] _SDL_AudioStream* stream);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_MixAudio", ExactSpelling = true)]
+        public static extern void MixAudio([NativeTypeName("Uint8 *")] byte* dst, [NativeTypeName("const Uint8 *")] byte* src, [NativeTypeName("Uint32")] uint len, int volume);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_MixAudioFormat", ExactSpelling = true)]
+        public static extern void MixAudioFormat([NativeTypeName("Uint8 *")] byte* dst, [NativeTypeName("const Uint8 *")] byte* src, [NativeTypeName("SDL_AudioFormat")] ushort format, [NativeTypeName("Uint32")] uint len, int volume);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_QueueAudio", ExactSpelling = true)]
+        public static extern int QueueAudio([NativeTypeName("SDL_AudioDeviceID")] uint dev, [NativeTypeName("const void *")] void* data, [NativeTypeName("Uint32")] uint len);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DequeueAudio", ExactSpelling = true)]
+        [return: NativeTypeName("Uint32")]
+        public static extern uint DequeueAudio([NativeTypeName("SDL_AudioDeviceID")] uint dev, void* data, [NativeTypeName("Uint32")] uint len);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetQueuedAudioSize", ExactSpelling = true)]
+        [return: NativeTypeName("Uint32")]
+        public static extern uint GetQueuedAudioSize([NativeTypeName("SDL_AudioDeviceID")] uint dev);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ClearQueuedAudio", ExactSpelling = true)]
+        public static extern void ClearQueuedAudio([NativeTypeName("SDL_AudioDeviceID")] uint dev);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LockAudio", ExactSpelling = true)]
+        public static extern void LockAudio();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LockAudioDevice", ExactSpelling = true)]
+        public static extern void LockAudioDevice([NativeTypeName("SDL_AudioDeviceID")] uint dev);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UnlockAudio", ExactSpelling = true)]
+        public static extern void UnlockAudio();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UnlockAudioDevice", ExactSpelling = true)]
+        public static extern void UnlockAudioDevice([NativeTypeName("SDL_AudioDeviceID")] uint dev);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CloseAudio", ExactSpelling = true)]
+        public static extern void CloseAudio();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CloseAudioDevice", ExactSpelling = true)]
+        public static extern void CloseAudioDevice([NativeTypeName("SDL_AudioDeviceID")] uint dev);
+
+        [NativeTypeName("#define SDL_AUDIO_MASK_BITSIZE (0xFF)")]
+        public const int SDL_AUDIO_MASK_BITSIZE = (0xFF);
+
+        [NativeTypeName("#define SDL_AUDIO_MASK_DATATYPE (1<<8)")]
+        public const int SDL_AUDIO_MASK_DATATYPE = (1 << 8);
+
+        [NativeTypeName("#define SDL_AUDIO_MASK_ENDIAN (1<<12)")]
+        public const int SDL_AUDIO_MASK_ENDIAN = (1 << 12);
+
+        [NativeTypeName("#define SDL_AUDIO_MASK_SIGNED (1<<15)")]
+        public const int SDL_AUDIO_MASK_SIGNED = (1 << 15);
+
+        [NativeTypeName("#define AUDIO_U8 0x0008")]
+        public const int AUDIO_U8 = 0x0008;
+
+        [NativeTypeName("#define AUDIO_S8 0x8008")]
+        public const int AUDIO_S8 = 0x8008;
+
+        [NativeTypeName("#define AUDIO_U16LSB 0x0010")]
+        public const int AUDIO_U16LSB = 0x0010;
+
+        [NativeTypeName("#define AUDIO_S16LSB 0x8010")]
+        public const int AUDIO_S16LSB = 0x8010;
+
+        [NativeTypeName("#define AUDIO_U16MSB 0x1010")]
+        public const int AUDIO_U16MSB = 0x1010;
+
+        [NativeTypeName("#define AUDIO_S16MSB 0x9010")]
+        public const int AUDIO_S16MSB = 0x9010;
+
+        [NativeTypeName("#define AUDIO_U16 AUDIO_U16LSB")]
+        public const int AUDIO_U16 = 0x0010;
+
+        [NativeTypeName("#define AUDIO_S16 AUDIO_S16LSB")]
+        public const int AUDIO_S16 = 0x8010;
+
+        [NativeTypeName("#define AUDIO_S32LSB 0x8020")]
+        public const int AUDIO_S32LSB = 0x8020;
+
+        [NativeTypeName("#define AUDIO_S32MSB 0x9020")]
+        public const int AUDIO_S32MSB = 0x9020;
+
+        [NativeTypeName("#define AUDIO_S32 AUDIO_S32LSB")]
+        public const int AUDIO_S32 = 0x8020;
+
+        [NativeTypeName("#define AUDIO_F32LSB 0x8120")]
+        public const int AUDIO_F32LSB = 0x8120;
+
+        [NativeTypeName("#define AUDIO_F32MSB 0x9120")]
+        public const int AUDIO_F32MSB = 0x9120;
+
+        [NativeTypeName("#define AUDIO_F32 AUDIO_F32LSB")]
+        public const int AUDIO_F32 = 0x8120;
+
+        [NativeTypeName("#define AUDIO_U16SYS AUDIO_U16LSB")]
+        public const int AUDIO_U16SYS = 0x0010;
+
+        [NativeTypeName("#define AUDIO_S16SYS AUDIO_S16LSB")]
+        public const int AUDIO_S16SYS = 0x8010;
+
+        [NativeTypeName("#define AUDIO_S32SYS AUDIO_S32LSB")]
+        public const int AUDIO_S32SYS = 0x8020;
+
+        [NativeTypeName("#define AUDIO_F32SYS AUDIO_F32LSB")]
+        public const int AUDIO_F32SYS = 0x8120;
+
+        [NativeTypeName("#define SDL_AUDIO_ALLOW_FREQUENCY_CHANGE 0x00000001")]
+        public const int SDL_AUDIO_ALLOW_FREQUENCY_CHANGE = 0x00000001;
+
+        [NativeTypeName("#define SDL_AUDIO_ALLOW_FORMAT_CHANGE 0x00000002")]
+        public const int SDL_AUDIO_ALLOW_FORMAT_CHANGE = 0x00000002;
+
+        [NativeTypeName("#define SDL_AUDIO_ALLOW_CHANNELS_CHANGE 0x00000004")]
+        public const int SDL_AUDIO_ALLOW_CHANNELS_CHANGE = 0x00000004;
+
+        [NativeTypeName("#define SDL_AUDIO_ALLOW_SAMPLES_CHANGE 0x00000008")]
+        public const int SDL_AUDIO_ALLOW_SAMPLES_CHANGE = 0x00000008;
+
+        [NativeTypeName("#define SDL_AUDIO_ALLOW_ANY_CHANGE (SDL_AUDIO_ALLOW_FREQUENCY_CHANGE|SDL_AUDIO_ALLOW_FORMAT_CHANGE|SDL_AUDIO_ALLOW_CHANNELS_CHANGE|SDL_AUDIO_ALLOW_SAMPLES_CHANGE)")]
+        public const int SDL_AUDIO_ALLOW_ANY_CHANGE = (0x00000001 | 0x00000002 | 0x00000004 | 0x00000008);
+
+        [NativeTypeName("#define SDL_AUDIOCVT_MAX_FILTERS 9")]
+        public const int SDL_AUDIOCVT_MAX_FILTERS = 9;
+
+        [NativeTypeName("#define SDL_MIX_MAXVOLUME 128")]
+        public const int SDL_MIX_MAXVOLUME = 128;
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ComposeCustomBlendMode", ExactSpelling = true)]
         public static extern SDL_BlendMode ComposeCustomBlendMode(SDL_BlendFactor srcColorFactor, SDL_BlendFactor dstColorFactor, SDL_BlendOperation colorOperation, SDL_BlendFactor srcAlphaFactor, SDL_BlendFactor dstAlphaFactor, SDL_BlendOperation alphaOperation);
 
