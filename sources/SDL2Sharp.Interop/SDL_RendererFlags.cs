@@ -1,6 +1,7 @@
 namespace SDL2Sharp.Interop
 {
-    public enum SDL_RendererFlags
+    [NativeTypeName("int")]
+    public enum SDL_RendererFlags : uint
     {
         SDL_RENDERER_SOFTWARE = 0x00000001,
         SDL_RENDERER_ACCELERATED = 0x00000002,

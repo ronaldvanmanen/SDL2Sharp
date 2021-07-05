@@ -41,4 +41,6 @@ SDL_
 --test-output
 tests\SDL2Sharp.Interop.UnitTests
 --with-type
+SDL_EventType=uint
 SDL_PixelFormatEnum=uint
+SDL_RendererFlags=uint
