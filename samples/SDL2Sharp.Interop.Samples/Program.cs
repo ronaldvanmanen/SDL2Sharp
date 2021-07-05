@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Threading;
-using SDL2Sharp.Interop;
+using System.Text;
 
 namespace SDL2Sharp.Interop.Samples
 {
@@ -18,32 +17,56 @@ namespace SDL2Sharp.Interop.Samples
                 return 1;
             }
 
-            // Create an application window with the following settings:
-            var window = SDL.CreateWindow(
-                null,                                       // window title
-                (int)SDL.SDL_WINDOWPOS_UNDEFINED,           // initial x position
-                (int)SDL.SDL_WINDOWPOS_UNDEFINED,           // initial y position
-                640,                                        // width, in pixels
-                480,                                        // height, in pixels
-                (uint)SDL_WindowFlags.SDL_WINDOW_OPENGL     // flags - see below
-            );
+            SDL_Window* window = null;
 
-            // Check that the window was successfully created
+            fixed (byte* title = &Encoding.ASCII.GetBytes("SDL2Sharp")[0])
+            {
+                window = SDL.CreateWindow(
+                    (sbyte*)title,
+                (int)SDL.SDL_WINDOWPOS_UNDEFINED,
+                (int)SDL.SDL_WINDOWPOS_UNDEFINED,
+                640,
+                480,
+                (uint)SDL_WindowFlags.SDL_WINDOW_OPENGL
+            );
+            }
+
             if (window == null)
             {
-                // In the case that the window could not be made...
-                Console.WriteLine("Could not create window: %s\n", SDL.GetErrorString());
+                Console.WriteLine("Could not create window: {0}\n", SDL.GetErrorString());
                 return 1;
             }
 
-            // The window is open: could enter program loop here (see SDL_PollEvent())
+            var renderer = SDL.CreateRenderer(window, -1, (uint)SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+            SDL_Texture* bitmapTexture = null;
+            fixed (byte* file = &Encoding.ASCII.GetBytes("Sample.bmp")[0])
+            fixed (byte* mode = &Encoding.ASCII.GetBytes("rb")[0])
+            {
+                var bitmapSurface = SDL.LoadBMP_RW(SDL.RWFromFile((sbyte*)file, (sbyte*)mode), 1);
+                bitmapTexture = SDL.CreateTextureFromSurface(renderer, bitmapSurface);
+                SDL.FreeSurface(bitmapSurface);
+            }
 
-            Thread.Sleep(3000);  // Pause execution for 3000 milliseconds, for example
+            while (true)
+            {
+                SDL_Event e;
+                if (0 == SDL.PollEvent(&e))
+                {
+                    if (e.type == (uint)SDL_EventType.SDL_QUIT)
+                    {
+                        break;
+                    }
+                }
 
-            // Close and destroy the window
+                SDL.RenderClear(renderer);
+                SDL.RenderCopy(renderer, bitmapTexture, null, null);
+                SDL.RenderPresent(renderer);
+            }
+
+            SDL.DestroyTexture(bitmapTexture);
+            SDL.DestroyRenderer(renderer);
             SDL.DestroyWindow(window);
 
-            // Clean up
             SDL.Quit();
 
             return 0;

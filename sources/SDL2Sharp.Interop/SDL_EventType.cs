@@ -1,6 +1,7 @@
 namespace SDL2Sharp.Interop
 {
-    public enum SDL_EventType
+    [NativeTypeName("int")]
+    public enum SDL_EventType : uint
     {
         SDL_FIRSTEVENT = 0,
         SDL_QUIT = 0x100,
