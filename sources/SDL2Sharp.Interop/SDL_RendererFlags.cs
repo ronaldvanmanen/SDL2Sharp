@@ -1,0 +1,10 @@
+namespace SDL2Sharp.Interop
+{
+    public enum SDL_RendererFlags
+    {
+        SDL_RENDERER_SOFTWARE = 0x00000001,
+        SDL_RENDERER_ACCELERATED = 0x00000002,
+        SDL_RENDERER_PRESENTVSYNC = 0x00000004,
+        SDL_RENDERER_TARGETTEXTURE = 0x00000008,
+    }
+}

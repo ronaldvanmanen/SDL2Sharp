@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
-    <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
   </ItemGroup>
 
 </Project>

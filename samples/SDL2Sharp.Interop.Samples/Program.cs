@@ -2,7 +2,7 @@
 using System.Threading;
 using SDL2Sharp.Interop;
 
-namespace SDL2Sharp.Samples
+namespace SDL2Sharp.Interop.Samples
 {
     internal static unsafe class Program
     {

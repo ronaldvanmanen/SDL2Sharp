@@ -33,12 +33,12 @@ SDL2.dll
 --methodClassName
 SDL
 --namespace
-SDL2Sharp
+SDL2Sharp.Interop
 --output
-sources\SDL2Sharp
+sources\SDL2Sharp.Interop
 --prefixStrip
 SDL_
 --test-output
-tests\SDL2Sharp.UnitTests
+tests\SDL2Sharp.Interop.UnitTests
 --with-type
 SDL_PixelFormatEnum=uint
