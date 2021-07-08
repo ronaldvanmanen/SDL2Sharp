@@ -455,6 +455,90 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_MAX_LOG_MESSAGE 4096")]
         public const int SDL_MAX_LOG_MESSAGE = 4096;
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetMouseFocus", ExactSpelling = true)]
+        public static extern SDL_Window* GetMouseFocus();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetMouseState", ExactSpelling = true)]
+        [return: NativeTypeName("Uint32")]
+        public static extern uint GetMouseState(int* x, int* y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGlobalMouseState", ExactSpelling = true)]
+        [return: NativeTypeName("Uint32")]
+        public static extern uint GetGlobalMouseState(int* x, int* y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRelativeMouseState", ExactSpelling = true)]
+        [return: NativeTypeName("Uint32")]
+        public static extern uint GetRelativeMouseState(int* x, int* y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WarpMouseInWindow", ExactSpelling = true)]
+        public static extern void WarpMouseInWindow(SDL_Window* window, int x, int y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WarpMouseGlobal", ExactSpelling = true)]
+        public static extern int WarpMouseGlobal(int x, int y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetRelativeMouseMode", ExactSpelling = true)]
+        public static extern int SetRelativeMouseMode(SDL_bool enabled);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CaptureMouse", ExactSpelling = true)]
+        public static extern int CaptureMouse(SDL_bool enabled);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetRelativeMouseMode", ExactSpelling = true)]
+        public static extern SDL_bool GetRelativeMouseMode();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateCursor", ExactSpelling = true)]
+        public static extern SDL_Cursor* CreateCursor([NativeTypeName("const Uint8 *")] byte* data, [NativeTypeName("const Uint8 *")] byte* mask, int w, int h, int hot_x, int hot_y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateColorCursor", ExactSpelling = true)]
+        public static extern SDL_Cursor* CreateColorCursor(SDL_Surface* surface, int hot_x, int hot_y);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateSystemCursor", ExactSpelling = true)]
+        public static extern SDL_Cursor* CreateSystemCursor(SDL_SystemCursor id);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetCursor", ExactSpelling = true)]
+        public static extern void SetCursor(SDL_Cursor* cursor);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetCursor", ExactSpelling = true)]
+        public static extern SDL_Cursor* GetCursor();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetDefaultCursor", ExactSpelling = true)]
+        public static extern SDL_Cursor* GetDefaultCursor();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FreeCursor", ExactSpelling = true)]
+        public static extern void FreeCursor(SDL_Cursor* cursor);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ShowCursor", ExactSpelling = true)]
+        public static extern int ShowCursor(int toggle);
+
+        [NativeTypeName("#define SDL_BUTTON_LEFT 1")]
+        public const int SDL_BUTTON_LEFT = 1;
+
+        [NativeTypeName("#define SDL_BUTTON_MIDDLE 2")]
+        public const int SDL_BUTTON_MIDDLE = 2;
+
+        [NativeTypeName("#define SDL_BUTTON_RIGHT 3")]
+        public const int SDL_BUTTON_RIGHT = 3;
+
+        [NativeTypeName("#define SDL_BUTTON_X1 4")]
+        public const int SDL_BUTTON_X1 = 4;
+
+        [NativeTypeName("#define SDL_BUTTON_X2 5")]
+        public const int SDL_BUTTON_X2 = 5;
+
+        [NativeTypeName("#define SDL_BUTTON_LMASK SDL_BUTTON(SDL_BUTTON_LEFT)")]
+        public const int SDL_BUTTON_LMASK = (1 << ((1) - 1));
+
+        [NativeTypeName("#define SDL_BUTTON_MMASK SDL_BUTTON(SDL_BUTTON_MIDDLE)")]
+        public const int SDL_BUTTON_MMASK = (1 << ((2) - 1));
+
+        [NativeTypeName("#define SDL_BUTTON_RMASK SDL_BUTTON(SDL_BUTTON_RIGHT)")]
+        public const int SDL_BUTTON_RMASK = (1 << ((3) - 1));
+
+        [NativeTypeName("#define SDL_BUTTON_X1MASK SDL_BUTTON(SDL_BUTTON_X1)")]
+        public const int SDL_BUTTON_X1MASK = (1 << ((4) - 1));
+
+        [NativeTypeName("#define SDL_BUTTON_X2MASK SDL_BUTTON(SDL_BUTTON_X2)")]
+        public const int SDL_BUTTON_X2MASK = (1 << ((5) - 1));
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetPixelFormatName", ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
         public static extern sbyte* GetPixelFormatName([NativeTypeName("Uint32")] uint format);
