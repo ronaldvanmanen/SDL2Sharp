@@ -1,5 +1,5 @@
 --config
-compatible-codegen
+latest-codegen
 generate-aggressive-inlining
 generate-macro-bindings
 generate-tests-xunit

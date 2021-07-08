@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 
 namespace SDL2Sharp.Interop
@@ -31,25 +30,25 @@ namespace SDL2Sharp.Interop
 
         public int filter_index;
 
-        public partial struct _filters_e__FixedBuffer
+        public unsafe partial struct _filters_e__FixedBuffer
         {
-            public IntPtr e0;
-            public IntPtr e1;
-            public IntPtr e2;
-            public IntPtr e3;
-            public IntPtr e4;
-            public IntPtr e5;
-            public IntPtr e6;
-            public IntPtr e7;
-            public IntPtr e8;
-            public IntPtr e9;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e0;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e1;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e2;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e3;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e4;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e5;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e6;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e7;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e8;
+            public delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> e9;
 
-            public unsafe ref IntPtr this[int index]
+            public ref delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void> this[int index]
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
-                    fixed (IntPtr* pThis = &e0)
+                    fixed (delegate* unmanaged[Cdecl]<SDL_AudioCVT*, ushort, void>* pThis = &e0)
                     {
                         return ref pThis[index];
                     }
