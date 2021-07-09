@@ -29,6 +29,8 @@ SDL_scancode.h
 SDL_stdinc.h
 SDL_surface.h
 SDL_video.h
+--headerFile
+generation\HeaderFile.txt
 --libraryPath
 SDL2.dll
 --methodClassName

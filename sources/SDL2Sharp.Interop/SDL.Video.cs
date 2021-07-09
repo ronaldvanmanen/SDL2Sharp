@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,19 +18,19 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Text;
+
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_DisplayMode
+    public static unsafe partial class SDL
     {
-        [NativeTypeName("Uint32")]
-        public uint format;
-
-        public int w;
-
-        public int h;
-
-        public int refresh_rate;
-
-        public void* driverdata;
+        public static void SetWindowTitle(SDL_Window* window, string title)
+        {
+            var bytes = Encoding.ASCII.GetBytes(title);
+            fixed (byte* fixedBytes = bytes)
+            { 
+                SetWindowTitle(window, (sbyte*)fixedBytes); 
+            }
+        }
     }
 }

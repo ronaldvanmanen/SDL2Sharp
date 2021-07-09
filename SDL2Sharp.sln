@@ -15,16 +15,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Samples", "sample
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5FE8CD57-EFE4-4E31-BFA2-2C95CBB7BA36}"
-	ProjectSection(SolutionItems) = preProject
-		generation\settings.rsp = generation\settings.rsp
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop", "sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj", "{A03FB552-F079-4852-8E1A-6ADD6C1BD3A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Sharp.Interop.UnitTests", "tests\SDL2Sharp.Interop.UnitTests\SDL2Sharp.Interop.UnitTests.csproj", "{C4E13408-B833-4B51-BC7B-BABBC759FB1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.UnitTests", "tests\SDL2Sharp.Interop.UnitTests\SDL2Sharp.Interop.UnitTests.csproj", "{C4E13408-B833-4B51-BC7B-BABBC759FB1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Sharp.Interop.Samples", "samples\SDL2Sharp.Interop.Samples\SDL2Sharp.Interop.Samples.csproj", "{DC48E764-6243-4067-B070-D73600FD6734}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.Samples", "samples\SDL2Sharp.Interop.Samples\SDL2Sharp.Interop.Samples.csproj", "{DC48E764-6243-4067-B070-D73600FD6734}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generation", "generation", "{7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}"
+	ProjectSection(SolutionItems) = preProject
+		generation\HeaderFile.txt = generation\HeaderFile.txt
+		generation\settings.rsp = generation\settings.rsp
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
