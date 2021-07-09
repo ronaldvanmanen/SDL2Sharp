@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,17 +20,11 @@
 
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_DisplayMode
+    public static unsafe partial class SDL
     {
-        [NativeTypeName("Uint32")]
-        public uint format;
-
-        public int w;
-
-        public int h;
-
-        public int refresh_rate;
-
-        public void* driverdata;
+        public static string GetPixelFormatName(SDL_PixelFormatEnum pixelFormat)
+        {
+            return new string(GetPixelFormatName((uint)pixelFormat));
+        }
     }
 }
