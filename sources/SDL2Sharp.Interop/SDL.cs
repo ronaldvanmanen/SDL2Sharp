@@ -1405,16 +1405,16 @@ namespace SDL2Sharp.Interop
         public const double M_PI = 3.14159265358979323846264338327950288;
 
         [NativeTypeName("#define SDL_ICONV_ERROR (size_t)-1")]
-        public static readonly nuint SDL_ICONV_ERROR = unchecked((nuint)(-1));
+        public const nuint SDL_ICONV_ERROR = unchecked((uint)(-1));
 
         [NativeTypeName("#define SDL_ICONV_E2BIG (size_t)-2")]
-        public static readonly nuint SDL_ICONV_E2BIG = unchecked((nuint)(-2));
+        public const nuint SDL_ICONV_E2BIG = unchecked((uint)(-2));
 
         [NativeTypeName("#define SDL_ICONV_EILSEQ (size_t)-3")]
-        public static readonly nuint SDL_ICONV_EILSEQ = unchecked((nuint)(-3));
+        public const nuint SDL_ICONV_EILSEQ = unchecked((uint)(-3));
 
         [NativeTypeName("#define SDL_ICONV_EINVAL (size_t)-4")]
-        public static readonly nuint SDL_ICONV_EINVAL = unchecked((nuint)(-4));
+        public const nuint SDL_ICONV_EINVAL = unchecked((uint)(-4));
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateRGBSurface", ExactSpelling = true)]
         public static extern SDL_Surface* CreateRGBSurface([NativeTypeName("Uint32")] uint flags, int width, int height, int depth, [NativeTypeName("Uint32")] uint Rmask, [NativeTypeName("Uint32")] uint Gmask, [NativeTypeName("Uint32")] uint Bmask, [NativeTypeName("Uint32")] uint Amask);
