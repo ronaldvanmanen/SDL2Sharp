@@ -18,6 +18,7 @@ SDL_audio.h
 SDL_blendmode.h
 SDL_error.h
 SDL_events.h
+SDL_hints.h
 SDL_keyboard.h
 SDL_keycode.h
 SDL_log.h
