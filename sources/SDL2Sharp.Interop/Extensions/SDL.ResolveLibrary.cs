@@ -40,14 +40,14 @@ namespace SDL2Sharp.Interop
         {
             return TryResolveLibrary(libraryName, assembly, searchPath, out var nativeLibrary)
                 ? nativeLibrary
-                : libraryName.Equals("SDL2.dll") && TryResolveSDL2(assembly, searchPath, out nativeLibrary)
+                : libraryName.Equals("SDL2.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
                 ? nativeLibrary
                 : IntPtr.Zero;
         }
 
-        private static bool TryResolveSDL2(Assembly assembly, DllImportSearchPath? searchPath, out IntPtr nativeLibrary)
+        private static bool TryResolveNativeLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath, out IntPtr nativeLibrary)
         {
-            if (NativeLibrary.TryLoad("SDL2.dll", assembly, searchPath, out nativeLibrary))
+            if (NativeLibrary.TryLoad(libraryName, assembly, searchPath, out nativeLibrary))
             {
                 return true;
             }
@@ -57,7 +57,7 @@ namespace SDL2Sharp.Interop
                 return false;
             }
             
-            var libraryPath = Path.Combine(LibraryDirectory, "SDL2.dll");
+            var libraryPath = Path.Combine(LibraryDirectory, libraryName);
             var result = NativeLibrary.TryLoad(libraryPath, out nativeLibrary);
             return result;
         }
