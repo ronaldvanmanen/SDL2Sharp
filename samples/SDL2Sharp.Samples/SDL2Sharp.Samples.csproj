@@ -27,4 +27,10 @@
     <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Sample.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
