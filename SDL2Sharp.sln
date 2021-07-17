@@ -8,12 +8,24 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.UnitTests", "tests\SDL2Sharp.UnitTests\SDL2Sharp.UnitTests.csproj", "{0EA1CB52-0E1E-4EEC-80B5-5EA37F436EAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}"
+	ProjectSection(SolutionItems) = preProject
+		sources\Directory.Build.props = sources\Directory.Build.props
+		sources\Directory.Build.targets = sources\Directory.Build.targets
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{79105D14-18FF-4FAD-BD24-52C477EDA1B2}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+		tests\Directory.Build.targets = tests\Directory.Build.targets
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Samples", "samples\SDL2Sharp.Samples\SDL2Sharp.Samples.csproj", "{04352BAF-739B-4A63-A29A-036402C85925}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Directory.Build.props = samples\Directory.Build.props
+		samples\Directory.Build.targets = samples\Directory.Build.targets
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop", "sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj", "{A03FB552-F079-4852-8E1A-6ADD6C1BD3A8}"
 EndProject
@@ -25,6 +37,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generation", "generation", 
 	ProjectSection(SolutionItems) = preProject
 		generation\HeaderFile.txt = generation\HeaderFile.txt
 		generation\settings.rsp = generation\settings.rsp
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BABC58-A31C-4658-BB81-FB21DD86F87B}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\build.ps1 = scripts\build.ps1
+		scripts\build.sh = scripts\build.sh
+		scripts\cibuild.cmd = scripts\cibuild.cmd
+		scripts\cibuild.sh = scripts\cibuild.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724-335F-42C6-A2ED-4DFECD530B7F}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		build.sh = build.sh
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		LICENSE = LICENSE
+		pack.cmd = pack.cmd
+		pack.sh = pack.sh
+		README.md = README.md
+		restore.cmd = restore.cmd
+		restore.sh = restore.sh
+		test.cmd = test.cmd
+		test.sh = test.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0793D351-B4AF-440D-AEC3-23830CC24DEE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{BE1EC505-678D-4E09-836A-9CCBEF4E5232}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 	EndProjectSection
 EndProject
 Global
@@ -94,6 +138,7 @@ Global
 		{A03FB552-F079-4852-8E1A-6ADD6C1BD3A8} = {1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}
 		{C4E13408-B833-4B51-BC7B-BABBC759FB1B} = {79105D14-18FF-4FAD-BD24-52C477EDA1B2}
 		{DC48E764-6243-4067-B070-D73600FD6734} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{BE1EC505-678D-4E09-836A-9CCBEF4E5232} = {0793D351-B4AF-440D-AEC3-23830CC24DEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}

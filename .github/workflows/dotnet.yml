@@ -7,19 +7,73 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  windows-x64:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        architecture: [ x64 ]
+        configuration: [ debug, release ]
+        os: [ windows ]
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+    - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }}
+      shell: cmd
+    - uses: actions/upload-artifact@v2
       with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+        name: ${{ matrix.os }}_${{ matrix.configuration }}_${{ matrix.architecture }}
+        path: |
+          ./artifacts/bin/**/*
+          ./artifacts/log/**/*
+          ./artifacts/pkg/**/*
+          ./artifacts/tst/**/*
+        if-no-files-found: error
+  windows-x86:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        architecture: [ x86 ]
+        configuration: [ debug, release ]
+        os: [ windows ]
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }}
+      shell: cmd
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.os }}_${{ matrix.configuration }}_x86
+        path: |
+          ./artifacts/bin/**/*
+          ./artifacts/log/**/*
+          ./artifacts/pkg/**/*
+          ./artifacts/tst/**/*
+        if-no-files-found: error
+  build-nuget:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./scripts/cibuild.cmd -configuration release -architecture x64
+      shell: cmd
+      env:
+        EXCLUDE_RUN_ID_FROM_PACKAGE: true
+    - uses: actions/upload-artifact@v2
+      with:
+        name: nuget
+        path: |
+          ./artifacts/bin/**/*
+          ./artifacts/log/**/*
+          ./artifacts/pkg/**/*
+          ./artifacts/tst/**/*
+        if-no-files-found: error
+  publish-nightlies-github:
+    runs-on: windows-latest
+    if: ${{ github.event_name == 'push' }}
+    needs: [ windows-x64, windows-x86, build-nuget ]
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: windows_release_x64
+        path: ./artifacts
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+    - run: dotnet nuget push "./artifacts/pkg/Release/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
