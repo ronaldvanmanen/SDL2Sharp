@@ -27,9 +27,9 @@ namespace SDL2Sharp.Interop
 {
     public static unsafe partial class SDL
     {
-        public static event DllImportResolver ResolveLibrary;
+        public static event DllImportResolver? ResolveLibrary;
 
-        public static string LibraryDirectory { get; set; }
+        public static string? LibraryDirectory { get; set; }
 
         static SDL()
         {

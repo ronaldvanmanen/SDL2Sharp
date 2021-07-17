@@ -31,10 +31,10 @@ namespace SDL2Sharp.Samples
                 ? @"..\..\..\..\packages\sdl2.runtime.win-x64"
                 : @"..\..\..\..\packages\sdl2.runtime.win-x86";
 
-            Subsystem subsystem = null;
-            Window window = null;
-            Renderer renderer = null;
-            Texture bitmapTexture = null;
+            Subsystem subsystem = null!;
+            Window window = null!;
+            Renderer renderer = null!;
+            Texture bitmapTexture = null!;
 
             try
             {

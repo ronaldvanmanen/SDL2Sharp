@@ -1,0 +1,13 @@
+{
+  "solution": {
+    "path": "SDL2Sharp.sln",
+    "projects": [
+      "samples\\SDL2Sharp.Interop.Samples\\SDL2Sharp.Interop.Samples.csproj",
+      "samples\\SDL2Sharp.Samples\\SDL2Sharp.Samples.csproj",
+      "sources\\SDL2Sharp.Interop\\SDL2Sharp.Interop.csproj",
+      "sources\\SDL2Sharp\\SDL2Sharp.csproj",
+      "tests\\SDL2Sharp.Interop.UnitTests\\SDL2Sharp.Interop.UnitTests.csproj",
+      "tests\\SDL2Sharp.UnitTests\\SDL2Sharp.UnitTests.csproj"
+    ]
+  }
+}
