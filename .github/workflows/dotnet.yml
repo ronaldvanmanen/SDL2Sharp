@@ -16,6 +16,8 @@ jobs:
         os: [ windows ]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }}
       shell: cmd
     - uses: actions/upload-artifact@v2
@@ -36,6 +38,8 @@ jobs:
         os: [ windows ]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }}
       shell: cmd
     - uses: actions/upload-artifact@v2
@@ -51,6 +55,8 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - run: ./scripts/cibuild.cmd -configuration release -architecture x64
       shell: cmd
       env:
