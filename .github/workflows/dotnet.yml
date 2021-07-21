@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-dependencies:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
       with:
