@@ -49,6 +49,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724-335F-42C6-A2ED-4DFECD530B7F}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.gitmodules = .gitmodules
+		azure-pipelines.yml = azure-pipelines.yml
 		build.cmd = build.cmd
 		build.sh = build.sh
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
