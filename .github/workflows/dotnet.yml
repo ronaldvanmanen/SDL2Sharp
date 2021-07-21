@@ -7,6 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
+  build-dependencies:
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+    - run: |
+        nuget pack "./packages/**/*.nuspec"
+        dotnet nuget push "./packages/**/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
     strategy:
