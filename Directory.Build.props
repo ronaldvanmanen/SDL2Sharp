@@ -10,11 +10,6 @@
     that is done by the file that imports us.
   -->
 
-  <ItemGroup>
-    <ProjectCapability Include="DynamicDependentFile" />
-    <ProjectCapability Include="DynamicFileNesting" />
-  </ItemGroup>
-
   <!-- Default settings that are used by other settings -->
   <PropertyGroup>
     <BaseArtifactsPath>$(MSBuildThisFileDirectory)artifacts/</BaseArtifactsPath>
@@ -25,7 +20,7 @@
   <!-- Default settings that explicitly differ from the Sdk.props defaults  -->
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!--<BaseIntermediateOutputPath>$(BaseArtifactsPath)obj/$(BaseArtifactsPathSuffix)/</BaseIntermediateOutputPath>-->
+    <BaseIntermediateOutputPath>$(BaseArtifactsPath)obj/$(BaseArtifactsPathSuffix)/</BaseIntermediateOutputPath>
     <DebugType>embedded</DebugType>
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <Nullable>enable</Nullable>
@@ -41,7 +36,7 @@
   <!-- Default settings that explicitly differ from the Sdk.targets defaults-->
   <PropertyGroup>
     <Authors>Ronald van Manen</Authors>
-    <!--<BaseOutputPath>$(BaseArtifactsPath)bin/$(BaseArtifactsPathSuffix)/</BaseOutputPath>-->
+    <BaseOutputPath>$(BaseArtifactsPath)bin/$(BaseArtifactsPathSuffix)/</BaseOutputPath>
     <Company>Ragnvaldr Systems</Company>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
     <PackageOutputPath>$(BaseArtifactsPath)pkg/$(Configuration)/</PackageOutputPath>
@@ -74,4 +69,8 @@
     <UseSharedCompilation>true</UseSharedCompilation>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**</DefaultItemExcludes>
+  </PropertyGroup>
+  
 </Project>
