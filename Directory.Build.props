@@ -14,7 +14,7 @@
   <PropertyGroup>
     <BaseArtifactsPath>$(MSBuildThisFileDirectory)artifacts/</BaseArtifactsPath>
     <BaseArtifactsPathSuffix>$(SDL2SharpProjectCategory)/$(MSBuildProjectName)</BaseArtifactsPathSuffix>
-    <RepositoryUrl>https://github.com/ronaldvanmanen/SDL2Sharp.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ronaldvanmanen/SDL2Sharp</RepositoryUrl>
   </PropertyGroup>
 
   <!-- Default settings that explicitly differ from the Sdk.props defaults  -->
@@ -59,7 +59,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <OverwriteReadOnlyFiles>true</OverwriteReadOnlyFiles>
     <PackageLicenseExpression>Zlib</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/ronaldvanmanen/SDL2Sharp</PackageProjectUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <PublicSign>true</PublicSign>
     <RepositoryType>git</RepositoryType>
