@@ -17,10 +17,10 @@ jobs:
       with:
         nuget-version: '5.x'
     - run: |
-        nuget pack "./packages/sdl2/SDL2.nuspec" -OutputDirectory "./artifacts/pkg/Release/"
-        nuget pack "./packages/sdl2.runtime.win-x86/SDL2.runtime.win-x86.nuspec" -OutputDirectory "./artifacts/pkg/Release/"
-        nuget pack "./packages/sdl2.runtime.win-x64/SDL2.runtime.win-x64.nuspec" -OutputDirectory "./artifacts/pkg/Release/"
-        dotnet nuget push "./artifacts/pkg/Release/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+        nuget pack "./packages/sdl2/SDL2.nuspec"
+        nuget pack "./packages/sdl2.runtime.win-x86/SDL2.runtime.win-x86.nuspec"
+        nuget pack "./packages/sdl2.runtime.win-x64/SDL2.runtime.win-x64.nuspec"
+        dotnet nuget push "./packages/**/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
     needs: [ build-dependencies ]
