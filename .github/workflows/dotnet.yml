@@ -21,6 +21,7 @@ jobs:
         dotnet nuget push "./packages/**/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
+    needs: [ build-dependencies ]
     strategy:
       matrix:
         architecture: [ x64 ]
@@ -43,6 +44,7 @@ jobs:
         if-no-files-found: error
   windows-x86:
     runs-on: ${{ matrix.os }}-latest
+    needs: [ build-dependencies ]
     strategy:
       matrix:
         architecture: [ x86 ]
@@ -65,6 +67,7 @@ jobs:
         if-no-files-found: error
   build-nuget:
     runs-on: windows-latest
+    needs: [ build-dependencies ]
     steps:
     - uses: actions/checkout@v2
       with:
