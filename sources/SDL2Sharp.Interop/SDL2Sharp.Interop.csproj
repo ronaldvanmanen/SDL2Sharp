@@ -6,4 +6,10 @@
     <Description>Provides SDL2 bindings written in C#.</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="libsdl2" Version="2.0.14" />
+    <PackageReference Include="libsdl2.runtime.win-x64" Version="2.0.14" />
+    <PackageReference Include="libsdl2.runtime.win-x86" Version="2.0.14" />
+  </ItemGroup>
+
 </Project>

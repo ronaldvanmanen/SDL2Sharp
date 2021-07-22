@@ -79,17 +79,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{BF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2", "sdl2", "{FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5}"
 	ProjectSection(SolutionItems) = preProject
+		packages\sdl2\LICENSE.txt = packages\sdl2\LICENSE.txt
+		packages\sdl2\runtime.json = packages\sdl2\runtime.json
 		packages\sdl2\SDL2.nuspec = packages\sdl2\SDL2.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2.runtime.win-x64", "sdl2.runtime.win-x64", "{6B023808-1956-4375-8A89-8138D146E786}"
 	ProjectSection(SolutionItems) = preProject
+		packages\sdl2.runtime.win-x64\README-SDL.txt = packages\sdl2.runtime.win-x64\README-SDL.txt
 		packages\sdl2.runtime.win-x64\SDL2.runtime.win-x64.nuspec = packages\sdl2.runtime.win-x64\SDL2.runtime.win-x64.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2.runtime.win-x86", "sdl2.runtime.win-x86", "{5B432945-6164-4A64-8B4E-22F42279E021}"
 	ProjectSection(SolutionItems) = preProject
+		packages\sdl2.runtime.win-x86\README-SDL.txt = packages\sdl2.runtime.win-x86\README-SDL.txt
 		packages\sdl2.runtime.win-x86\SDL2.runtime.win-x86.nuspec = packages\sdl2.runtime.win-x86\SDL2.runtime.win-x86.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{9D834C64-E1A5-427A-946F-003234CA720E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{6547EEAF-2825-4071-8832-A075045CB5ED}"
+	ProjectSection(SolutionItems) = preProject
+		packages\sdl2\lib\net5.0\_._ = packages\sdl2\lib\net5.0\_._
 	EndProjectSection
 EndProject
 Global
@@ -163,6 +174,8 @@ Global
 		{FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 		{6B023808-1956-4375-8A89-8138D146E786} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 		{5B432945-6164-4A64-8B4E-22F42279E021} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
+		{9D834C64-E1A5-427A-946F-003234CA720E} = {FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5}
+		{6547EEAF-2825-4071-8832-A075045CB5ED} = {9D834C64-E1A5-427A-946F-003234CA720E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
