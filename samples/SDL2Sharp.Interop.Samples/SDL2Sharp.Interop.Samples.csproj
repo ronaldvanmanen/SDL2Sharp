@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
+    <Content Include="Sample.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Sample.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\..\sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,12 +8,13 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">Zlib</license>
     <projectUrl>https://github.com/ronaldvanmanen/SDL2Sharp</projectUrl>
-    <description>win x86 native library for libclang.</description>
+    <description>win x86 native library for libsdl2.</description>
     <copyright>Copyright © Ronald van Manen</copyright>
     <repository type="git" url="https://github.com/ronaldvanmanen/SDL2Sharp" branch="main" />
   </metadata>
   <files>
     <file src="..\sdl2\LICENSE.TXT" target="LICENSE.TXT" />
+    <file src="README-SDL.txt" target="README-SDL.txt" />
     <file src="SDL2.dll" target="runtimes\win-x86\native\SDL2.dll" />
   </files>
 </package>

@@ -27,10 +27,6 @@ namespace SDL2Sharp.Samples
     {
         private static int Main(string[] args)
         {
-            SDL.LibraryDirectory = (Environment.Is64BitProcess)
-                ? @"..\..\..\..\packages\sdl2.runtime.win-x64"
-                : @"..\..\..\..\packages\sdl2.runtime.win-x86";
-
             Subsystem subsystem = null!;
             Window window = null!;
             Renderer renderer = null!;
