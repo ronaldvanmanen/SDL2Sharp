@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Platforms>x64;x86</Platforms>
+    <Platforms>AnyCPU</Platforms>
     <Description>Provides SDL2 bindings written in C#.</Description>
   </PropertyGroup>
 
