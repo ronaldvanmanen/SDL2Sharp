@@ -20,7 +20,7 @@ jobs:
         nuget pack "./packages/sdl2/SDL2.nuspec"
         nuget pack "./packages/sdl2.runtime.win-x86/SDL2.runtime.win-x86.nuspec"
         nuget pack "./packages/sdl2.runtime.win-x64/SDL2.runtime.win-x64.nuspec"
-        dotnet nuget push "./packages/**/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+    - run: dotnet nuget push "./packages/**/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
     needs: [ build-dependencies ]
