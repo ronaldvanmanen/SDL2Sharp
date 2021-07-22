@@ -6,7 +6,7 @@
     <authors>Ronald van Manen and Contributors</authors>
     <owners>Ronald van Manen and Contributors</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <license type="expression">MIT</license>
+    <license type="expression">Zlib</license>
     <projectUrl>https://github.com/ronaldvanmanen/SDL2Sharp</projectUrl>
     <description>win x86 native library for libclang.</description>
     <copyright>Copyright © Ronald van Manen</copyright>
