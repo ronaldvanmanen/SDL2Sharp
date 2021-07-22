@@ -75,6 +75,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{BE
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{BFB3B017-B286-4AA8-9F24-3303FE7D6755}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2", "sdl2", "{FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5}"
+	ProjectSection(SolutionItems) = preProject
+		packages\sdl2\SDL2.nuspec = packages\sdl2\SDL2.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2.runtime.win-x64", "sdl2.runtime.win-x64", "{6B023808-1956-4375-8A89-8138D146E786}"
+	ProjectSection(SolutionItems) = preProject
+		packages\sdl2.runtime.win-x64\SDL2.runtime.win-x64.nuspec = packages\sdl2.runtime.win-x64\SDL2.runtime.win-x64.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2.runtime.win-x86", "sdl2.runtime.win-x86", "{5B432945-6164-4A64-8B4E-22F42279E021}"
+	ProjectSection(SolutionItems) = preProject
+		packages\sdl2.runtime.win-x86\SDL2.runtime.win-x86.nuspec = packages\sdl2.runtime.win-x86\SDL2.runtime.win-x86.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -143,6 +160,9 @@ Global
 		{C4E13408-B833-4B51-BC7B-BABBC759FB1B} = {79105D14-18FF-4FAD-BD24-52C477EDA1B2}
 		{DC48E764-6243-4067-B070-D73600FD6734} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 		{BE1EC505-678D-4E09-836A-9CCBEF4E5232} = {0793D351-B4AF-440D-AEC3-23830CC24DEE}
+		{FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
+		{6B023808-1956-4375-8A89-8138D146E786} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
+		{5B432945-6164-4A64-8B4E-22F42279E021} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
