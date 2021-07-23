@@ -17,9 +17,9 @@ jobs:
       with:
         nuget-version: '5.x'
     - run: |
-        nuget pack ".\packages\sdl2\SDL2.nuspec" -OutputDirectory ".\packages\"
-        nuget pack ".\packages\sdl2.runtime.win-x86/SDL2.runtime.win-x86.nuspec" -OutputDirectory ".\packages\"
-        nuget pack ".\packages\sdl2.runtime.win-x64/SDL2.runtime.win-x64.nuspec" -OutputDirectory ".\packages\"
+        nuget pack ".\packages\libsdl2\libsdl2.nuspec" -OutputDirectory ".\packages\"
+        nuget pack ".\packages\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec" -OutputDirectory ".\packages\"
+        nuget pack ".\packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec" -OutputDirectory ".\packages\"
     - run: dotnet nuget push ".\packages\*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
