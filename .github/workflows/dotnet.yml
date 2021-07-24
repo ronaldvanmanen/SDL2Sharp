@@ -42,7 +42,7 @@ jobs:
         source-url: https://nuget.pkg.github.com/ronaldvanmanen/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} -verbosity diagnostic
+    - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }} -verbosity normal
       shell: cmd
     - uses: actions/upload-artifact@v2
       with:
@@ -73,7 +73,7 @@ jobs:
         source-url: https://nuget.pkg.github.com/ronaldvanmanen/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }} -verbosity diagnostic
+    - run: ./scripts/cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }} -verbosity normal
       shell: cmd
     - uses: actions/upload-artifact@v2
       with:
@@ -98,7 +98,7 @@ jobs:
         source-url: https://nuget.pkg.github.com/ronaldvanmanen/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: ./scripts/cibuild.cmd -configuration release -architecture x64 -verbosity diagnostic
+    - run: ./scripts/cibuild.cmd -configuration release -architecture x64 /p:PlatformTarget=x64 -verbosity normal
       shell: cmd
       env:
         EXCLUDE_RUN_ID_FROM_PACKAGE: true
