@@ -9,7 +9,7 @@ namespace SDL2Sharp.UnitTests
         [Fact]
         public static void TestConstructor()
         {
-            SDL.LibraryDirectory = Assembly.GetExecutingAssembly().Location;
+            SDL.LibraryDirectory = typeof(SubsystemTests).Assembly.Location;
 
             using (new Subsystem(0)) 
             { 
