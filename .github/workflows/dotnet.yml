@@ -23,7 +23,6 @@ jobs:
         nuget pack ".\packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec" -OutputDirectory ".\packages\"
     - run: dotnet nuget push ".\packages\*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
   windows-x64:
-    if: ${{ false }}  # disable for now
     runs-on: ${{ matrix.os }}-latest
     needs: [ build-dependencies ]
     strategy:
@@ -56,7 +55,6 @@ jobs:
           ./artifacts/tst/**/*
         if-no-files-found: error
   windows-x86:
-    if: ${{ false }}  # disable for now
     runs-on: ${{ matrix.os }}-latest
     needs: [ build-dependencies ]
     strategy:
