@@ -18,3 +18,7 @@ This project has adopted the [Contributor Covenant Code of Conduct](https://www.
 Copyright (c) Ronald van Manen. All rights reserved.
 Licensed under the z-lib license.
 See [LICENSE](LICENSE) in the project root for license information.
+
+### Languages and Frameworks
+
+SDL2Sharp uses C# as its primary development language and .NET Core as our primary target framework.
