@@ -20,13 +20,45 @@ jobs:
     - run: nuget pack ".\packages\libsdl2\libsdl2.nuspec" -OutputDirectory ".\packages\"
     - run: nuget pack ".\packages\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec" -OutputDirectory ".\packages\"
     - run: nuget pack ".\packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec" -OutputDirectory ".\packages\"
-    - run: dotnet nuget push ".\packages\*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
-    - run: dotnet nuget push ".\packages\*.nupkg" --source https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json --api-key AzureDevOps --skip-duplicate
+    - uses: actions/upload-artifact@v2
+      with:
+        name: build-dependencies
+        path: |
+          .\packages\*.nupkg
+        if-no-files-found: error
+  publish-dependencies-azure:
+    runs-on: ubuntu-latest
+    needs: [ build-dependencies ]
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-dependencies
+        path: ./packages
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+        source-url: https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
+    - run: dotnet nuget push "./packages/*.nupkg" --api-key AzureDevOps --skip-duplicate
+  publish-dependencies-github:
+    runs-on: ubuntu-latest
+    needs: [ build-dependencies ]
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-dependencies
+        path: ./packages
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+        source-url: https://nuget.pkg.github.com/ronaldvanmanen/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: dotnet nuget push "./packages/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
-    needs: [ build-dependencies ]
+    needs: [ publish-dependencies-azure, publish-dependencies-github ]
     strategy:
       matrix:
         architecture: [ x64 ]
@@ -42,7 +74,7 @@ jobs:
         dotnet-version: '5.0.x'
         source-url: https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json
       env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
     - run: .\scripts\cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }}
       shell: cmd
       env: 
@@ -58,7 +90,7 @@ jobs:
         if-no-files-found: error
   windows-x86:
     runs-on: ${{ matrix.os }}-latest
-    needs: [ build-dependencies ]
+    needs: [ publish-dependencies-azure, publish-dependencies-github ]
     strategy:
       matrix:
         architecture: [ x86 ]
@@ -74,7 +106,7 @@ jobs:
         dotnet-version: '5.0.x'
         source-url: https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json
       env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
     - run: .\scripts\cibuild.cmd -configuration ${{ matrix.configuration }} -architecture ${{ matrix.architecture }} /p:PlatformTarget=${{ matrix.architecture }}
       env: 
         OVERRIDE_RUNTIME_IDENTIFIER: win-x86
@@ -90,7 +122,7 @@ jobs:
         if-no-files-found: error
   build-nuget:
     runs-on: windows-latest
-    needs: [ build-dependencies ]
+    needs: [ publish-dependencies-azure, publish-dependencies-github ]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -101,7 +133,7 @@ jobs:
         dotnet-version: '5.0.x'
         source-url: https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json
       env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
     - run: .\scripts\cibuild.cmd -configuration release -architecture x64 /p:PlatformTarget=x64
       shell: cmd
       env:
@@ -147,4 +179,4 @@ jobs:
         source-url: https://nuget.pkg.github.com/ronaldvanmanen/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: dotnet nuget push "./artifacts/pkg/Release/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+    - run: dotnet nuget push "./artifacts/pkg/Release/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }}
