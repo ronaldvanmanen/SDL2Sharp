@@ -17,11 +17,13 @@ jobs:
     - uses: nuget/setup-nuget@v1
       with:
         nuget-version: '5.x'
-    - run: |
-        nuget pack ".\packages\libsdl2\libsdl2.nuspec" -OutputDirectory ".\packages\"
-        nuget pack ".\packages\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec" -OutputDirectory ".\packages\"
-        nuget pack ".\packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec" -OutputDirectory ".\packages\"
+    - run: nuget pack ".\packages\libsdl2\libsdl2.nuspec" -OutputDirectory ".\packages\"
+    - run: nuget pack ".\packages\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec" -OutputDirectory ".\packages\"
+    - run: nuget pack ".\packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec" -OutputDirectory ".\packages\"
     - run: dotnet nuget push ".\packages\*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+    - run: dotnet nuget push ".\packages\*.nupkg" --source https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json --api-key AzureDevOps --skip-duplicate
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
   windows-x64:
     runs-on: ${{ matrix.os }}-latest
     needs: [ build-dependencies ]
@@ -114,19 +116,35 @@ jobs:
           .\artifacts\pkg\**\*
           .\artifacts\tst\**\*
         if-no-files-found: error
-  publish-nightlies-github:
-    runs-on: windows-latest
+  publish-nightlies-azure:
+    runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     needs: [ windows-x64, windows-x86, build-nuget ]
     steps:
     - uses: actions/download-artifact@v2
       with:
         name: windows_release_x64
-        path: .\artifacts
+        path: ./artifacts
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+        source-url: https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
+    - run: dotnet nuget push "./artifacts/pkg/Release/*.nupkg" --api-key AzureDevOps
+  publish-nightlies-github:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    needs: [ windows-x64, windows-x86, build-nuget ]
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: windows_release_x64
+        path: ./artifacts
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
         source-url: https://nuget.pkg.github.com/ronaldvanmanen/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: dotnet nuget push ".\artifacts\pkg\Release\*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+    - run: dotnet nuget push "./artifacts/pkg/Release/*.nupkg" --source https://nuget.pkg.github.com/ronaldvanmanen/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
