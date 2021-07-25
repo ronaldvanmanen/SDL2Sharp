@@ -13,6 +13,7 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileDirectory)..\Directory.Build.props</MSBuildAllProjects>
     <SDL2SharpProjectCategory>samples</SDL2SharpProjectCategory>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
