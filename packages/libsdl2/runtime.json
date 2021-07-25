@@ -1,12 +1,12 @@
 {
   "runtimes": {
     "win-x64": {
-      "SDL2": {
+      "libsdl2": {
         "libsdl2.runtime.win-x64": "2.0.14"
       }
     },
     "win-x86": {
-      "SDL2": {
+      "libsdl2": {
         "libsdl2.runtime.win-x86": "2.0.14"
       }
     }
