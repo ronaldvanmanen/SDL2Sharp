@@ -2,6 +2,8 @@
 
 SDL2Sharp provides SDL2 bindings written in C#.
 
+[![.NET](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/dotnet.yml)
+
 ## Table of Contents
 
 * [Code of Conduct](#code-of-conduct)
