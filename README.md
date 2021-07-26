@@ -8,6 +8,8 @@ SDL2Sharp provides SDL2 bindings written in C#.
 
 * [Code of Conduct](#code-of-conduct)
 * [License](#license)
+* [Languages and Frameworks](#languages-and-frameworks)
+* [Building](#building)
 
 ### Code of Conduct
 
