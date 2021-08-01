@@ -89,14 +89,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2.runtime.win-x64", "
 	ProjectSection(SolutionItems) = preProject
 		packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec = packages\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec
 		packages\libsdl2.runtime.win-x64\README-SDL.txt = packages\libsdl2.runtime.win-x64\README-SDL.txt
-		packages\libsdl2.runtime.win-x64\SDL2.dll = packages\libsdl2.runtime.win-x64\SDL2.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2.runtime.win-x86", "libsdl2.runtime.win-x86", "{5B432945-6164-4A64-8B4E-22F42279E021}"
 	ProjectSection(SolutionItems) = preProject
 		packages\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec = packages\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec
 		packages\libsdl2.runtime.win-x86\README-SDL.txt = packages\libsdl2.runtime.win-x86\README-SDL.txt
-		packages\libsdl2.runtime.win-x86\SDL2.dll = packages\libsdl2.runtime.win-x86\SDL2.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{9D834C64-E1A5-427A-946F-003234CA720E}"
