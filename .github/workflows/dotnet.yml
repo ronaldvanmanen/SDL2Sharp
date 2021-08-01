@@ -79,11 +79,10 @@ jobs:
         source-url: https://pkgs.dev.azure.com/ronaldvanmanen/_packaging/ronaldvanmanen/nuget/v3/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}
-    - run: .\scripts\cibuild.cmd -configuration release -architecture x64 /p:PlatformTarget=x64
+    - run: .\scripts\cibuild.cmd -configuration release
       shell: cmd
       env:
         EXCLUDE_RUN_ID_FROM_PACKAGE: true
-        OVERRIDE_RUNTIME_IDENTIFIER: win-x64
     - uses: actions/upload-artifact@v2
       with:
         name: nuget
@@ -116,7 +115,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v2
       with:
-        name: windows_release_x64
+        name: nuget
         path: ./artifacts
     - uses: actions/setup-dotnet@v1
       with:
