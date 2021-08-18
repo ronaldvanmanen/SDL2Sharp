@@ -51,7 +51,18 @@ namespace SDL2Sharp
             _surface = surface;
         }
 
+        ~Surface()
+        {
+            Dispose(false);
+        }
+
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool _)
         {
             if (_surface == null) return;
             SDL.FreeSurface(_surface);

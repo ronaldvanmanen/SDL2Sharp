@@ -37,7 +37,18 @@ namespace SDL2Sharp
             _texture = texture;
         }
 
+        ~Texture()
+        {
+            Dispose(false);
+        }
+
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool _)
         {
             if (_texture == null) return;
             SDL.DestroyTexture(_texture);

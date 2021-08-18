@@ -54,7 +54,18 @@ namespace SDL2Sharp
             }
         }
 
+        ~Window()
+        {
+            Dispose(false);
+        }
+
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool _)
         {
             if (_window == null) return;
             SDL.DestroyWindow(_window);
@@ -63,11 +74,15 @@ namespace SDL2Sharp
 
         public Renderer CreateRenderer()
         {
+            ThrowWhenDisposed();
+
             return CreateRenderer((uint)0);
         }
 
         public Renderer CreateRenderer(SDL_RendererFlags flags)
         {
+            ThrowWhenDisposed();
+
             return CreateRenderer((uint)flags);
         }
 
@@ -76,6 +91,14 @@ namespace SDL2Sharp
             var renderer = SDL.CreateRenderer(_window, -1, flags);
             Error.ThrowOnFailure(renderer);
             return new Renderer(renderer);
+        }
+
+        private void ThrowWhenDisposed()
+        {
+            if (_window == null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
     }
 }
