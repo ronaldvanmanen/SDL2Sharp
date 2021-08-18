@@ -37,7 +37,18 @@ namespace SDL2Sharp
             _renderer = renderer;
         }
 
-        public void Dispose()
+        ~Renderer()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose() 
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool _)
         {
             if (_renderer == null) return;
             SDL.DestroyRenderer(_renderer);
@@ -46,6 +57,8 @@ namespace SDL2Sharp
 
         public Texture CreateTexture(uint format, int access, int width, int height)
         {
+            ThrowWhenDisposed();
+
             var texture = SDL.CreateTexture(_renderer, format, access, width, height);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
@@ -53,6 +66,8 @@ namespace SDL2Sharp
 
         public Texture CreateTextureFromSurface(Surface surface)
         {
+            ThrowWhenDisposed();
+
             var texture = SDL.CreateTextureFromSurface(_renderer, surface);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
@@ -60,6 +75,8 @@ namespace SDL2Sharp
 
         public void Clear()
         {
+            ThrowWhenDisposed();
+
             Error.ThrowOnFailure(
                 SDL.RenderClear(_renderer)
             );
@@ -67,6 +84,8 @@ namespace SDL2Sharp
 
         public void Copy(Texture texture)
         {
+            ThrowWhenDisposed();
+
             Error.ThrowOnFailure(
                 SDL.RenderCopy(_renderer, texture, null, null)
             );
@@ -74,7 +93,17 @@ namespace SDL2Sharp
 
         public void Present()
         {
+            ThrowWhenDisposed();
+
             SDL.RenderPresent(_renderer);
+        }
+
+        private void ThrowWhenDisposed()
+        {
+            if (_renderer == null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
     }
 }
