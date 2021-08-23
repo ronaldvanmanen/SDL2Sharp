@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Platforms>AnyCPU</Platforms>
+    <PackageTags>SDL2</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Sample.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
+    <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
+  </ItemGroup>
+
+</Project>

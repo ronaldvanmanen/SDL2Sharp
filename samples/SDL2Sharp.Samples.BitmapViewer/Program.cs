@@ -21,7 +21,7 @@
 using System;
 using SDL2Sharp.Interop;
 
-namespace SDL2Sharp.Samples
+namespace SDL2Sharp.Samples.BitmapViewer
 {
     internal static unsafe class Program
     {
