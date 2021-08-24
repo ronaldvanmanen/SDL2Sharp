@@ -18,19 +18,19 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using SDL2Sharp.Interop;
 using System;
-using System.Text;
 
-namespace SDL2Sharp.Interop
+namespace SDL2Sharp
 {
-    public static unsafe partial class SDL
+    public static class SpanExtensions
     {
-        public static void Log(string message)
+        public static unsafe void MixAudioFormat(this Span<byte> source, Span<byte> destination, ushort format, int volume)
         {
-            var bytes = Encoding.ASCII.GetBytes(message);
-            fixed (byte* fixedBytes = bytes)
+            fixed (byte* dst = &destination[0])
+            fixed (byte* src = &source[0])
             {
-                Log((sbyte*)fixedBytes);
+                SDL.MixAudioFormat(dst, src, format, (uint)source.Length, volume);
             }
         }
     }

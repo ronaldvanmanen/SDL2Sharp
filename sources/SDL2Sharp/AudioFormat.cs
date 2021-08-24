@@ -18,20 +18,29 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using System.Text;
+using SDL2Sharp.Interop;
 
-namespace SDL2Sharp.Interop
+namespace SDL2Sharp
 {
-    public static unsafe partial class SDL
+    public enum AudioFormat : ushort
     {
-        public static void Log(string message)
-        {
-            var bytes = Encoding.ASCII.GetBytes(message);
-            fixed (byte* fixedBytes = bytes)
-            {
-                Log((sbyte*)fixedBytes);
-            }
-        }
+        AUDIO_U8 = SDL.AUDIO_U8,
+        AUDIO_S8 = SDL.AUDIO_S8,
+        AUDIO_U16LSB = SDL.AUDIO_U16LSB,
+        AUDIO_S16LSB = SDL.AUDIO_S16LSB,
+        AUDIO_U16MSB = SDL.AUDIO_U16MSB,
+        AUDIO_S16MSB = SDL.AUDIO_S16MSB,
+        AUDIO_U16 = SDL.AUDIO_U16,
+        AUDIO_S16 = SDL.AUDIO_S16,
+        AUDIO_S32LSB = SDL.AUDIO_S32LSB,
+        AUDIO_S32MSB = SDL.AUDIO_S32MSB,
+        AUDIO_S32 = SDL.AUDIO_S32,
+        AUDIO_F32LSB = SDL.AUDIO_F32LSB,
+        AUDIO_F32MSB = SDL.AUDIO_F32MSB,
+        AUDIO_F32 = SDL.AUDIO_F32,
+        AUDIO_U16SYS = SDL.AUDIO_U16SYS,
+        AUDIO_S16SYS = SDL.AUDIO_S16SYS,
+        AUDIO_S32SYS = SDL.AUDIO_S32SYS,
+        AUDIO_F32SYS = SDL.AUDIO_F32SYS
     }
 }

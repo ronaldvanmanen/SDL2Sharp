@@ -18,20 +18,19 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using SDL2Sharp.Interop;
 using System;
-using System.Text;
 
-namespace SDL2Sharp.Interop
+namespace SDL2Sharp
 {
-    public static unsafe partial class SDL
+    [Flags]
+    public enum AudioAllowedChanges
     {
-        public static void Log(string message)
-        {
-            var bytes = Encoding.ASCII.GetBytes(message);
-            fixed (byte* fixedBytes = bytes)
-            {
-                Log((sbyte*)fixedBytes);
-            }
-        }
+        None = 0,
+        Frequency = SDL.SDL_AUDIO_ALLOW_FREQUENCY_CHANGE,
+        Format = SDL.SDL_AUDIO_ALLOW_FORMAT_CHANGE,
+        Channels = SDL.SDL_AUDIO_ALLOW_CHANNELS_CHANGE,
+        Samples = SDL.SDL_AUDIO_ALLOW_SAMPLES_CHANGE,
+        Any = SDL.SDL_AUDIO_ALLOW_ANY_CHANGE,
     }
 }
