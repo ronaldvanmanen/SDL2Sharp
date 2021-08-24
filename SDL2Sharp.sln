@@ -106,6 +106,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{6547EE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Sharp.Interop.Samples.WavePlayer", "samples\SDL2Sharp.Interop.Samples.WavePlayer\SDL2Sharp.Interop.Samples.WavePlayer.csproj", "{4B6B9280-5C5C-4465-99B2-D881563CDF9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Sharp.Samples.WavePlayer", "samples\SDL2Sharp.Samples.WavePlayer\SDL2Sharp.Samples.WavePlayer.csproj", "{C5401193-099C-4FC6-8BE1-C90329DCA79A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{4B6B9280-5C5C-4465-99B2-D881563CDF9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B6B9280-5C5C-4465-99B2-D881563CDF9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B6B9280-5C5C-4465-99B2-D881563CDF9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,6 +164,7 @@ Global
 		{9D834C64-E1A5-427A-946F-003234CA720E} = {FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5}
 		{6547EEAF-2825-4071-8832-A075045CB5ED} = {9D834C64-E1A5-427A-946F-003234CA720E}
 		{4B6B9280-5C5C-4465-99B2-D881563CDF9D} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{C5401193-099C-4FC6-8BE1-C90329DCA79A} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}

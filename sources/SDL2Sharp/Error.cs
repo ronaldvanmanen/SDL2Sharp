@@ -56,6 +56,23 @@ namespace SDL2Sharp
             }
         }
 
+        internal static void ThrowOnFailure(uint returnCode)
+        {
+            if (returnCode == 0)
+            {
+                throw new Error(SDL.GetErrorString());
+            }
+        }
+
+        internal static unsafe uint ReturnOrThrowOnFailure(uint returnCode)
+        {
+            if (returnCode == 0)
+            {
+                throw new Error(SDL.GetErrorString());
+            }
+            return returnCode;
+        }
+
         internal static unsafe T* ReturnOrThrowOnFailure<T>(T* pointer) where T : unmanaged
         {
             if (pointer == null)
