@@ -38,7 +38,7 @@ namespace SDL2Sharp
 
         public static readonly string LogicalSizeMode = Encoding.ASCII.GetString(SDL.SDL_HINT_RENDER_LOGICAL_SIZE_MODE);
 
-        public static readonly string ScaleQuality = Encoding.ASCII.GetString(SDL.SDL_HINT_RENDER_SCALE_QUALITY);
+        public static readonly string RenderScaleQuality = Encoding.ASCII.GetString(SDL.SDL_HINT_RENDER_SCALE_QUALITY);
 
         public static readonly string RenderVSync = Encoding.ASCII.GetString(SDL.SDL_HINT_RENDER_VSYNC);
 
