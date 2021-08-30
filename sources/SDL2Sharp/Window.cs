@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
@@ -32,7 +33,7 @@ namespace SDL2Sharp
         : this(title, (int)SDL.SDL_WINDOWPOS_UNDEFINED, (int)SDL.SDL_WINDOWPOS_UNDEFINED, width, height, (uint)0)
         { }
 
-        public Window(string title, int width, int height, SDL_WindowFlags flags)
+        public Window(string title, int width, int height, WindowFlags flags)
         : this(title, (int)SDL.SDL_WINDOWPOS_UNDEFINED, (int)SDL.SDL_WINDOWPOS_UNDEFINED, width, height, (uint)flags)
         { }
 
@@ -40,7 +41,7 @@ namespace SDL2Sharp
         : this(title, x, y, width, height, (uint)0)
         { }
 
-        public Window(string title, int x, int y, int width, int height, SDL_WindowFlags flags)
+        public Window(string title, int x, int y, int width, int height, WindowFlags flags)
         : this(title, x, y, width, height, (uint)flags)
         { }
 
@@ -74,23 +75,46 @@ namespace SDL2Sharp
 
         public Renderer CreateRenderer()
         {
-            ThrowWhenDisposed();
-
-            return CreateRenderer((uint)0);
+            return CreateRenderer(RendererFlags.None);
         }
 
-        public Renderer CreateRenderer(SDL_RendererFlags flags)
+        public Renderer CreateRenderer(RendererFlags flags)
+        {
+            if (!TryCreateRenderer(flags, out var renderer, out var error))
+            {
+                throw error;
+            }
+
+            return renderer;
+        }
+
+        public bool TryCreateRenderer([NotNullWhen(true)] out Renderer renderer)
+        {
+            return TryCreateRenderer(RendererFlags.None, out renderer);
+        }
+
+        public bool TryCreateRenderer(RendererFlags flags, [NotNullWhen(true)] out Renderer renderer)
+        {
+            return TryCreateRenderer(flags, out renderer, out _);
+        }
+
+        public bool TryCreateRenderer(RendererFlags flags, [NotNullWhen(true)] out Renderer renderer, [NotNullWhen(false)] out Error error)
         {
             ThrowWhenDisposed();
 
-            return CreateRenderer((uint)flags);
-        }
-
-        private Renderer CreateRenderer(uint flags)
-        {
-            var renderer = SDL.CreateRenderer(_window, -1, flags);
-            Error.ThrowOnFailure(renderer);
-            return new Renderer(renderer);
+            var renderPointer = SDL.CreateRenderer(_window, -1, (uint)flags);
+            if (renderPointer == null)
+            {
+                error = new Error(SDL.GetErrorString());
+                renderer = null!;
+                return false;
+            }
+            else
+            {
+                error = null!;
+                renderer = new Renderer(renderPointer);
+                return true;
+            }
         }
 
         private void ThrowWhenDisposed()
