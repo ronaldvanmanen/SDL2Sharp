@@ -27,6 +27,18 @@ namespace SDL2Sharp
     {
         private SDL_Renderer* _renderer;
 
+        public RendererInfo Info 
+        {
+            get
+            {
+                SDL_RendererInfo rendererInfo = new SDL_RendererInfo();
+                Error.ThrowOnFailure(
+                    SDL.GetRendererInfo(_renderer, &rendererInfo)
+                );
+                return new RendererInfo(rendererInfo);
+            }
+        }
+
         internal Renderer(SDL_Renderer* renderer)
         {
             if (renderer == null)
