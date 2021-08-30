@@ -35,8 +35,8 @@ namespace SDL2Sharp.Samples.BitmapViewer
             try
             {
                 subsystem = new Subsystem(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO);
-                window = new Window("SDL2Sharp", 640, 480, SDL_WindowFlags.SDL_WINDOW_OPENGL);
-                renderer = window.CreateRenderer(SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+                window = new Window("SDL2Sharp", 640, 480, WindowFlags.OpenGL);
+                renderer = window.CreateRenderer(RendererFlags.Accelerated);
                 bitmapTexture = renderer.CreateTextureFromBitmap("Sample.bmp");
 
                 while (true)
