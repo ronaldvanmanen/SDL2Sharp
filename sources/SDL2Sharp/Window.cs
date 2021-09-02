@@ -29,6 +29,161 @@ namespace SDL2Sharp
     {
         private SDL_Window* _window;
 
+        public string Title
+        {
+            get
+            {
+                return new string(SDL.GetWindowTitle(_window));
+            }
+            set
+            {
+                using (var marshaledValue = new MarshaledString(value))
+                {
+                    SDL.SetWindowTitle(_window, marshaledValue);
+                }
+            }
+        }
+
+        public Point Position
+        {
+            get
+            {
+                int x, y;
+                SDL.GetWindowPosition(_window, &x, &y);
+                return new Point(x, y);
+            }
+            set
+            {
+                SDL.SetWindowPosition(_window, value.X, value.Y);
+            }
+        }
+
+        public Size Size
+        {
+            get
+            {
+                int width, height;
+                SDL.GetWindowSize(_window, &width, &height);
+                return new Size(width, height);
+            }
+            set
+            {
+                SDL.SetWindowSize(_window, value.Width, value.Height);
+            }
+        }
+
+        public Size MinimumSize
+        {
+            get
+            {
+                int width, height;
+                SDL.GetWindowMinimumSize(_window, &width, &height);
+                return new Size(width, height);
+            }
+            set
+            {
+                SDL.SetWindowMinimumSize(_window, value.Width, value.Height);
+            }
+        }
+
+        public Size MaximumSize
+        {
+            get
+            {
+                int width, height;
+                SDL.GetWindowMaximumSize(_window, &width, &height);
+                return new Size(width, height);
+            }
+            set
+            {
+                SDL.SetWindowMaximumSize(_window, value.Width, value.Height);
+            }
+        }
+
+        public Size ClientSize
+        {
+            get
+            {
+                int top, left, bottom, right;
+                Error.ThrowOnFailure(
+                    SDL.GetWindowBordersSize(_window, &top, &left, &bottom, &right)
+                );
+                return new Size(right - left, bottom - top);
+            }
+        }
+
+        public bool IsBordered
+        {
+            get
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+                var flags = SDL.GetWindowFlags(_window);
+                return (flags & flag) != 0;
+            }
+            set
+            {
+                SDL.SetWindowBordered(_window, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
+            }
+        }
+
+        public bool IsResizable
+        {
+            get
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+                var flags = SDL.GetWindowFlags(_window);
+                return (flags & flag) != 0;
+            }
+            set
+            {
+                SDL.SetWindowResizable(_window, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
+            }
+        }
+
+        public bool IsFullScreen
+        {
+            get
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+                var flags = SDL.GetWindowFlags(_window);
+                return (flags & flag) != 0;
+            }
+            set
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+                Error.ThrowOnFailure(
+                    SDL.SetWindowFullscreen(_window, value ? flag : 0u)
+                );
+            }
+        }
+
+        public bool IsFullScreenDesktop
+        {
+            get
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+                var flags = SDL.GetWindowFlags(_window);
+                return (flags & flag) != 0;
+            }
+            set
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+                Error.ThrowOnFailure(
+                    SDL.SetWindowFullscreen(_window, value ? flag : 0u)
+                );
+            }
+        }
+
+        public bool IsVisible
+        {
+            get
+            {
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_SHOWN;
+                var flags = SDL.GetWindowFlags(_window);
+                return (flags & flag) != 0;
+            }
+        }
+
         public Window(string title, int width, int height)
         : this(title, (int)SDL.SDL_WINDOWPOS_UNDEFINED, (int)SDL.SDL_WINDOWPOS_UNDEFINED, width, height, (uint)0)
         { }
@@ -71,6 +226,36 @@ namespace SDL2Sharp
             if (_window == null) return;
             SDL.DestroyWindow(_window);
             _window = null;
+        }
+
+        public void Show()
+        {
+            SDL.ShowWindow(_window);
+        }
+
+        public void Hide()
+        {
+            SDL.HideWindow(_window);
+        }
+
+        public void Raise()
+        {
+            SDL.RaiseWindow(_window);
+        }
+
+        public void Maximize()
+        {
+            SDL.MaximizeWindow(_window);
+        }
+
+        public void Minimize()
+        {
+            SDL.MinimizeWindow(_window);
+        }
+
+        public void Restore()
+        {
+            SDL.RestoreWindow(_window);
         }
 
         public Renderer CreateRenderer()
