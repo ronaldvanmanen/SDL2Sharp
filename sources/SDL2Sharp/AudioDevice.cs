@@ -138,7 +138,7 @@ namespace SDL2Sharp
             _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, &obtainedSpec, 0);
             if (_deviceID == 0)
             {
-                error = new Error(SDL.GetErrorString());
+                error = new Error(new string(SDL.GetError()));
                 return false;
             }
             else

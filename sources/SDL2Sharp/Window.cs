@@ -290,7 +290,7 @@ namespace SDL2Sharp
             var renderPointer = SDL.CreateRenderer(_window, -1, (uint)flags);
             if (renderPointer == null)
             {
-                error = new Error(SDL.GetErrorString());
+                error = new Error(new string(SDL.GetError()));
                 renderer = null!;
                 return false;
             }
