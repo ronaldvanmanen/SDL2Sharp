@@ -42,9 +42,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BABC58-A31C-4658-BB81-FB21DD86F87B}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\build.ps1 = scripts\build.ps1
-		scripts\build.sh = scripts\build.sh
 		scripts\cibuild.cmd = scripts\cibuild.cmd
-		scripts\cibuild.sh = scripts\cibuild.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724-335F-42C6-A2ED-4DFECD530B7F}"
@@ -55,19 +53,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724
 		.gitmodules = .gitmodules
 		azure-pipelines.yml = azure-pipelines.yml
 		build.cmd = build.cmd
-		build.sh = build.sh
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		pack.cmd = pack.cmd
-		pack.sh = pack.sh
 		README.md = README.md
 		restore.cmd = restore.cmd
-		restore.sh = restore.sh
 		test.cmd = test.cmd
-		test.sh = test.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0793D351-B4AF-440D-AEC3-23830CC24DEE}"
