@@ -44,7 +44,7 @@ namespace SDL2Sharp
         {
             if (pointer == null)
             {
-                throw new Error(SDL.GetErrorString());
+                throw new Error(new string(SDL.GetError()));
             }
         }
 
@@ -52,15 +52,15 @@ namespace SDL2Sharp
         {
             if (returnCode != 0)
             {
-                throw new Error(SDL.GetErrorString());
+                throw new Error(new string(SDL.GetError()));
             }
         }
 
-        internal static void ThrowOnFailure(uint returnCode)
+        internal static unsafe void ThrowOnFailure(uint returnCode)
         {
             if (returnCode == 0)
             {
-                throw new Error(SDL.GetErrorString());
+                throw new Error(new string(SDL.GetError()));
             }
         }
 
@@ -68,7 +68,7 @@ namespace SDL2Sharp
         {
             if (returnCode == 0)
             {
-                throw new Error(SDL.GetErrorString());
+                throw new Error(new string(SDL.GetError()));
             }
             return returnCode;
         }
@@ -77,7 +77,7 @@ namespace SDL2Sharp
         {
             if (pointer == null)
             {
-                throw new Error(SDL.GetErrorString());
+                throw new Error(new string(SDL.GetError()));
             }
             return pointer;
         }
