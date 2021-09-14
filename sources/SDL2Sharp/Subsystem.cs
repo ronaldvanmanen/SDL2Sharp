@@ -23,16 +23,19 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed class Subsystem : IDisposable
+    [Flags]
+    public enum Subsystem : uint
     {
-        public Subsystem(uint flags)
-        {
-            Error.ThrowOnFailure(SDL.Init(flags));
-        }
-
-        public void Dispose()
-        {
-            SDL.Quit();
-        }
+        None = 0,
+        Timer = SDL.SDL_INIT_TIMER,
+        Audio = SDL.SDL_INIT_AUDIO,
+        Video = SDL.SDL_INIT_VIDEO,
+        Joystick = SDL.SDL_INIT_JOYSTICK,
+        Haptic = SDL.SDL_INIT_HAPTIC,
+        GameController = SDL.SDL_INIT_GAMECONTROLLER,
+        Events = SDL.SDL_INIT_EVENTS,
+        Sensor = SDL.SDL_INIT_SENSOR,
+        NoParachute = SDL.SDL_INIT_NOPARACHUTE,
+        All = SDL.SDL_INIT_EVERYTHING,
     }
 }

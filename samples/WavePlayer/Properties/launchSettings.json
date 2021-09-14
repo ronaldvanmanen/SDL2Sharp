@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WavePlayer": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Roland-GR-1-Trumpet-C5.wav\""
+    }
+  }
+}

@@ -2,15 +2,17 @@
 
 namespace SDL2Sharp.UnitTests
 {
-    public static class SubsystemTests
+    public static class ApplicationTests
     {
+        private sealed class App : Application { }
+
         [Fact]
         public static void TestConstructor()
         {
-            using (new Subsystem(0)) 
-            { 
+            using (new App())
+            {
                 // Empty on purpose
-            } ;
+            };
         }
     }
 }

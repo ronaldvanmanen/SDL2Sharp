@@ -20,55 +20,60 @@
 
 using System;
 using SDL2Sharp;
-using SDL2Sharp.Interop;
 
 namespace BitmapViewer
 {
-    internal static unsafe class Program
+    internal unsafe class App : Application
     {
+        private Window _window = null!;
+
+        private Renderer _renderer = null!;
+
+        private Texture _bitmapTexture = null!;
+
+        public App()
+        : base(Subsystem.Video)
+        { }
+
+        protected override void OnStartup(string[] args)
+        {
+            _window = new Window("Bitmap Viewer", 640, 480);
+            _renderer = _window.CreateRenderer(RendererFlags.Accelerated);
+            _bitmapTexture = _renderer.CreateTextureFromBitmap(args[0]);
+        }
+
+        protected override void OnShutdown()
+        {
+            _bitmapTexture?.Dispose();
+            _renderer?.Dispose();
+            _window?.Dispose();
+        }
+
+        protected override void OnIdle()
+        {
+            _renderer.Clear();
+            _renderer.Copy(_bitmapTexture);
+            _renderer.Present();
+        }
+
         private static int Main(string[] args)
         {
-            Subsystem subsystem = null!;
-            Window window = null!;
-            Renderer renderer = null!;
-            Texture bitmapTexture = null!;
+            App app = null!;
 
             try
             {
-                subsystem = new Subsystem(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO);
-                window = new Window("SDL2Sharp", 640, 480, WindowFlags.OpenGL);
-                renderer = window.CreateRenderer(RendererFlags.Accelerated);
-                bitmapTexture = renderer.CreateTextureFromBitmap("Sample.bmp");
-
-                while (true)
-                {
-                    SDL_Event e;
-                    if (0 == SDL.PollEvent(&e))
-                    {
-                        if (e.type == (uint)SDL_EventType.SDL_QUIT)
-                        {
-                            break;
-                        }
-                    }
-
-                    renderer.Clear();
-                    renderer.Copy(bitmapTexture);
-                    renderer.Present();
-                }
-
+                app = new App();
+                app.Run(args);
                 return 0;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Could not run sample: {0}\n", e.Message);
+                Console.WriteLine("Could not run sample: {0}", e.Message);
                 return 1;
             }
             finally
             {
-                bitmapTexture?.Dispose();
-                renderer?.Dispose();
-                window?.Dispose();
-                subsystem?.Dispose();
+                app?.Dispose();
             }
         }
     }
