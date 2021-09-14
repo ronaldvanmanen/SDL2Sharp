@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BitmapViewer": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Sample.bmp\""
+    }
+  }
+}

@@ -22,11 +22,46 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
+using System.Collections.Generic;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class Window : IDisposable
+    public sealed unsafe class Window : IDisposable
     {
+        public event EventHandler? Shown;
+
+        public event EventHandler? Hidden;
+
+        public event EventHandler? Exposed;
+
+        public event EventHandler? Moved;
+
+        public event EventHandler? Resized;
+
+        public event EventHandler? SizeChanged;
+
+        public event EventHandler? Minimized;
+
+        public event EventHandler? Maximized;
+
+        public event EventHandler? Restored;
+
+        public event EventHandler? Enter;
+
+        public event EventHandler? Leave;
+
+        public event EventHandler? FocusGained;
+
+        public event EventHandler? FocusLost;
+
+        public event EventHandler? Close;
+
+        public event EventHandler? TakeFocus;
+
+        public event EventHandler? HitTest;
+
+        private static readonly Dictionary<uint, Window> _windows = new Dictionary<uint, Window>();
+
         private SDL_Window* _window;
 
         public string Title
@@ -207,6 +242,8 @@ namespace SDL2Sharp
                 _window = Error.ReturnOrThrowOnFailure(
                     SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
                 );
+                var windowID = SDL.GetWindowID(_window);
+                _windows.Add(windowID, this);
             }
         }
 
@@ -287,8 +324,8 @@ namespace SDL2Sharp
         {
             ThrowWhenDisposed();
 
-            var renderPointer = SDL.CreateRenderer(_window, -1, (uint)flags);
-            if (renderPointer == null)
+            var handle = SDL.CreateRenderer(_window, -1, (uint)flags);
+            if (handle == null)
             {
                 error = new Error(new string(SDL.GetError()));
                 renderer = null!;
@@ -297,7 +334,7 @@ namespace SDL2Sharp
             else
             {
                 error = null!;
-                renderer = new Renderer(renderPointer);
+                renderer = new Renderer(handle);
                 return true;
             }
         }
@@ -308,6 +345,146 @@ namespace SDL2Sharp
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
+        }
+
+        internal void ProcessEvent(SDL_WindowEvent windowEvent)
+        {
+            switch ((SDL_WindowEventID)windowEvent.type)
+            {
+                case SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN:
+                    OnShown();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN:
+                    OnHidden();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED:
+                    OnExposed();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:
+                    OnMoved();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
+                    OnResized();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
+                    OnSizeChanged();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED:
+                    OnMinimized();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED:
+                    OnMaximized();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED:
+                    OnRestored();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_ENTER:
+                    OnEnter();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE:
+                    OnLeave();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED:
+                    OnFocusGained();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST:
+                    OnFocusLost();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
+                    OnClose();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_TAKE_FOCUS:
+                    OnTakeFocus();
+                    break;
+                case SDL_WindowEventID.SDL_WINDOWEVENT_HIT_TEST:
+                    OnHitTest();
+                    break;
+            }
+        }
+
+        private void OnShown()
+        {
+            Shown?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnHidden()
+        {
+            Hidden?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnExposed()
+        {
+            Exposed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnMoved()
+        {
+            Moved?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnResized()
+        {
+            Resized?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnSizeChanged()
+        {
+            SizeChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnMinimized()
+        {
+            Minimized?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnMaximized()
+        {
+            Maximized?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnRestored()
+        {
+            Restored?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnEnter()
+        {
+            Enter?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnLeave()
+        {
+            Leave?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnFocusGained()
+        {
+            FocusGained?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnFocusLost()
+        {
+            FocusLost?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnClose()
+        {
+            Close?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnTakeFocus()
+        {
+            TakeFocus?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnHitTest()
+        {
+            HitTest?.Invoke(this, EventArgs.Empty);
+        }
+
+        internal static bool TryGetWindowFromID(uint windowID, [MaybeNullWhen(false)] out Window window)
+        {
+            return _windows.TryGetValue(windowID, out window);
         }
     }
 }
