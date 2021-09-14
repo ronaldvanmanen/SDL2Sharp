@@ -10,8 +10,6 @@ SDL_OutOfMemory
 SDL_Unsupported
 SDL_memset4
 SDL_memcpy4
---file-directory
-submodules\sdl\include
 --file
 SDL.h
 SDL_audio.h
@@ -32,7 +30,7 @@ SDL_stdinc.h
 SDL_surface.h
 SDL_video.h
 --headerFile
-generation\HeaderFile.txt
+HeaderFile.txt
 --libraryPath
 SDL2.dll
 --methodClassName
@@ -40,11 +38,11 @@ SDL
 --namespace
 SDL2Sharp.Interop
 --output
-sources\SDL2Sharp.Interop
+..\sources\SDL2Sharp.Interop
 --prefixStrip
 SDL_
 --test-output
-tests\SDL2Sharp.Interop.UnitTests
+..\tests\SDL2Sharp.Interop.UnitTests
 --with-type
 SDL_EventType=uint
 SDL_PixelFormatEnum=uint

@@ -35,6 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.Samples.B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generation", "generation", "{7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}"
 	ProjectSection(SolutionItems) = preProject
+		generation\generate.ps1 = generation\generate.ps1
 		generation\HeaderFile.txt = generation\HeaderFile.txt
 		generation\settings.rsp = generation\settings.rsp
 	EndProjectSection
@@ -58,6 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		generate.cmd = generate.cmd
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		pack.cmd = pack.cmd
