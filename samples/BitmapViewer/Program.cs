@@ -19,51 +19,55 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Threading;
-using static SDL2Sharp.Interop.SDL;
+using SDL2Sharp;
+using SDL2Sharp.Interop;
 
-namespace SDL2Sharp.Samples.WavePlayer
+namespace BitmapViewer
 {
     internal static unsafe class Program
     {
         private static int Main(string[] args)
         {
             Subsystem subsystem = null!;
-            WaveFile waveFile = null!;
-            AudioDevice audioDevice = null!;
-            int wavePosition = 0;
+            Window window = null!;
+            Renderer renderer = null!;
+            Texture bitmapTexture = null!;
 
             try
             {
-                subsystem = new Subsystem(SDL_INIT_AUDIO);
-                waveFile = new WaveFile("Roland-GR-1-Trumpet-C5.wav");
-                audioDevice = new AudioDevice(waveFile.Spec, (userdata, stream) => 
+                subsystem = new Subsystem(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO);
+                window = new Window("SDL2Sharp", 640, 480, WindowFlags.OpenGL);
+                renderer = window.CreateRenderer(RendererFlags.Accelerated);
+                bitmapTexture = renderer.CreateTextureFromBitmap("Sample.bmp");
+
+                while (true)
                 {
-                    var sliceLength = (int)Math.Min(waveFile.Length - wavePosition, stream.Length);
-                    if (sliceLength <= 0)
+                    SDL_Event e;
+                    if (0 == SDL.PollEvent(&e))
                     {
-                        return;
+                        if (e.type == (uint)SDL_EventType.SDL_QUIT)
+                        {
+                            break;
+                        }
                     }
-                    var slice = waveFile.Buffer.Slice(wavePosition, sliceLength);
-                    stream.Fill(waveFile.Spec.Silence);
-                    //slice.CopyTo(stream);
-                    slice.MixAudioFormat(stream, waveFile.Spec.Format, SDL_MIX_MAXVOLUME);
-                    wavePosition += sliceLength;
-                });
-                audioDevice.Unpause();
-                SpinWait.SpinUntil(() => wavePosition >= waveFile.Length);
+
+                    renderer.Clear();
+                    renderer.Copy(bitmapTexture);
+                    renderer.Present();
+                }
+
                 return 0;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Could not run sample: {0}", e.Message);
-                Console.WriteLine();
+                Console.WriteLine("Could not run sample: {0}\n", e.Message);
                 return 1;
             }
             finally
             {
-                audioDevice?.Dispose();
-                waveFile?.Dispose();
+                bitmapTexture?.Dispose();
+                renderer?.Dispose();
+                window?.Dispose();
                 subsystem?.Dispose();
             }
         }

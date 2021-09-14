@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{79105D14
 		tests\Directory.Build.targets = tests\Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Samples.BitmapViewer", "samples\SDL2Sharp.Samples.BitmapViewer\SDL2Sharp.Samples.BitmapViewer.csproj", "{04352BAF-739B-4A63-A29A-036402C85925}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitmapViewer", "samples\BitmapViewer\BitmapViewer.csproj", "{04352BAF-739B-4A63-A29A-036402C85925}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}"
 	ProjectSection(SolutionItems) = preProject
@@ -99,8 +99,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{6547EE
 		packages\libsdl2\lib\net5.0\_._ = packages\libsdl2\lib\net5.0\_._
 	EndProjectSection
 EndProject
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Samples.WavePlayer", "samples\SDL2Sharp.Samples.WavePlayer\SDL2Sharp.Samples.WavePlayer.csproj", "{C5401193-099C-4FC6-8BE1-C90329DCA79A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WavePlayer", "samples\WavePlayer\WavePlayer.csproj", "{C5401193-099C-4FC6-8BE1-C90329DCA79A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
