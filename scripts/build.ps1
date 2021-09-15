@@ -36,7 +36,6 @@ function Create-Directory([string[]] $Path) {
 function Generate() {
   $generationDir = Join-Path -Path $RepoRoot -ChildPath "generation"
   $generateRspFiles = Get-ChildItem -Path "$generationDir" -Recurse -Filter "settings.rsp"
-
   $generateRspFiles | ForEach-Object -Parallel {
     Push-Location -Path $_.DirectoryName
     & dotnet tool run ClangSharpPInvokeGenerator "@settings.rsp"
