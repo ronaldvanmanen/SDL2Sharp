@@ -124,21 +124,31 @@ namespace SDL2Sharp
 
         public static readonly string JoystickHidApi = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI);
 
+        public static readonly string JoystickHidApiGameCube = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE);
+
+        public static readonly string JoystickHidApiJoyCons = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS);
+
+        public static readonly string JoystickHidApiLuna = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_LUNA);
+
         public static readonly string JoystickHidApiPS4 = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_PS4);
+
+        public static readonly string JoystickHidApiPS4Rumble = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE);
 
         public static readonly string JoystickHidApiPS5 = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_PS5);
 
-        public static readonly string JoystickHidApiPS4Rumble = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE);
+        public static readonly string JoystickHidApiPS5PlayerLed = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED);
+
+        public static readonly string JoystickHidApiPS5Rumble = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE);
+
+        public static readonly string JoystickHidApiStadia = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_STADIA);
 
         public static readonly string JoystickHidApiSteam = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_STEAM);
 
         public static readonly string JoystickHidApiSwitch = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_SWITCH);
 
+        public static readonly string JoystickHidApiSwitchHomeLed = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED);
+
         public static readonly string JoystickHidApiXbox = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_XBOX);
-
-        public static readonly string JoystickHidApiCorrelateXInput = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_CORRELATE_XINPUT);
-
-        public static readonly string JoystickHidApiGameCube = Encoding.ASCII.GetString(SDL.SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE);
 
         public static readonly string EnableSteamControllers = Encoding.ASCII.GetString(SDL.SDL_HINT_ENABLE_STEAM_CONTROLLERS);
 
