@@ -41,8 +41,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BABC58-A31C-4658-BB81-FB21DD86F87B}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\build-sdl2.ps1 = scripts\build-sdl2.ps1
+		scripts\build-sdl2ttf.ps1 = scripts\build-sdl2ttf.ps1
 		scripts\build.ps1 = scripts\build.ps1
 		scripts\cibuild-sdl2.cmd = scripts\cibuild-sdl2.cmd
+		scripts\cibuild-sdl2ttf.cmd = scripts\cibuild-sdl2ttf.cmd
 		scripts\cibuild.cmd = scripts\cibuild.cmd
 	EndProjectSection
 EndProject
@@ -71,6 +73,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{BE1EC505-678D-4E09-836A-9CCBEF4E5232}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci-sdl2.yml = .github\workflows\ci-sdl2.yml
+		.github\workflows\ci-sdl2ttf.yml = .github\workflows\ci-sdl2ttf.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 	EndProjectSection
 EndProject
@@ -100,6 +103,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{6547EE
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WavePlayer", "samples\WavePlayer\WavePlayer.csproj", "{C5401193-099C-4FC6-8BE1-C90329DCA79A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf", "libsdl2ttf", "{C41A8318-B76C-4552-99C0-238A5BA72CDD}"
+	ProjectSection(SolutionItems) = preProject
+		packages\libsdl2ttf\libsdl2ttf.nuspec = packages\libsdl2ttf\libsdl2ttf.nuspec
+		packages\libsdl2ttf\runtime.json = packages\libsdl2ttf\runtime.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf.runtime.win-x64", "libsdl2ttf.runtime.win-x64", "{716818B2-217C-4B07-B6B0-0D0AC096EBA6}"
+	ProjectSection(SolutionItems) = preProject
+		packages\libsdl2ttf.runtime.win-x64\libsdl2ttf.runtime.win-x64.nuspec = packages\libsdl2ttf.runtime.win-x64\libsdl2ttf.runtime.win-x64.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{698A3C29-E6D0-4E9B-80AE-74D1D019741C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{F7D49E70-5EBF-48D7-B77A-A9F60BE33B8F}"
+	ProjectSection(SolutionItems) = preProject
+		packages\libsdl2ttf\lib\net5.0\_._ = packages\libsdl2ttf\lib\net5.0\_._
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf.runtime.win-x86", "libsdl2ttf.runtime.win-x86", "{36E84273-F0C7-4F86-B807-80C8087A90CD}"
+	ProjectSection(SolutionItems) = preProject
+		packages\libsdl2ttf.runtime.win-x86\libsdl2ttf.runtime.win-x86.nuspec = packages\libsdl2ttf.runtime.win-x86\libsdl2ttf.runtime.win-x86.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,6 +174,11 @@ Global
 		{9D834C64-E1A5-427A-946F-003234CA720E} = {FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5}
 		{6547EEAF-2825-4071-8832-A075045CB5ED} = {9D834C64-E1A5-427A-946F-003234CA720E}
 		{C5401193-099C-4FC6-8BE1-C90329DCA79A} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{C41A8318-B76C-4552-99C0-238A5BA72CDD} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
+		{716818B2-217C-4B07-B6B0-0D0AC096EBA6} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
+		{698A3C29-E6D0-4E9B-80AE-74D1D019741C} = {C41A8318-B76C-4552-99C0-238A5BA72CDD}
+		{F7D49E70-5EBF-48D7-B77A-A9F60BE33B8F} = {698A3C29-E6D0-4E9B-80AE-74D1D019741C}
+		{36E84273-F0C7-4F86-B807-80C8087A90CD} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
