@@ -56,7 +56,7 @@ namespace SDL2Sharp.Interop
             {
                 return false;
             }
-            
+
             var libraryPath = Path.Combine(LibraryDirectory, libraryName);
             var result = NativeLibrary.TryLoad(libraryPath, out nativeLibrary);
             return result;

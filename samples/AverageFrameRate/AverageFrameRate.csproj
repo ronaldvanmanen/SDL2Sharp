@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="lazy.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
+    <ProjectReference Include="..\..\sources\SDL2TTFSharp.Interop\SDL2TTFSharp.Interop.csproj" />
+  </ItemGroup>
+
+</Project>
