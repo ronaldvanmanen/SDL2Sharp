@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata minClientVersion="2.12">
+    <id>libsdl2ttf.runtime.win-x86</id>
+    <version>$version$</version>
+    <authors>Ronald van Manen</authors>
+    <owners>Ronald van Manen</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">Zlib</license>
+    <projectUrl>https://github.com/ronaldvanmanen/SDL2Sharp</projectUrl>
+    <description>win x86 native library for SDL2 TTF.</description>
+    <copyright>Copyright © Ronald van Manen</copyright>
+    <repository type="git" url="https://github.com/ronaldvanmanen/SDL2Sharp" branch="main" />
+  </metadata>
+  <files>
+    <file src="libfreetype-6.dll" target="runtimes\win-x86\native\libfreetype-6.dll" />
+    <file src="SDL2_ttf.dll" target="runtimes\win-x86\native\SDL2_ttf.dll" />
+    <file src="zlib1.dll" target="runtimes\win-x86\native\zlib1.dll" />
+  </files>
+</package>
