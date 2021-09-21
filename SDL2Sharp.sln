@@ -32,11 +32,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.UnitTests", "tests\SDL2Sharp.Interop.UnitTests\SDL2Sharp.Interop.UnitTests.csproj", "{C4E13408-B833-4B51-BC7B-BABBC759FB1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generation", "generation", "{7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}"
-	ProjectSection(SolutionItems) = preProject
-		generation\generate.ps1 = generation\generate.ps1
-		generation\HeaderFile.txt = generation\HeaderFile.txt
-		generation\settings.rsp = generation\settings.rsp
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BABC58-A31C-4658-BB81-FB21DD86F87B}"
 	ProjectSection(SolutionItems) = preProject
@@ -104,6 +99,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{6547EE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WavePlayer", "samples\WavePlayer\WavePlayer.csproj", "{C5401193-099C-4FC6-8BE1-C90329DCA79A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2", "sdl2", "{7A5BBA71-D7E0-4074-B1F1-656E9A632EC3}"
+	ProjectSection(SolutionItems) = preProject
+		generation\sdl2\generate.ps1 = generation\sdl2\generate.ps1
+		generation\sdl2\HeaderFile.txt = generation\sdl2\HeaderFile.txt
+		generation\sdl2\settings.rsp = generation\sdl2\settings.rsp
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2ttf", "sdl2ttf", "{DA2D9B5A-2791-43DC-A3D0-81B1C23D2D9B}"
+	ProjectSection(SolutionItems) = preProject
+		generation\sdl2ttf\generate.ps1 = generation\sdl2ttf\generate.ps1
+		generation\sdl2ttf\HeaderFile.txt = generation\sdl2ttf\HeaderFile.txt
+		generation\sdl2ttf\settings.rsp = generation\sdl2ttf\settings.rsp
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf", "libsdl2ttf", "{C41A8318-B76C-4552-99C0-238A5BA72CDD}"
 	ProjectSection(SolutionItems) = preProject
 		packages\libsdl2ttf\libsdl2ttf.nuspec = packages\libsdl2ttf\libsdl2ttf.nuspec
@@ -126,6 +135,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf.runtime.win-x86"
 	ProjectSection(SolutionItems) = preProject
 		packages\libsdl2ttf.runtime.win-x86\libsdl2ttf.runtime.win-x86.nuspec = packages\libsdl2ttf.runtime.win-x86\libsdl2ttf.runtime.win-x86.nuspec
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2TTFSharp.Interop.UnitTests", "tests\SDL2TTFSharp.Interop.UnitTests\SDL2TTFSharp.Interop.UnitTests.csproj", "{602326A2-2E08-4327-95CE-5EE497BAB37D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2TTFSharp.Interop", "sources\SDL2TTFSharp.Interop\SDL2TTFSharp.Interop.csproj", "{F74A756F-6062-43FB-BE62-EE9889AD1D76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,6 +170,14 @@ Global
 		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5401193-099C-4FC6-8BE1-C90329DCA79A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{602326A2-2E08-4327-95CE-5EE497BAB37D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{602326A2-2E08-4327-95CE-5EE497BAB37D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{602326A2-2E08-4327-95CE-5EE497BAB37D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{602326A2-2E08-4327-95CE-5EE497BAB37D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F74A756F-6062-43FB-BE62-EE9889AD1D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F74A756F-6062-43FB-BE62-EE9889AD1D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F74A756F-6062-43FB-BE62-EE9889AD1D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F74A756F-6062-43FB-BE62-EE9889AD1D76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,11 +195,15 @@ Global
 		{9D834C64-E1A5-427A-946F-003234CA720E} = {FF4FF9E6-49F8-4D0C-A12E-A0107A3C65C5}
 		{6547EEAF-2825-4071-8832-A075045CB5ED} = {9D834C64-E1A5-427A-946F-003234CA720E}
 		{C5401193-099C-4FC6-8BE1-C90329DCA79A} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{7A5BBA71-D7E0-4074-B1F1-656E9A632EC3} = {7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}
+		{DA2D9B5A-2791-43DC-A3D0-81B1C23D2D9B} = {7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}
 		{C41A8318-B76C-4552-99C0-238A5BA72CDD} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 		{716818B2-217C-4B07-B6B0-0D0AC096EBA6} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 		{698A3C29-E6D0-4E9B-80AE-74D1D019741C} = {C41A8318-B76C-4552-99C0-238A5BA72CDD}
 		{F7D49E70-5EBF-48D7-B77A-A9F60BE33B8F} = {698A3C29-E6D0-4E9B-80AE-74D1D019741C}
 		{36E84273-F0C7-4F86-B807-80C8087A90CD} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
+		{602326A2-2E08-4327-95CE-5EE497BAB37D} = {79105D14-18FF-4FAD-BD24-52C477EDA1B2}
+		{F74A756F-6062-43FB-BE62-EE9889AD1D76} = {1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
