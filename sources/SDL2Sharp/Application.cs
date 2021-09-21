@@ -20,6 +20,7 @@
 
 using System;
 using SDL2Sharp.Interop;
+using SDL2TTFSharp.Interop;
 
 namespace SDL2Sharp
 {
@@ -32,6 +33,7 @@ namespace SDL2Sharp
         protected Application(Subsystem subsystems)
         {
             Error.ThrowOnFailure(SDL.Init((uint)subsystems));
+            Error.ThrowOnFailure(TTF.Init());
         }
 
         ~Application()
@@ -45,8 +47,9 @@ namespace SDL2Sharp
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool _)
         {
+            TTF.Quit();
             SDL.Quit();
         }
 

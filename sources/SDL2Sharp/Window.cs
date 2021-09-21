@@ -139,11 +139,15 @@ namespace SDL2Sharp
         {
             get
             {
-                int top, left, bottom, right;
+                int borderTop, borderLeft, borderBottom, borderRight;
                 Error.ThrowOnFailure(
-                    SDL.GetWindowBordersSize(_window, &top, &left, &bottom, &right)
+                    SDL.GetWindowBordersSize(_window, &borderTop, &borderLeft, &borderBottom, &borderRight)
                 );
-                return new Size(right - left, bottom - top);
+                int windowWidth, windowHeight;
+                SDL.GetWindowSize(_window, &windowWidth, &windowHeight);
+                var clientWidth = windowWidth - borderRight - borderLeft;
+                var clientHeight = windowHeight - borderBottom - borderTop;
+                return new Size(clientWidth, clientHeight);
             }
         }
 

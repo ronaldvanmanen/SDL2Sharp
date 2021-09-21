@@ -19,19 +19,21 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
+using SDL2TTFSharp.Interop;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class Renderer : IDisposable
+    public sealed unsafe class Renderer : IDisposable
     {
         private SDL_Renderer* _renderer;
 
-        public RendererInfo Info 
+        public RendererInfo Info
         {
             get
             {
-                SDL_RendererInfo rendererInfo = new SDL_RendererInfo();
+                var rendererInfo = new SDL_RendererInfo();
                 Error.ThrowOnFailure(
                     SDL.GetRendererInfo(_renderer, &rendererInfo)
                 );
@@ -54,7 +56,7 @@ namespace SDL2Sharp
             Dispose(false);
         }
 
-        public void Dispose() 
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -79,7 +81,7 @@ namespace SDL2Sharp
         public Texture CreateTextureFromSurface(Surface surface)
         {
             ThrowWhenDisposed();
-
+            
             var texture = SDL.CreateTextureFromSurface(_renderer, surface);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
@@ -94,12 +96,38 @@ namespace SDL2Sharp
             );
         }
 
+        public void SetDrawColor(Color color)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A)
+            ); ;
+        }
+
         public void Copy(Texture texture)
         {
             ThrowWhenDisposed();
 
             Error.ThrowOnFailure(
                 SDL.RenderCopy(_renderer, texture, null, null)
+            );
+        }
+
+        public void Copy(Texture texture, Point origin)
+        {
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect
+            {
+                x = origin.X,
+                y = origin.Y,
+                w = texture.Width,
+                h = texture.Height
+            };
+
+            Error.ThrowOnFailure(
+                SDL.RenderCopy(_renderer, texture, null, &rect)
             );
         }
 

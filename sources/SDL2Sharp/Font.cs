@@ -19,47 +19,26 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using SDL2Sharp.Interop;
+using SDL2Sharp.Internals;
+using SDL2TTFSharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Texture : IDisposable
+    public sealed unsafe class Font : IDisposable
     {
-        private SDL_Texture* _texture;
+        private _TTF_Font* _handle;
 
-        internal Texture(SDL_Texture* texture)
+        public Font(string path, int pointSize)
         {
-            if (texture == null)
+            using (var marshaledPath = new MarshaledString(path))
             {
-                throw new ArgumentNullException(nameof(texture));
-            }
-
-            _texture = texture;
-        }
-
-        ~Texture()
-        {
-            Dispose(false);
-        }
-
-        public int Width
-        {
-            get
-            {
-                int width;
-                Error.ThrowOnFailure(SDL.QueryTexture(_texture, null, null, &width, null));
-                return width;
+                _handle = TTF.OpenFont(marshaledPath, pointSize);
             }
         }
 
-        public int Height
+        ~Font()
         {
-            get
-            {
-                int height;
-                Error.ThrowOnFailure(SDL.QueryTexture(_texture, null, null, null, &height));
-                return height;
-            }
+            Dispose(true);
         }
 
         public void Dispose()
@@ -70,19 +49,27 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_texture == null) return;
-            SDL.DestroyTexture(_texture);
-            _texture = null;
+            if (_handle == null) return;
+            TTF.CloseFont(_handle);
+            _handle = null;
         }
 
-        public static implicit operator SDL_Texture*(Texture texture)
+        public Surface RenderSolid(string text, Color color)
         {
-            if (texture is null)
+            using (var marshaledText = new MarshaledString(text))
             {
-                throw new ArgumentNullException(nameof(texture));
+                return new Surface(TTF.RenderText_Solid(_handle, marshaledText, color));
+            }
+        }
+
+        public static implicit operator _TTF_Font*(Font font)
+        {
+            if (font is null)
+            {
+                throw new ArgumentNullException(nameof(font));
             }
 
-            return texture._texture;
+            return font._handle;
         }
     }
 }
