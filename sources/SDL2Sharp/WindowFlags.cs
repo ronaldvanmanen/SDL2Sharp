@@ -44,7 +44,7 @@ namespace SDL2Sharp
         AlwaysOnTop = Interop.SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP,
         SkipTaskbar = Interop.SDL_WindowFlags.SDL_WINDOW_SKIP_TASKBAR,
         Utility = Interop.SDL_WindowFlags.SDL_WINDOW_UTILITY,
-        Tooptip = Interop.SDL_WindowFlags.SDL_WINDOW_TOOLTIP,
+        Tooltip = Interop.SDL_WindowFlags.SDL_WINDOW_TOOLTIP,
         PopupMenu = Interop.SDL_WindowFlags.SDL_WINDOW_POPUP_MENU,
         Vulkan = Interop.SDL_WindowFlags.SDL_WINDOW_VULKAN,
         Metal = Interop.SDL_WindowFlags.SDL_WINDOW_METAL,
