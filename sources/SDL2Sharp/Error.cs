@@ -28,7 +28,7 @@ namespace SDL2Sharp
     {
         public Error() { }
 
-        public Error(string message) 
+        public Error(string message)
         : base(message)
         { }
 
@@ -36,7 +36,7 @@ namespace SDL2Sharp
         : base(info, context)
         { }
 
-        public Error(string message, Exception innerException) 
+        public Error(string message, Exception innerException)
         : base(message, innerException)
         { }
 
@@ -50,7 +50,7 @@ namespace SDL2Sharp
 
         internal static unsafe void ThrowOnFailure(int returnCode)
         {
-            if (returnCode != 0)
+            if (returnCode < 0)
             {
                 throw new Error(new string(SDL.GetError()));
             }
