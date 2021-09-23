@@ -55,31 +55,40 @@ namespace SDL2Sharp
 
         public void Run(string[] arguments)
         {
-            OnStartup(arguments);
-
-            while (true)
+            try
             {
-                SDL_Event e;
-                if (0 == SDL.PollEvent(&e))
-                {
-                    var eventType = (SDL_EventType)e.type;
-                    if (eventType == SDL_EventType.SDL_QUIT)
-                    {
-                        break;
-                    }
+                OnStartup(arguments);
 
-                    switch (eventType)
+                var running = true;
+
+                while (running)
+                {
+                    SDL_Event e;
+
+                    while (0 != SDL.PollEvent(&e))
                     {
-                        case SDL_EventType.SDL_WINDOWEVENT:
-                            DispatchEvent(e.window);
+                        var eventType = (SDL_EventType)e.type;
+                        if (eventType == SDL_EventType.SDL_QUIT)
+                        {
+                            running = false;
                             break;
+                        }
+
+                        switch (eventType)
+                        {
+                            case SDL_EventType.SDL_WINDOWEVENT:
+                                DispatchEvent(e.window);
+                                break;
+                        }
                     }
 
                     OnIdle();
                 }
             }
-
-            OnShutdown();
+            finally
+            {
+                OnShutdown();
+            }
         }
 
         public void Quit()
@@ -97,7 +106,7 @@ namespace SDL2Sharp
 
         protected virtual void OnIdle() { }
 
-        private void DispatchEvent(SDL_WindowEvent windowEvent)
+        private static void DispatchEvent(SDL_WindowEvent windowEvent)
         {
             if (Window.TryGetWindowFromID(windowEvent.windowID, out var window))
             {
