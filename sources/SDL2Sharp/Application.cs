@@ -47,6 +47,7 @@ namespace SDL2Sharp
             _instance = this;
             Error.ThrowOnFailure(SDL.Init((uint)subsystems));
             Error.ThrowOnFailure(TTF.Init());
+            SDL.SetEventFilter(&EventFilter, null);
         }
 
         ~Application()
@@ -74,33 +75,23 @@ namespace SDL2Sharp
 
                 while (true)
                 {
-                    SDL.PumpEvents();
-
                     SDL_Event @event;
 
-                    while (0 == SDL.PeepEvents(&@event, 1, SDL_eventaction.SDL_GETEVENT, (uint)SDL_EventType.SDL_FIRSTEVENT, (uint)SDL_EventType.SDL_LASTEVENT))
+                    while (0 != SDL.PollEvent(&@event))
                     {
-                        OnIdle();
+                        var eventType = (SDL_EventType)@event.type;
+                        switch (eventType)
+                        {
+                            case SDL_EventType.SDL_QUIT:
+                                return;
 
-                        SDL.PumpEvents();
+                            case SDL_EventType.SDL_WINDOWEVENT:
+                                DispatchWindowEvent(@event.window);
+                                break;
+                        }
                     }
 
-                    var eventType = (SDL_EventType)@event.type;
-                    switch (eventType)
-                    {
-                        case SDL_EventType.SDL_QUIT:
-                            return;
-
-                        case SDL_EventType.SDL_WINDOWEVENT:
-                            var windows = Application.Current.WindowsInternal;
-                            var windowID = @event.window.windowID;
-                            var window = windows.FirstOrDefault(w => w.Id == windowID);
-                            if (window != null)
-                            {
-                                window.ProcessEvent(@event.window);
-                            }
-                            break;
-                    }
+                    OnIdle();
                 }
             }
             finally
@@ -123,5 +114,28 @@ namespace SDL2Sharp
         protected virtual void OnQuit() { }
 
         protected virtual void OnIdle() { }
+
+        [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
+        private static int EventFilter(void* userdata, SDL_Event* @event)
+        {
+            var eventType = (SDL_EventType)@event->type;
+            if (eventType == SDL_EventType.SDL_WINDOWEVENT)
+            {
+                var windowEventID = (SDL_WindowEventID)@event->window.@event;
+                DispatchWindowEvent(@event->window);
+                return 0;
+            }
+            return 1;
+        }
+
+        private static void DispatchWindowEvent(SDL_WindowEvent @event)
+        {
+            var windows = Application.Current.WindowsInternal;
+            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            if (window != null)
+            {
+                window.ProcessEvent(@event);
+            }
+        }
     }
 }
