@@ -74,29 +74,33 @@ namespace SDL2Sharp
 
                 while (true)
                 {
+                    SDL.PumpEvents();
+
                     SDL_Event @event;
 
-                    while (0 != SDL.PollEvent(&@event))
+                    while (0 == SDL.PeepEvents(&@event, 1, SDL_eventaction.SDL_GETEVENT, (uint)SDL_EventType.SDL_FIRSTEVENT, (uint)SDL_EventType.SDL_LASTEVENT))
                     {
-                        var eventType = (SDL_EventType)@event.type;
-                        switch (eventType)
-                        {
-                            case SDL_EventType.SDL_QUIT:
-                                return;
+                        OnIdle();
 
-                            case SDL_EventType.SDL_WINDOWEVENT:
-                                var windows = Application.Current.WindowsInternal;
-                                var windowID = @event.window.windowID;
-                                var window = windows.FirstOrDefault(w => w.Id == windowID);
-                                if (window != null)
-                                {
-                                    window.ProcessEvent(@event.window);
-                                }
-                                break;
-                        }
+                        SDL.PumpEvents();
                     }
 
-                    OnIdle();
+                    var eventType = (SDL_EventType)@event.type;
+                    switch (eventType)
+                    {
+                        case SDL_EventType.SDL_QUIT:
+                            return;
+
+                        case SDL_EventType.SDL_WINDOWEVENT:
+                            var windows = Application.Current.WindowsInternal;
+                            var windowID = @event.window.windowID;
+                            var window = windows.FirstOrDefault(w => w.Id == windowID);
+                            if (window != null)
+                            {
+                                window.ProcessEvent(@event.window);
+                            }
+                            break;
+                    }
                 }
             }
             finally
