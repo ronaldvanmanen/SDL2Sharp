@@ -24,9 +24,13 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class Surface : IDisposable
+    public sealed unsafe class Surface : IDisposable
     {
         private SDL_Surface* _surface;
+
+        public int Width => _surface->w;
+
+        public int Height => _surface->h;
 
         public static Surface LoadBitmap(string filename)
         {

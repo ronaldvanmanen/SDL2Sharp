@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -1987,10 +1987,10 @@ namespace SDL2Sharp.Interop
         public const int SDL_SIMD_ALIGNED = 0x00000008;
 
         [NativeTypeName("#define SDL_BlitSurface SDL_UpperBlit")]
-        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> SDL_BlitSurface = &UpperBlit;
+        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> Blit = &UpperBlit;
 
         [NativeTypeName("#define SDL_BlitScaled SDL_UpperBlitScaled")]
-        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> SDL_BlitScaled = &UpperBlitScaled;
+        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> BlitScaled = &UpperBlitScaled;
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowsMessageHook", ExactSpelling = true)]
         public static extern void SetWindowsMessageHook([NativeTypeName("SDL_WindowsMessageHook")] delegate* unmanaged[Cdecl]<void*, void*, uint, ulong, long, void> callback, void* userdata);

@@ -35,15 +35,17 @@ namespace BitmapViewer
         : base(Subsystem.Video)
         { }
 
-        protected override void OnStartup(string[] args)
+        protected override void OnInit(string[] args)
         {
-            _window = new Window("Bitmap Viewer", 640, 480);
+            _window = new Window("Bitmap Viewer", 640, 480, WindowFlags.Resizable);
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated);
             _bitmapTexture = _renderer.CreateTextureFromBitmap(args[0]);
+            _window.SizeChanged += OnSizeChanged;
         }
 
-        protected override void OnShutdown()
+        protected override void OnQuit()
         {
+            _window.SizeChanged -= OnSizeChanged;
             _bitmapTexture?.Dispose();
             _renderer?.Dispose();
             _window?.Dispose();
@@ -51,9 +53,19 @@ namespace BitmapViewer
 
         protected override void OnIdle()
         {
-            _renderer.Clear();
-            _renderer.Copy(_bitmapTexture);
-            _renderer.Present();
+            Render();
+        }
+
+        private void OnSizeChanged(object? sender, WindowSizeChangedEventArgs e)
+        {
+            Render();
+        }
+
+        private void Render()
+        {
+            _renderer.RenderClear();
+            _renderer.RenderCopy(_bitmapTexture);
+            _renderer.RenderPresent();
         }
 
         private static int Main(string[] args)
