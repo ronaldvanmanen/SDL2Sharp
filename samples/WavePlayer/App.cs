@@ -36,14 +36,14 @@ namespace WavePlayer
         : base(Subsystem.Audio)
         { }
 
-        protected override void OnStartup(string[] args)
+        protected override void OnInit(string[] args)
         {
             _waveFile = new WaveFile(args[0]);
             _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback);
             _audioDevice.Unpause();
         }
 
-        protected override void OnShutdown()
+        protected override void OnQuit()
         {
             _audioDevice?.Dispose();
             _waveFile?.Dispose();

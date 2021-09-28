@@ -34,11 +34,11 @@ namespace SDL2Sharp
 
         public event EventHandler? Exposed;
 
-        public event EventHandler? Moved;
+        public event EventHandler<WindowMovedEventArgs>? Moved;
 
-        public event EventHandler? Resized;
+        public event EventHandler<WindowResizedEventArgs>? Resized;
 
-        public event EventHandler? SizeChanged;
+        public event EventHandler<WindowSizeChangedEventArgs>? SizeChanged;
 
         public event EventHandler? Minimized;
 
@@ -60,21 +60,27 @@ namespace SDL2Sharp
 
         public event EventHandler? HitTest;
 
-        private static readonly Dictionary<uint, Window> _windows = new Dictionary<uint, Window>();
+        private SDL_Window* _handle;
 
-        private SDL_Window* _window;
+        public uint Id
+        {
+            get
+            {
+                return SDL.GetWindowID(_handle);
+            }
+        }
 
         public string Title
         {
             get
             {
-                return new string(SDL.GetWindowTitle(_window));
+                return new string(SDL.GetWindowTitle(_handle));
             }
             set
             {
                 using (var marshaledValue = new MarshaledString(value))
                 {
-                    SDL.SetWindowTitle(_window, marshaledValue);
+                    SDL.SetWindowTitle(_handle, marshaledValue);
                 }
             }
         }
@@ -84,12 +90,32 @@ namespace SDL2Sharp
             get
             {
                 int x, y;
-                SDL.GetWindowPosition(_window, &x, &y);
+                SDL.GetWindowPosition(_handle, &x, &y);
                 return new Point(x, y);
             }
             set
             {
-                SDL.SetWindowPosition(_window, value.X, value.Y);
+                SDL.SetWindowPosition(_handle, value.X, value.Y);
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                int width;
+                SDL.GetWindowSize(_handle, &width, null);
+                return width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                int height;
+                SDL.GetWindowSize(_handle, null, &height);
+                return height;
             }
         }
 
@@ -98,12 +124,12 @@ namespace SDL2Sharp
             get
             {
                 int width, height;
-                SDL.GetWindowSize(_window, &width, &height);
+                SDL.GetWindowSize(_handle, &width, &height);
                 return new Size(width, height);
             }
             set
             {
-                SDL.SetWindowSize(_window, value.Width, value.Height);
+                SDL.SetWindowSize(_handle, value.Width, value.Height);
             }
         }
 
@@ -112,12 +138,12 @@ namespace SDL2Sharp
             get
             {
                 int width, height;
-                SDL.GetWindowMinimumSize(_window, &width, &height);
+                SDL.GetWindowMinimumSize(_handle, &width, &height);
                 return new Size(width, height);
             }
             set
             {
-                SDL.SetWindowMinimumSize(_window, value.Width, value.Height);
+                SDL.SetWindowMinimumSize(_handle, value.Width, value.Height);
             }
         }
 
@@ -126,12 +152,12 @@ namespace SDL2Sharp
             get
             {
                 int width, height;
-                SDL.GetWindowMaximumSize(_window, &width, &height);
+                SDL.GetWindowMaximumSize(_handle, &width, &height);
                 return new Size(width, height);
             }
             set
             {
-                SDL.SetWindowMaximumSize(_window, value.Width, value.Height);
+                SDL.SetWindowMaximumSize(_handle, value.Width, value.Height);
             }
         }
 
@@ -141,10 +167,10 @@ namespace SDL2Sharp
             {
                 int borderTop, borderLeft, borderBottom, borderRight;
                 Error.ThrowOnFailure(
-                    SDL.GetWindowBordersSize(_window, &borderTop, &borderLeft, &borderBottom, &borderRight)
+                    SDL.GetWindowBordersSize(_handle, &borderTop, &borderLeft, &borderBottom, &borderRight)
                 );
                 int windowWidth, windowHeight;
-                SDL.GetWindowSize(_window, &windowWidth, &windowHeight);
+                SDL.GetWindowSize(_handle, &windowWidth, &windowHeight);
                 var clientWidth = windowWidth - borderRight - borderLeft;
                 var clientHeight = windowHeight - borderBottom - borderTop;
                 return new Size(clientWidth, clientHeight);
@@ -156,12 +182,12 @@ namespace SDL2Sharp
             get
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
-                var flags = SDL.GetWindowFlags(_window);
+                var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
-                SDL.SetWindowBordered(_window, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
+                SDL.SetWindowBordered(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
         }
 
@@ -170,12 +196,12 @@ namespace SDL2Sharp
             get
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
-                var flags = SDL.GetWindowFlags(_window);
+                var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
-                SDL.SetWindowResizable(_window, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
+                SDL.SetWindowResizable(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
         }
 
@@ -184,14 +210,14 @@ namespace SDL2Sharp
             get
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
-                var flags = SDL.GetWindowFlags(_window);
+                var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
                 Error.ThrowOnFailure(
-                    SDL.SetWindowFullscreen(_window, value ? flag : 0u)
+                    SDL.SetWindowFullscreen(_handle, value ? flag : 0u)
                 );
             }
         }
@@ -201,14 +227,14 @@ namespace SDL2Sharp
             get
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
-                var flags = SDL.GetWindowFlags(_window);
+                var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
                 Error.ThrowOnFailure(
-                    SDL.SetWindowFullscreen(_window, value ? flag : 0u)
+                    SDL.SetWindowFullscreen(_handle, value ? flag : 0u)
                 );
             }
         }
@@ -218,10 +244,11 @@ namespace SDL2Sharp
             get
             {
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_SHOWN;
-                var flags = SDL.GetWindowFlags(_window);
+                var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
         }
+
 
         public Window(string title, int width, int height)
         : this(title, (int)SDL.SDL_WINDOWPOS_UNDEFINED, (int)SDL.SDL_WINDOWPOS_UNDEFINED, width, height, (uint)0)
@@ -243,12 +270,11 @@ namespace SDL2Sharp
         {
             using (var marshaledTitle = new MarshaledString(title))
             {
-                _window = Error.ReturnOrThrowOnFailure(
+                _handle = Error.ReturnOrThrowOnFailure(
                     SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
                 );
-                var windowID = SDL.GetWindowID(_window);
-                _windows.Add(windowID, this);
             }
+            Application.Current.WindowsInternal.Add(this);
         }
 
         ~Window()
@@ -264,39 +290,39 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_window == null) return;
-            SDL.DestroyWindow(_window);
-            _window = null;
+            if (_handle == null) return;
+            SDL.DestroyWindow(_handle);
+            _handle = null;
         }
 
         public void Show()
         {
-            SDL.ShowWindow(_window);
+            SDL.ShowWindow(_handle);
         }
 
         public void Hide()
         {
-            SDL.HideWindow(_window);
+            SDL.HideWindow(_handle);
         }
 
         public void Raise()
         {
-            SDL.RaiseWindow(_window);
+            SDL.RaiseWindow(_handle);
         }
 
         public void Maximize()
         {
-            SDL.MaximizeWindow(_window);
+            SDL.MaximizeWindow(_handle);
         }
 
         public void Minimize()
         {
-            SDL.MinimizeWindow(_window);
+            SDL.MinimizeWindow(_handle);
         }
 
         public void Restore()
         {
-            SDL.RestoreWindow(_window);
+            SDL.RestoreWindow(_handle);
         }
 
         public Renderer CreateRenderer()
@@ -328,7 +354,7 @@ namespace SDL2Sharp
         {
             ThrowWhenDisposed();
 
-            var handle = SDL.CreateRenderer(_window, -1, (uint)flags);
+            var handle = SDL.CreateRenderer(_handle, -1, (uint)flags);
             if (handle == null)
             {
                 error = new Error(new string(SDL.GetError()));
@@ -345,7 +371,7 @@ namespace SDL2Sharp
 
         private void ThrowWhenDisposed()
         {
-            if (_window == null)
+            if (_handle == null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
@@ -353,7 +379,7 @@ namespace SDL2Sharp
 
         internal void ProcessEvent(SDL_WindowEvent windowEvent)
         {
-            switch ((SDL_WindowEventID)windowEvent.type)
+            switch ((SDL_WindowEventID)windowEvent.@event)
             {
                 case SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN:
                     OnShown();
@@ -365,13 +391,13 @@ namespace SDL2Sharp
                     OnExposed();
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:
-                    OnMoved();
+                    OnMoved(windowEvent.data1, windowEvent.data2);
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
-                    OnResized();
+                    OnResized(windowEvent.data1, windowEvent.data2);
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
-                    OnSizeChanged();
+                    OnSizeChanged(windowEvent.data1, windowEvent.data2);
                     break;
                 case SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED:
                     OnMinimized();
@@ -421,19 +447,19 @@ namespace SDL2Sharp
             Exposed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnMoved()
+        private void OnMoved(int x, int y)
         {
-            Moved?.Invoke(this, EventArgs.Empty);
+            Moved?.Invoke(this, new WindowMovedEventArgs(x, y));
         }
 
-        private void OnResized()
+        private void OnResized(int width, int height)
         {
-            Resized?.Invoke(this, EventArgs.Empty);
+            Resized?.Invoke(this, new WindowResizedEventArgs(width, height));
         }
 
-        private void OnSizeChanged()
+        private void OnSizeChanged(int width, int height)
         {
-            SizeChanged?.Invoke(this, EventArgs.Empty);
+            SizeChanged?.Invoke(this, new WindowSizeChangedEventArgs(width, height));
         }
 
         private void OnMinimized()
@@ -484,11 +510,6 @@ namespace SDL2Sharp
         private void OnHitTest()
         {
             HitTest?.Invoke(this, EventArgs.Empty);
-        }
-
-        internal static bool TryGetWindowFromID(uint windowID, [MaybeNullWhen(false)] out Window window)
-        {
-            return _windows.TryGetValue(windowID, out window);
         }
     }
 }

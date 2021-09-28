@@ -25,29 +25,14 @@ namespace SDL2Sharp
 {
     public sealed unsafe class Texture : IDisposable
     {
-        private SDL_Texture* _texture;
-
-        internal Texture(SDL_Texture* texture)
-        {
-            if (texture == null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
-
-            _texture = texture;
-        }
-
-        ~Texture()
-        {
-            Dispose(false);
-        }
+        private SDL_Texture* _handle;
 
         public int Width
         {
             get
             {
                 int width;
-                Error.ThrowOnFailure(SDL.QueryTexture(_texture, null, null, &width, null));
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, &width, null));
                 return width;
             }
         }
@@ -57,9 +42,24 @@ namespace SDL2Sharp
             get
             {
                 int height;
-                Error.ThrowOnFailure(SDL.QueryTexture(_texture, null, null, null, &height));
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, null, &height));
                 return height;
             }
+        }
+
+        internal Texture(SDL_Texture* texture)
+        {
+            if (texture == null)
+            {
+                throw new ArgumentNullException(nameof(texture));
+            }
+
+            _handle = texture;
+        }
+
+        ~Texture()
+        {
+            Dispose(false);
         }
 
         public void Dispose()
@@ -70,9 +70,9 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_texture == null) return;
-            SDL.DestroyTexture(_texture);
-            _texture = null;
+            if (_handle == null) return;
+            SDL.DestroyTexture(_handle);
+            _handle = null;
         }
 
         public static implicit operator SDL_Texture*(Texture texture)
@@ -82,7 +82,7 @@ namespace SDL2Sharp
                 throw new ArgumentNullException(nameof(texture));
             }
 
-            return texture._texture;
+            return texture._handle;
         }
     }
 }

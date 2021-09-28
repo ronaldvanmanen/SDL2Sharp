@@ -20,6 +20,7 @@
 
 using System;
 using System.Globalization;
+using System.Threading;
 using SDL2Sharp;
 using SDL2TTFSharp.Interop;
 
@@ -27,73 +28,108 @@ namespace BitmapViewer
 {
     internal unsafe class App : Application
     {
+        private AutoResetEvent _quitEvent = null!;
+
+        private AutoResetEvent _rendererInvalidatedEvent = null!;
+
         private Window _window = null!;
 
-        private Renderer _renderer = null!;
-
-        private Font _font = null!;
-
-        private readonly Color _foregroundColor = new Color(0, 0, 0, 255);
-
-        private readonly Color _backgroundColor = new Color(255, 255, 255, 0);
-
-        private DateTime _lastFrameTime;
-
-        private readonly TimeSpan _updateInterval = TimeSpan.FromMilliseconds(1000d);
-
-        private int _frameCount;
+        private Thread _renderThread = null!;
 
         public App()
         : base(Subsystem.Video)
         { }
 
-        protected override void OnStartup(string[] args)
+        protected override void OnInit(string[] args)
         {
-            _window = new Window("Average Frame Rate", 640, 480);
-            _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-            _font = new Font("lazy.ttf", 28);
-            _lastFrameTime = DateTime.UtcNow;
-            _frameCount = 0;
+            _quitEvent = new AutoResetEvent(false);
+            _rendererInvalidatedEvent = new AutoResetEvent(false);
+            _window = new Window("Average Frame Rate", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+            _window.SizeChanged += OnSizeChanged;
+            _renderThread = new Thread(Render);
+            _renderThread.Start();
         }
 
-        protected override void OnShutdown()
+        protected override void OnQuit()
         {
-            _font?.Dispose();
-            _renderer?.Dispose();
+            _quitEvent.Set();
+            _renderThread?.Join();
             _window?.Dispose();
+            _rendererInvalidatedEvent?.Dispose();
+            _quitEvent?.Dispose();
         }
 
-        protected override void OnIdle()
+        private void Render()
         {
-            _frameCount++;
+            WaitHandle[] waitHandles = new WaitHandle[] { _quitEvent, _rendererInvalidatedEvent };
+            DateTime lastUpdateTime = DateTime.UtcNow;
+            TimeSpan updateInterval = TimeSpan.FromMilliseconds(1000d);
+            Color textColor = new Color(0, 0, 0, 255);
+            Color drawColor = new Color(255, 255, 255, 0);
+            Int32 frameCount = 0;
+            Renderer renderer = null!;
+            Font font = null!;
 
-            var currentFrameTime = DateTime.UtcNow;
-            var elapsedTime = currentFrameTime - _lastFrameTime;
-            if (elapsedTime > _updateInterval)
+            try
             {
-                var frameRate = _frameCount / elapsedTime.TotalSeconds;
-                var frameRateText = $"Average frame rate = {frameRate:0.00}";
-                using (var frameRateSurface = _font.RenderSolid(frameRateText, _foregroundColor))
-                using (var frameRateTexture = _renderer.CreateTextureFromSurface(frameRateSurface))
+                renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
+                renderer.RenderDrawColor = drawColor;
+                font = new Font("lazy.ttf", 28);
+
+                while (true)
                 {
-                    var clientSize = _window.ClientSize;
-                    var x = Math.Abs(clientSize.Width - frameRateTexture.Width) / 2;
-                    var y = Math.Abs(clientSize.Height - frameRateTexture.Height) / 2;
-                    var origin = new Point(x, y);
+                    var waitHandleIndex = WaitHandle.WaitAny(waitHandles, 0);
+                    if (waitHandleIndex == 0)
+                    {
+                        return;
+                    }
 
-                    _renderer.SetDrawColor(_backgroundColor);
-                    _renderer.Clear();
-                    _renderer.Copy(frameRateTexture, origin);
-                    _renderer.Present();
+                    if (waitHandleIndex == 1)
+                    {
+                        renderer.Dispose();
+                        renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
+                        renderer.RenderDrawColor = drawColor;
+                    }
+
+                    frameCount++;
+
+                    var currentTime = DateTime.UtcNow;
+                    var elapsedTime = currentTime - lastUpdateTime;
+                    var frameRate = frameCount / elapsedTime.TotalSeconds;
+                    var frameRateText = $"Average frame rate = {frameRate:0.00}";
+                    using (var frameRateSurface = font.RenderSolid(frameRateText, textColor))
+                    {
+                        using (var frameRateTexture = renderer.CreateTextureFromSurface(frameRateSurface))
+                        {
+                            var outputSize = renderer.OutputSize;
+                            var x = Math.Abs(outputSize.Width - frameRateTexture.Width) / 2;
+                            var y = Math.Abs(outputSize.Height - frameRateTexture.Height) / 2;
+                            var dest = new Rectangle(x, y, frameRateTexture.Width, frameRateTexture.Height);
+
+                            renderer.RenderClear();
+                            renderer.RenderCopy(frameRateTexture, dest);
+                        }
+                    }
+
+                    lastUpdateTime = currentTime;
+                    frameCount = 0;
+                    renderer.RenderPresent();
                 }
-
-                _lastFrameTime = currentFrameTime;
-                _frameCount = 0;
             }
-            else
+            catch (Exception e)
             {
-                _renderer.Present();
+                Console.Error.WriteLine(e.Message);
             }
+            finally
+            {
+                font?.Dispose();
+                renderer?.Dispose();
+            }
+        }
+
+        private void OnSizeChanged(object? sender, WindowSizeChangedEventArgs e)
+        {
+            _rendererInvalidatedEvent.Set();
         }
 
         private static int Main(string[] args)

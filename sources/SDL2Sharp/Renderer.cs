@@ -19,25 +19,117 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
-using SDL2TTFSharp.Interop;
 
 namespace SDL2Sharp
 {
     public sealed unsafe class Renderer : IDisposable
     {
-        private SDL_Renderer* _renderer;
+        private SDL_Renderer* _handle;
 
         public RendererInfo Info
         {
             get
             {
+                ThrowWhenDisposed();
+
                 var rendererInfo = new SDL_RendererInfo();
                 Error.ThrowOnFailure(
-                    SDL.GetRendererInfo(_renderer, &rendererInfo)
+                    SDL.GetRendererInfo(_handle, &rendererInfo)
                 );
                 return new RendererInfo(rendererInfo);
+            }
+        }
+
+        public Size OutputSize
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                int width, height;
+                Error.ThrowOnFailure(
+                    SDL.GetRendererOutputSize(_handle, &width, &height)
+                );
+                return new Size(width, height);
+            }
+        }
+
+        public Color RenderDrawColor
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                byte r, g, b, a;
+                Error.ThrowOnFailure(
+                    SDL.GetRenderDrawColor(_handle, &r, &g, &b, &a)
+                );
+                return new Color(r, g, b, a);
+            }
+            set
+            {
+                ThrowWhenDisposed();
+
+                Error.ThrowOnFailure(
+                    SDL.SetRenderDrawColor(_handle, value.R, value.G, value.B, value.A)
+                );
+            }
+        }
+
+        public Size RenderLogicalViewSize
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                int width, height;
+                SDL.RenderGetLogicalSize(_handle, &width, &height);
+                return new Size(width, height);
+            }
+            set
+            {
+                ThrowWhenDisposed();
+
+                Error.ThrowOnFailure(
+                    SDL.RenderSetLogicalSize(_handle, value.Width, value.Height)
+                );
+            }
+        }
+
+        public Scale RenderScale
+        {
+            get
+            {
+
+                float scaleX, scaleY;
+                SDL.RenderGetScale(_handle, &scaleX, &scaleY);
+                return new Scale(scaleX, scaleY);
+            }
+            set
+            {
+                SDL.RenderSetScale(_handle, value.X, value.Y);
+            }
+        }
+
+        public Rectangle RenderViewPort
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                var rect = new SDL_Rect();
+                SDL.RenderGetViewport(_handle, &rect);
+                return new Rectangle(rect.x, rect.y, rect.w, rect.h);
+            }
+            set
+            {
+                ThrowWhenDisposed();
+
+                var rect = new SDL_Rect { x = value.X, y = value.Y, w = value.Width, h = value.Height };
+                Error.ThrowOnFailure(
+                    SDL.RenderSetViewport(_handle, &rect)
+                );
             }
         }
 
@@ -48,7 +140,7 @@ namespace SDL2Sharp
                 throw new ArgumentNullException(nameof(renderer));
             }
 
-            _renderer = renderer;
+            _handle = renderer;
         }
 
         ~Renderer()
@@ -64,16 +156,16 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_renderer == null) return;
-            SDL.DestroyRenderer(_renderer);
-            _renderer = null;
+            if (_handle == null) return;
+            SDL.DestroyRenderer(_handle);
+            _handle = null;
         }
 
-        public Texture CreateTexture(uint format, int access, int width, int height)
+        public Texture CreateTexture(PixelFormatEnum format, TextureAccess access, int width, int height)
         {
             ThrowWhenDisposed();
 
-            var texture = SDL.CreateTexture(_renderer, format, access, width, height);
+            var texture = SDL.CreateTexture(_handle, (uint)format, (int)access, width, height);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
         }
@@ -81,66 +173,83 @@ namespace SDL2Sharp
         public Texture CreateTextureFromSurface(Surface surface)
         {
             ThrowWhenDisposed();
-            
-            var texture = SDL.CreateTextureFromSurface(_renderer, surface);
+
+            var texture = SDL.CreateTextureFromSurface(_handle, surface);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
         }
 
-        public void Clear()
+        public void RenderClear()
         {
             ThrowWhenDisposed();
 
             Error.ThrowOnFailure(
-                SDL.RenderClear(_renderer)
+                SDL.RenderClear(_handle)
             );
         }
 
-        public void SetDrawColor(Color color)
+
+        public void RenderCopy(Texture texture)
         {
             ThrowWhenDisposed();
 
             Error.ThrowOnFailure(
-                SDL.SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A)
-            ); ;
-        }
-
-        public void Copy(Texture texture)
-        {
-            ThrowWhenDisposed();
-
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_renderer, texture, null, null)
+                SDL.RenderCopy(_handle, texture, null, null)
             );
         }
 
-        public void Copy(Texture texture, Point origin)
+        public void RenderCopy(Texture texture, Rectangle destination)
         {
             ThrowWhenDisposed();
 
-            var rect = new SDL_Rect
+            var dest = new SDL_Rect
             {
-                x = origin.X,
-                y = origin.Y,
-                w = texture.Width,
-                h = texture.Height
+                x = destination.X,
+                y = destination.Y,
+                w = destination.Width,
+                h = destination.Height
             };
 
             Error.ThrowOnFailure(
-                SDL.RenderCopy(_renderer, texture, null, &rect)
+                SDL.RenderCopy(_handle, texture, null, &dest)
             );
         }
 
-        public void Present()
+        public void RenderCopy(Texture texture, Rectangle source, Rectangle destination)
         {
             ThrowWhenDisposed();
 
-            SDL.RenderPresent(_renderer);
+            var src = new SDL_Rect
+            {
+                x = source.X,
+                y = source.Y,
+                w = source.Width,
+                h = source.Height
+            };
+
+            var dest = new SDL_Rect
+            {
+                x = destination.X,
+                y = destination.Y,
+                w = destination.Width,
+                h = destination.Height
+            };
+
+            Error.ThrowOnFailure(
+                SDL.RenderCopy(_handle, texture, &src, &dest)
+            );
+        }
+
+        public void RenderPresent()
+        {
+            ThrowWhenDisposed();
+
+            SDL.RenderPresent(_handle);
         }
 
         private void ThrowWhenDisposed()
         {
-            if (_renderer == null)
+            if (_handle == null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }

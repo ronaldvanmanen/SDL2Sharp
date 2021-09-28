@@ -25,14 +25,14 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class AudioDevice : IDisposable
+    public sealed unsafe class AudioDevice : IDisposable
     {
         private uint _deviceID = 0;
-        
+
         private AudioDeviceCallback _callback = null!;
 
         private object _userdata = null!;
-        
+
         private GCHandle _handle = default;
 
         private bool _disposed = false;
@@ -41,7 +41,7 @@ namespace SDL2Sharp
 
         public bool IsOpen => _deviceID != 0;
 
-        public AudioDevice() 
+        public AudioDevice()
         : this(null!)
         { }
 
@@ -124,7 +124,7 @@ namespace SDL2Sharp
             ThrowIfOpen();
 
             SDL_AudioSpec desiredSpec = (SDL_AudioSpec)spec;
-            
+
             if (callback != null)
             {
                 _callback = callback;
@@ -132,7 +132,7 @@ namespace SDL2Sharp
                 _handle = GCHandle.Alloc(this, GCHandleType.Normal);
                 desiredSpec.callback = &UnmanagedCallback;
                 desiredSpec.userdata = (void*)(IntPtr)_handle;
-            } 
+            }
 
             SDL_AudioSpec obtainedSpec;
             _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, &obtainedSpec, 0);
