@@ -28,6 +28,7 @@ SDL_rwops.h
 SDL_scancode.h
 SDL_stdinc.h
 SDL_surface.h
+SDL_system.h
 SDL_version.h
 SDL_video.h
 --headerFile
