@@ -24,7 +24,7 @@ using System.Threading;
 using SDL2Sharp;
 using SDL2TTFSharp.Interop;
 
-namespace BitmapViewer
+namespace AverageFrameRate
 {
     internal unsafe class App : Application
     {
