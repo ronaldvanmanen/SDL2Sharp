@@ -41,7 +41,7 @@
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
     <PackageOutputPath>$(BaseArtifactsPath)pkg/$(Configuration)/</PackageOutputPath>
     <Product>SDL2Sharp</Product>
-    <VersionPrefix>2.0.14</VersionPrefix>
+    <VersionPrefix>2.0.16</VersionPrefix>
     <VersionSuffix>beta1</VersionSuffix>
     <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request'">pr</VersionSuffix>
   </PropertyGroup>
