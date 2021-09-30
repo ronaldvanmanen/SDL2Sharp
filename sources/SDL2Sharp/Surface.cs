@@ -26,11 +26,15 @@ namespace SDL2Sharp
 {
     public sealed unsafe class Surface : IDisposable
     {
-        private SDL_Surface* _surface;
+        private SDL_Surface* _handle;
 
-        public int Width => _surface->w;
+        private readonly bool _freeHandle;
 
-        public int Height => _surface->h;
+        public int Width => _handle->w;
+
+        public int Height => _handle->h;
+
+        public PixelFormatEnum PixelFormat => (PixelFormatEnum)_handle->format->format;
 
         public static Surface LoadBitmap(string filename)
         {
@@ -45,14 +49,19 @@ namespace SDL2Sharp
             }
         }
 
-        public unsafe Surface(SDL_Surface* surface)
+        public unsafe Surface(SDL_Surface* handle)
+        : this(handle, true)
+        { }
+
+        public unsafe Surface(SDL_Surface* handle, bool freeHandle)
         {
-            if (surface == null)
+            if (handle == null)
             {
-                throw new ArgumentNullException(nameof(surface));
+                throw new ArgumentNullException(nameof(handle));
             }
 
-            _surface = surface;
+            _handle = handle;
+            _freeHandle = freeHandle;
         }
 
         ~Surface()
@@ -68,9 +77,47 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_surface == null) return;
-            SDL.FreeSurface(_surface);
-            _surface = null;
+            if (_handle == null)
+            {
+                return;
+            }
+
+            if (_freeHandle)
+            {
+                SDL.FreeSurface(_handle);
+            }
+
+            _handle = null;
+        }
+
+        public void Blit(Surface surface)
+        {
+            ThrowWhenDisposed();
+
+            if (surface == null)
+            {
+                throw new ArgumentNullException(nameof(surface));
+            }
+
+            Error.ThrowOnFailure(
+                SDL.Blit(_handle, null, surface._handle, null)
+            );
+        }
+
+        public Surface Convert(PixelFormatEnum format)
+        {
+            ThrowWhenDisposed();
+
+            return new Surface(SDL.ConvertSurfaceFormat(_handle, (uint)format, 0));
+        }
+
+        public void FillRect(uint color)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.FillRect(_handle, null, color)
+            );
         }
 
         public static implicit operator SDL_Surface*(Surface surface)
@@ -80,7 +127,15 @@ namespace SDL2Sharp
                 throw new ArgumentNullException(nameof(surface));
             }
 
-            return surface._surface;
+            return surface._handle;
+        }
+
+        private void ThrowWhenDisposed()
+        {
+            if (_handle == null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
     }
 }

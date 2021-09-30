@@ -22,7 +22,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
-using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace SDL2Sharp
 {
@@ -66,6 +67,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 return SDL.GetWindowID(_handle);
             }
         }
@@ -74,10 +77,14 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 return new string(SDL.GetWindowTitle(_handle));
             }
             set
             {
+                ThrowWhenDisposed();
+
                 using (var marshaledValue = new MarshaledString(value))
                 {
                     SDL.SetWindowTitle(_handle, marshaledValue);
@@ -89,12 +96,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int x, y;
                 SDL.GetWindowPosition(_handle, &x, &y);
                 return new Point(x, y);
             }
             set
             {
+                ThrowWhenDisposed();
+
                 SDL.SetWindowPosition(_handle, value.X, value.Y);
             }
         }
@@ -103,6 +114,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int width;
                 SDL.GetWindowSize(_handle, &width, null);
                 return width;
@@ -113,6 +126,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int height;
                 SDL.GetWindowSize(_handle, null, &height);
                 return height;
@@ -123,12 +138,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int width, height;
                 SDL.GetWindowSize(_handle, &width, &height);
                 return new Size(width, height);
             }
             set
             {
+                ThrowWhenDisposed();
+
                 SDL.SetWindowSize(_handle, value.Width, value.Height);
             }
         }
@@ -137,12 +156,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int width, height;
                 SDL.GetWindowMinimumSize(_handle, &width, &height);
                 return new Size(width, height);
             }
             set
             {
+                ThrowWhenDisposed();
+
                 SDL.SetWindowMinimumSize(_handle, value.Width, value.Height);
             }
         }
@@ -151,12 +174,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int width, height;
                 SDL.GetWindowMaximumSize(_handle, &width, &height);
                 return new Size(width, height);
             }
             set
             {
+                ThrowWhenDisposed();
+
                 SDL.SetWindowMaximumSize(_handle, value.Width, value.Height);
             }
         }
@@ -165,6 +192,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 int borderTop, borderLeft, borderBottom, borderRight;
                 Error.ThrowOnFailure(
                     SDL.GetWindowBordersSize(_handle, &borderTop, &borderLeft, &borderBottom, &borderRight)
@@ -181,12 +210,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
                 var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
+                ThrowWhenDisposed();
+
                 SDL.SetWindowBordered(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
         }
@@ -195,12 +228,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
                 var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
+                ThrowWhenDisposed();
+
                 SDL.SetWindowResizable(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
         }
@@ -209,12 +246,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
                 var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
                 Error.ThrowOnFailure(
                     SDL.SetWindowFullscreen(_handle, value ? flag : 0u)
@@ -226,12 +267,16 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
                 var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
             }
             set
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
                 Error.ThrowOnFailure(
                     SDL.SetWindowFullscreen(_handle, value ? flag : 0u)
@@ -243,6 +288,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowWhenDisposed();
+
                 const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_SHOWN;
                 var flags = SDL.GetWindowFlags(_handle);
                 return (flags & flag) != 0;
@@ -273,6 +320,10 @@ namespace SDL2Sharp
                 _handle = Error.ReturnOrThrowOnFailure(
                     SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
                 );
+
+                Error.ThrowOnFailure(
+                    SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
+                );
             }
             Application.Current.WindowsInternal.Add(this);
         }
@@ -297,31 +348,43 @@ namespace SDL2Sharp
 
         public void Show()
         {
+            ThrowWhenDisposed();
+
             SDL.ShowWindow(_handle);
         }
 
         public void Hide()
         {
+            ThrowWhenDisposed();
+
             SDL.HideWindow(_handle);
         }
 
         public void Raise()
         {
+            ThrowWhenDisposed();
+
             SDL.RaiseWindow(_handle);
         }
 
         public void Maximize()
         {
+            ThrowWhenDisposed();
+
             SDL.MaximizeWindow(_handle);
         }
 
         public void Minimize()
         {
+            ThrowWhenDisposed();
+
             SDL.MinimizeWindow(_handle);
         }
 
         public void Restore()
         {
+            ThrowWhenDisposed();
+
             SDL.RestoreWindow(_handle);
         }
 
@@ -510,6 +573,76 @@ namespace SDL2Sharp
         private void OnHitTest()
         {
             HitTest?.Invoke(this, EventArgs.Empty);
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
+        private static unsafe SDL_HitTestResult HitTestCallback(SDL_Window* win, SDL_Point* area, void* data)
+        {
+            int x = area->x;
+            int y = area->y;
+
+            int windowWidth = 0, windowHeight = 0;
+            SDL.GetWindowSize(win, &windowWidth, &windowHeight);
+
+            int windowTop = 0;
+            int windowLeft = 0;
+            int windowBottom = windowTop + windowHeight;
+            int windowRight = windowLeft + windowWidth;
+
+            int borderTop = 0, borderLeft = 0, borderBottom = 0, borderRight = 0;
+            SDL.GetWindowBordersSize(win, &borderTop, &borderLeft, &borderBottom, &borderRight);
+
+            int clientAreaTop = windowTop + borderTop;
+            int clientAreaLeft = windowLeft + borderLeft;
+            int clientAreaBottom = windowBottom - borderBottom;
+            int clientAreaRight = windowRight - borderRight;
+
+            if (y > windowTop && y < clientAreaTop)
+            {
+                return SDL_HitTestResult.SDL_HITTEST_DRAGGABLE;
+            }
+
+            if (y >= windowTop && y <= clientAreaTop)
+            {
+                if (x >= windowLeft && x <= clientAreaLeft)
+                {
+                    return SDL_HitTestResult.SDL_HITTEST_RESIZE_TOPLEFT;
+                }
+
+                if (x >= clientAreaRight && x <= windowRight)
+                {
+                    return SDL_HitTestResult.SDL_HITTEST_RESIZE_TOPRIGHT;
+                }
+
+                return SDL_HitTestResult.SDL_HITTEST_RESIZE_TOP;
+            }
+
+            if (y >= clientAreaBottom && y <= windowBottom)
+            {
+                if (x >= windowLeft && x <= clientAreaLeft)
+                {
+                    return SDL_HitTestResult.SDL_HITTEST_RESIZE_BOTTOMLEFT;
+                }
+
+                if (x >= clientAreaRight && x <= windowRight)
+                {
+                    return SDL_HitTestResult.SDL_HITTEST_RESIZE_BOTTOMRIGHT;
+                }
+
+                return SDL_HitTestResult.SDL_HITTEST_RESIZE_BOTTOM;
+            }
+
+            if (x >= windowLeft && x <= clientAreaLeft)
+            {
+                return SDL_HitTestResult.SDL_HITTEST_RESIZE_LEFT;
+            }
+
+            if (x >= clientAreaRight && x <= windowRight)
+            {
+                return SDL_HitTestResult.SDL_HITTEST_RESIZE_RIGHT;
+            }
+
+            return SDL_HitTestResult.SDL_HITTEST_NORMAL;
         }
     }
 }

@@ -19,22 +19,24 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Globalization;
 using System.Threading;
 using SDL2Sharp;
-using SDL2TTFSharp.Interop;
 
 namespace AverageFrameRate
 {
     internal unsafe class App : Application
     {
-        private AutoResetEvent _quitEvent = null!;
+        private static readonly Color _drawColor = new Color(255, 255, 255, 0);
 
-        private AutoResetEvent _rendererInvalidatedEvent = null!;
+        private static readonly Color _textColor = new Color(0, 0, 0, 255);
 
         private Window _window = null!;
 
-        private Thread _renderThread = null!;
+        private Thread _renderingThread = null!;
+
+        private volatile bool _rendererInvalidated = false;
+
+        private volatile bool _rendering = false;
 
         public App()
         : base(Subsystem.Video)
@@ -42,94 +44,78 @@ namespace AverageFrameRate
 
         protected override void OnInit(string[] args)
         {
-            _quitEvent = new AutoResetEvent(false);
-            _rendererInvalidatedEvent = new AutoResetEvent(false);
             _window = new Window("Average Frame Rate", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
-            _window.SizeChanged += OnSizeChanged;
-            _renderThread = new Thread(Render);
-            _renderThread.Start();
+            _window.SizeChanged += OnWindowSizeChanged;
+            _renderingThread = new Thread(Render);
+            _rendererInvalidated = true;
+            _rendering = true;
+            _renderingThread.Start();
         }
 
         protected override void OnQuit()
         {
-            _quitEvent.Set();
-            _renderThread?.Join();
+            _rendererInvalidated = false;
+            _rendering = false;
+            _renderingThread?.Join();
             _window?.Dispose();
-            _rendererInvalidatedEvent?.Dispose();
-            _quitEvent?.Dispose();
         }
 
         private void Render()
         {
-            WaitHandle[] waitHandles = new WaitHandle[] { _quitEvent, _rendererInvalidatedEvent };
-            DateTime lastUpdateTime = DateTime.UtcNow;
-            TimeSpan updateInterval = TimeSpan.FromMilliseconds(1000d);
-            Color textColor = new Color(0, 0, 0, 255);
-            Color drawColor = new Color(255, 255, 255, 0);
-            Int32 frameCount = 0;
+            Font font = new Font("lazy.ttf", 28);
             Renderer renderer = null!;
-            Font font = null!;
+            DateTime lastUpdateTime = DateTime.UtcNow;
+            TimeSpan updateInterval = TimeSpan.FromMilliseconds(500d);
+            int frameCount = 0;
 
             try
             {
-                renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-                renderer.RenderDrawColor = drawColor;
-                font = new Font("lazy.ttf", 28);
-
-                while (true)
+                while (_rendering)
                 {
-                    var waitHandleIndex = WaitHandle.WaitAny(waitHandles, 0);
-                    if (waitHandleIndex == 0)
-                    {
-                        return;
-                    }
-
-                    if (waitHandleIndex == 1)
-                    {
-                        renderer.Dispose();
-                        renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-                        renderer.RenderDrawColor = drawColor;
-                    }
-
-                    frameCount++;
-
                     var currentTime = DateTime.UtcNow;
                     var elapsedTime = currentTime - lastUpdateTime;
-                    var frameRate = frameCount / elapsedTime.TotalSeconds;
-                    var frameRateText = $"Average frame rate = {frameRate:0.00}";
-                    using (var frameRateSurface = font.RenderSolid(frameRateText, textColor))
+                    if (_rendererInvalidated || elapsedTime > updateInterval)
                     {
-                        using (var frameRateTexture = renderer.CreateTextureFromSurface(frameRateSurface))
+                        if (_rendererInvalidated)
+                        {
+                            renderer?.Dispose();
+                            renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
+                            renderer.RenderDrawColor = _drawColor;
+                            _rendererInvalidated = false;
+                        }
+
+                        renderer.RenderClear();
+
+                        var frameRate = frameCount / elapsedTime.TotalSeconds;
+                        var text = $"Average frame rate = {frameRate:0.00}";
+                        using (var textSurface = font.RenderBlended(text, _textColor))
+                        using (var textTexture = renderer.CreateTextureFromSurface(textSurface))
                         {
                             var outputSize = renderer.OutputSize;
-                            var x = Math.Abs(outputSize.Width - frameRateTexture.Width) / 2;
-                            var y = Math.Abs(outputSize.Height - frameRateTexture.Height) / 2;
-                            var dest = new Rectangle(x, y, frameRateTexture.Width, frameRateTexture.Height);
-
-                            renderer.RenderClear();
-                            renderer.RenderCopy(frameRateTexture, dest);
+                            var x = Math.Abs(outputSize.Width - textTexture.Width) / 2;
+                            var y = Math.Abs(outputSize.Height - textTexture.Height) / 2;
+                            var dest = new Rectangle(x, y, textTexture.Width, textTexture.Height);
+                            renderer.RenderCopy(textTexture, dest);
                         }
+
+                        lastUpdateTime = currentTime;
+                        frameCount = 0;
                     }
 
-                    lastUpdateTime = currentTime;
-                    frameCount = 0;
                     renderer.RenderPresent();
+                    frameCount++;
                 }
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e.Message);
             }
             finally
             {
-                font?.Dispose();
                 renderer?.Dispose();
+                font?.Dispose();
             }
         }
 
-        private void OnSizeChanged(object? sender, WindowSizeChangedEventArgs e)
+        private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
         {
-            _rendererInvalidatedEvent.Set();
+            _rendererInvalidated = true;
         }
 
         private static int Main(string[] args)
