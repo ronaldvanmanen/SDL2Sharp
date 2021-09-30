@@ -56,9 +56,21 @@ namespace SDL2Sharp
 
         public Surface RenderSolid(string text, Color color)
         {
+            ThrowWhenDisposed();
+
             using (var marshaledText = new MarshaledString(text))
             {
                 return new Surface(TTF.RenderText_Solid(_handle, marshaledText, color));
+            }
+        }
+
+        public Surface RenderBlended(string text, Color color)
+        {
+            ThrowWhenDisposed();
+
+            using (var marshaledText = new MarshaledString(text))
+            {
+                return new Surface(TTF.RenderText_Blended(_handle, marshaledText, color));
             }
         }
 
@@ -70,6 +82,14 @@ namespace SDL2Sharp
             }
 
             return font._handle;
+        }
+
+        private void ThrowWhenDisposed()
+        {
+            if (_handle == null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
     }
 }

@@ -86,7 +86,7 @@ namespace SDL2Sharp
                                 return;
 
                             case SDL_EventType.SDL_WINDOWEVENT:
-                                DispatchWindowEvent(@event.window);
+                                Dispatch(@event.window);
                                 break;
                         }
                     }
@@ -115,27 +115,27 @@ namespace SDL2Sharp
 
         protected virtual void OnIdle() { }
 
-        [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
-        private static int EventFilter(void* userdata, SDL_Event* @event)
+        private void Dispatch(SDL_WindowEvent @event)
         {
-            var eventType = (SDL_EventType)@event->type;
-            if (eventType == SDL_EventType.SDL_WINDOWEVENT)
-            {
-                var windowEventID = (SDL_WindowEventID)@event->window.@event;
-                DispatchWindowEvent(@event->window);
-                return 0;
-            }
-            return 1;
-        }
-
-        private static void DispatchWindowEvent(SDL_WindowEvent @event)
-        {
-            var windows = Application.Current.WindowsInternal;
+            var windows = WindowsInternal;
             var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
                 window.ProcessEvent(@event);
             }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
+        private static int EventFilter(void* userdata, SDL_Event* @event)
+        {
+            var eventType = (SDL_EventType)@event->type;
+            switch (eventType)
+            {
+                case SDL_EventType.SDL_WINDOWEVENT:
+                    Application.Current.Dispatch(@event->window);
+                    return 0;
+            }
+            return 1;
         }
     }
 }

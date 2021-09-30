@@ -75,6 +75,41 @@ namespace SDL2Sharp
             _handle = null;
         }
 
+        public Surface Lock(Rectangle rectangle)
+        {
+            return Lock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        public Surface Lock()
+        {
+            ThrowWhenDisposed();
+
+            SDL_Surface* surfaceHandle;
+            Error.ThrowOnFailure(
+                SDL.LockTextureToSurface(_handle, null, &surfaceHandle)
+            );
+            return new Surface(surfaceHandle, false);
+        }
+
+        public Surface Lock(int x, int y, int width, int height)
+        {
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            SDL_Surface* surfaceHandle;
+            Error.ThrowOnFailure(
+                SDL.LockTextureToSurface(_handle, &rect, &surfaceHandle)
+            );
+            return new Surface(surfaceHandle, false);
+        }
+
+        public void Unlock()
+        {
+            ThrowWhenDisposed();
+
+            SDL.UnlockTexture(_handle);
+        }
+
         public static implicit operator SDL_Texture*(Texture texture)
         {
             if (texture is null)
@@ -83,6 +118,14 @@ namespace SDL2Sharp
             }
 
             return texture._handle;
+        }
+
+        private void ThrowWhenDisposed()
+        {
+            if (_handle == null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
     }
 }
