@@ -271,7 +271,7 @@ namespace SDL2Sharp
             using (var marshaledName = new MarshaledString(name))
             {
                 var value = SDL.GetHint(marshaledName);
-                if (value == null)
+                if (value is null)
                 {
                     return null!;
                 }

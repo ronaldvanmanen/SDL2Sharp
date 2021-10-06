@@ -55,7 +55,7 @@ namespace SDL2Sharp
 
         public unsafe Surface(SDL_Surface* handle, bool freeHandle)
         {
-            if (handle == null)
+            if (handle is null)
             {
                 throw new ArgumentNullException(nameof(handle));
             }
@@ -77,7 +77,7 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle == null)
+            if (_handle is null)
             {
                 return;
             }
@@ -94,7 +94,7 @@ namespace SDL2Sharp
         {
             ThrowWhenDisposed();
 
-            if (surface == null)
+            if (surface is null)
             {
                 throw new ArgumentNullException(nameof(surface));
             }
@@ -132,7 +132,7 @@ namespace SDL2Sharp
 
         private void ThrowWhenDisposed()
         {
-            if (_handle == null)
+            if (_handle is null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }

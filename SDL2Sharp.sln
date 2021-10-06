@@ -135,11 +135,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf.runtime.win-x86"
 		packages\libsdl2ttf.runtime.win-x86\libsdl2ttf.runtime.win-x86.nuspec = packages\libsdl2ttf.runtime.win-x86\libsdl2ttf.runtime.win-x86.nuspec
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2TTFSharp.Interop.UnitTests", "tests\SDL2TTFSharp.Interop.UnitTests\SDL2TTFSharp.Interop.UnitTests.csproj", "{602326A2-2E08-4327-95CE-5EE497BAB37D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2TTFSharp.Interop.UnitTests", "tests\SDL2TTFSharp.Interop.UnitTests\SDL2TTFSharp.Interop.UnitTests.csproj", "{602326A2-2E08-4327-95CE-5EE497BAB37D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2TTFSharp.Interop", "sources\SDL2TTFSharp.Interop\SDL2TTFSharp.Interop.csproj", "{F74A756F-6062-43FB-BE62-EE9889AD1D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AverageFrameRate", "samples\AverageFrameRate\AverageFrameRate.csproj", "{7DED9CCC-16B4-4A5C-A3E6-98F80157B609}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AverageFrameRate", "samples\AverageFrameRate\AverageFrameRate.csproj", "{7DED9CCC-16B4-4A5C-A3E6-98F80157B609}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParticleSystem", "samples\ParticleSystem\ParticleSystem.csproj", "{484D62C0-58A2-410A-84B5-EC71A64DC975}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -183,6 +185,10 @@ Global
 		{7DED9CCC-16B4-4A5C-A3E6-98F80157B609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DED9CCC-16B4-4A5C-A3E6-98F80157B609}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DED9CCC-16B4-4A5C-A3E6-98F80157B609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -210,6 +216,7 @@ Global
 		{602326A2-2E08-4327-95CE-5EE497BAB37D} = {79105D14-18FF-4FAD-BD24-52C477EDA1B2}
 		{F74A756F-6062-43FB-BE62-EE9889AD1D76} = {1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}
 		{7DED9CCC-16B4-4A5C-A3E6-98F80157B609} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{484D62C0-58A2-410A-84B5-EC71A64DC975} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
