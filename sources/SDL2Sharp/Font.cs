@@ -49,7 +49,7 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle == null) return;
+            if (_handle is null) return;
             TTF.CloseFont(_handle);
             _handle = null;
         }
@@ -86,7 +86,7 @@ namespace SDL2Sharp
 
         private void ThrowWhenDisposed()
         {
-            if (_handle == null)
+            if (_handle is null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }

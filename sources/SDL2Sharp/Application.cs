@@ -85,6 +85,10 @@ namespace SDL2Sharp
                             case SDL_EventType.SDL_QUIT:
                                 return;
 
+                            case SDL_EventType.SDL_MOUSEMOTION:
+                                Dispatch(@event.motion);
+                                break;
+
                             case SDL_EventType.SDL_WINDOWEVENT:
                                 Dispatch(@event.window);
                                 break;
@@ -115,13 +119,23 @@ namespace SDL2Sharp
 
         protected virtual void OnIdle() { }
 
+        private void Dispatch(SDL_MouseMotionEvent @event)
+        {
+            var windows = WindowsInternal;
+            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            if (window != null)
+            {
+                window.HandleEvent(@event);
+            }
+        }
+
         private void Dispatch(SDL_WindowEvent @event)
         {
             var windows = WindowsInternal;
             var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
-                window.ProcessEvent(@event);
+                window.HandleEvent(@event);
             }
         }
 

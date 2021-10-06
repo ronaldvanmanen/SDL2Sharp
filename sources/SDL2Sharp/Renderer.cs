@@ -77,6 +77,28 @@ namespace SDL2Sharp
             }
         }
 
+        public BlendMode RenderBlendMode
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                SDL_BlendMode blendMode;
+                Error.ThrowOnFailure(
+                    SDL.GetRenderDrawBlendMode(_handle, &blendMode)
+                );
+                return (BlendMode)blendMode;
+            }
+            set
+            {
+                ThrowWhenDisposed();
+
+                Error.ThrowOnFailure(
+                    SDL.SetRenderDrawBlendMode(_handle, (SDL_BlendMode)value)
+                );
+            }
+        }
+
         public Size RenderLogicalViewSize
         {
             get
@@ -135,7 +157,7 @@ namespace SDL2Sharp
 
         internal Renderer(SDL_Renderer* renderer)
         {
-            if (renderer == null)
+            if (renderer is null)
             {
                 throw new ArgumentNullException(nameof(renderer));
             }
@@ -156,7 +178,7 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle == null) return;
+            if (_handle is null) return;
             SDL.DestroyRenderer(_handle);
             _handle = null;
         }
@@ -240,6 +262,37 @@ namespace SDL2Sharp
             );
         }
 
+        public void RenderDrawLine(int x1, int y1, int x2, int y2)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.RenderDrawLine(_handle, x1, y1, x2, y2)
+            );
+        }
+
+        public void RenderDrawPoint(int x, int y)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.RenderDrawPoint(_handle, x, y)
+            );
+        }
+
+        public void RenderFillRect(int x, int y, int width, int height)
+        {
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            Error.ThrowOnFailure(
+                SDL.RenderFillRect(_handle, &rect)
+            );
+        }
+
+        public void RenderFillRect(Rectangle rectangle)
+        {
+            RenderFillRect(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
         public void RenderPresent()
         {
             ThrowWhenDisposed();
@@ -249,7 +302,7 @@ namespace SDL2Sharp
 
         private void ThrowWhenDisposed()
         {
-            if (_handle == null)
+            if (_handle is null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }

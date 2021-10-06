@@ -61,6 +61,8 @@ namespace SDL2Sharp
 
         public event EventHandler? HitTest;
 
+        public event EventHandler<MouseMotionEventArgs>? MouseMotion;
+
         private SDL_Window* _handle;
 
         public uint Id
@@ -341,7 +343,7 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle == null) return;
+            if (_handle is null) return;
             SDL.DestroyWindow(_handle);
             _handle = null;
         }
@@ -418,7 +420,7 @@ namespace SDL2Sharp
             ThrowWhenDisposed();
 
             var handle = SDL.CreateRenderer(_handle, -1, (uint)flags);
-            if (handle == null)
+            if (handle is null)
             {
                 error = new Error(new string(SDL.GetError()));
                 renderer = null!;
@@ -434,13 +436,18 @@ namespace SDL2Sharp
 
         private void ThrowWhenDisposed()
         {
-            if (_handle == null)
+            if (_handle is null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
         }
 
-        internal void ProcessEvent(SDL_WindowEvent windowEvent)
+        internal void HandleEvent(SDL_MouseMotionEvent @event)
+        {
+            OnMouseMotion(@event.x, @event.y, @event.xrel, @event.yrel);
+        }
+
+        internal void HandleEvent(SDL_WindowEvent windowEvent)
         {
             switch ((SDL_WindowEventID)windowEvent.@event)
             {
@@ -573,6 +580,11 @@ namespace SDL2Sharp
         private void OnHitTest()
         {
             HitTest?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnMouseMotion(int x, int y, int relativeX, int relativeY)
+        {
+            MouseMotion?.Invoke(this, new MouseMotionEventArgs(x, y, relativeX, relativeY));
         }
 
         [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]

@@ -42,7 +42,7 @@ namespace SDL2Sharp
 
         internal static unsafe void ThrowOnFailure(void* pointer)
         {
-            if (pointer == null)
+            if (pointer is null)
             {
                 throw new Error(new string(SDL.GetError()));
             }
@@ -75,7 +75,7 @@ namespace SDL2Sharp
 
         internal static unsafe T* ReturnOrThrowOnFailure<T>(T* pointer) where T : unmanaged
         {
-            if (pointer == null)
+            if (pointer is null)
             {
                 throw new Error(new string(SDL.GetError()));
             }
