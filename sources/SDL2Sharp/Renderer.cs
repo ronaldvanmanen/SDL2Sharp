@@ -271,6 +271,16 @@ namespace SDL2Sharp
             );
         }
 
+        public void RenderDrawLines(Point[] points)
+        {
+            fixed (Point* point = &points[0])
+            {
+                Error.ThrowOnFailure(
+                    SDL.RenderDrawLines(_handle, (SDL_Point*)point, points.Length)
+                );
+            }
+        }
+
         public void RenderDrawPoint(int x, int y)
         {
             ThrowWhenDisposed();

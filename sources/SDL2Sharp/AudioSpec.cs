@@ -22,12 +22,12 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class AudioSpec
+    public sealed unsafe class AudioSpec
     {
         public AudioSpec(SDL_AudioSpec audioSpec)
         {
             Frequency = audioSpec.freq;
-            Format = audioSpec.format;
+            Format = (AudioFormat)audioSpec.format;
             Channels = audioSpec.channels;
             Silence = audioSpec.silence;
             Samples = audioSpec.samples;
@@ -37,7 +37,7 @@ namespace SDL2Sharp
 
         public int Frequency { get; set; }
 
-        public ushort Format { get; set; }
+        public AudioFormat Format { get; set; }
 
         public byte Channels { get; set; }
 
@@ -49,12 +49,12 @@ namespace SDL2Sharp
 
         public uint Size { get; private set; }
 
-        public static explicit operator SDL_AudioSpec (AudioSpec value)
+        public static explicit operator SDL_AudioSpec(AudioSpec value)
         {
             return new SDL_AudioSpec
             {
                 freq = value.Frequency,
-                format = value.Format,
+                format = (ushort)value.Format,
                 channels = value.Channels,
                 silence = value.Silence,
                 samples = value.Samples,

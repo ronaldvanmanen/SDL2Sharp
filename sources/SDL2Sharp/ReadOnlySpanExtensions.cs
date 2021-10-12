@@ -16,7 +16,7 @@
 //    appreciated but is not required.
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
+// 3. This notice may not be removed or altered from any bytes distribution.
 
 using SDL2Sharp.Interop;
 using System;
@@ -25,12 +25,161 @@ namespace SDL2Sharp
 {
     public static class ReadOnlySpanExtensions
     {
-        public static unsafe void MixAudioFormat(this ReadOnlySpan<byte> source, Span<byte> destination, ushort format, int volume)
+        public static unsafe short ToInt16(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if (sampleOffset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, "startIndex cannot be less than zero");
+            }
+
+            if (sampleOffset > (bytes.Length - sizeof(short)))
+            {
+                throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, @"startIndex cannot be greater than the length of bytes minus {sizeof(short)}");
+            }
+
+            fixed (byte* startPointer = &bytes[sampleOffset])
+            {
+                if (isLittleEndian)
+                {
+                    if (sampleOffset % 2 == 0)
+                    {   // data is aligned 
+                        return *(short*)startPointer;
+                    }
+                    return (short)((*startPointer) | (*(startPointer + 1) << 8));
+                }
+                else
+                {
+                    return (short)((*startPointer << 8) | (*(startPointer + 1)));
+                }
+            }
+        }
+
+        public static unsafe ushort ToUInt16(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
+        {
+            return (ushort)ToInt16(bytes, sampleOffset, isLittleEndian);
+        }
+
+        public static unsafe int ToInt32(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if (sampleOffset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, "startIndex cannot be less than zero");
+            }
+
+            if (sampleOffset > (bytes.Length - sizeof(int)))
+            {
+                throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, @"startIndex cannot be greater than the length of bytes minus {sizeof(int)}");
+            }
+
+            fixed (byte* startPointer = &bytes[sampleOffset])
+            {
+                if (isLittleEndian)
+                {
+                    if (sampleOffset % 4 == 0)
+                    {   // data is aligned 
+                        return *((int*)startPointer);
+                    }
+                    return (*startPointer) | (*(startPointer + 1) << 8) | (*(startPointer + 2) << 16) | (*(startPointer + 3) << 24);
+                }
+                else
+                {
+                    return (*startPointer << 24) | (*(startPointer + 1) << 16) | (*(startPointer + 2) << 8) | (*(startPointer + 3));
+                }
+            }
+        }
+
+        public static unsafe uint ToUInt32(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
+        {
+            return (uint)ToInt32(bytes, sampleOffset, isLittleEndian);
+        }
+
+        public static unsafe float ToSingle(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
+        {
+            var bits = ToInt32(bytes, sampleOffset, isLittleEndian);
+            var result = *(float*)&bits;
+            return result;
+        }
+
+        public static unsafe float ToNormalizedSingle(this ReadOnlySpan<byte> bytes, int sampleOffset, AudioFormat sampleFormat)
+        {
+            switch (sampleFormat)
+            {
+                case AudioFormat.AUDIO_U8:
+                    {
+                        var sample = bytes[sampleOffset];
+                        var normalizedSample = (sample - .5f - (byte.MaxValue + 1) / 2) / 255f;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_S8:
+                    {
+                        var sample = (sbyte)bytes[sampleOffset];
+                        var normalizedSample = (sample - .5f) / 255f;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_U16LSB:
+                    {
+                        var sample = bytes.ToUInt16(sampleOffset, true);
+                        var normalizedSample = (sample - .5f - (ushort.MaxValue + 1) / 2) / short.MaxValue;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_S16LSB:
+                    {
+                        var sample = bytes.ToInt16(sampleOffset, true);
+                        var normalizedSample = (sample - .5f) / short.MaxValue;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_U16MSB:
+                    {
+                        var sample = bytes.ToUInt16(sampleOffset, false);
+                        var normalizedSample = (sample - .5f - (ushort.MaxValue + 1) / 2) / short.MaxValue;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_S16MSB:
+                    {
+                        var sample = bytes.ToInt16(sampleOffset, false);
+                        var normalizedSample = (sample - .5f) / short.MaxValue;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_S32LSB:
+                    {
+                        var sample = bytes.ToInt32(sampleOffset, false);
+                        var normalizedSample = (sample - .5f) / int.MaxValue;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_S32MSB:
+                    {
+                        var sample = bytes.ToInt32(sampleOffset, false);
+                        var normalizedSample = (sample - .5f) / int.MaxValue;
+                        return normalizedSample;
+                    }
+                case AudioFormat.AUDIO_F32LSB:
+                    {
+                        return bytes.ToSingle(sampleOffset, true);
+                    }
+                case AudioFormat.AUDIO_F32MSB:
+                    {
+                        return bytes.ToSingle(sampleOffset, true);
+                    }
+            }
+            return float.NaN;
+        }
+
+        public static unsafe void MixAudioFormat(this ReadOnlySpan<byte> source, Span<byte> destination, AudioFormat format, int volume)
         {
             fixed (byte* dst = &destination[0])
             fixed (byte* src = &source[0])
             {
-                SDL.MixAudioFormat(dst, src, format, (uint)source.Length, volume);
+                SDL.MixAudioFormat(dst, src, (ushort)format, (uint)source.Length, volume);
             }
         }
     }
