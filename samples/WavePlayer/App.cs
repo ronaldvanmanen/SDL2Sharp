@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Threading;
 using SDL2Sharp;
 using SDL2Sharp.Interop;
 
@@ -26,6 +27,24 @@ namespace WavePlayer
 {
     internal sealed unsafe class App : Application
     {
+        private static readonly Font _frameRateFont = new Font("lazy.ttf", 28);
+
+        private static readonly Color _frameRateColor = new Color(255, 255, 255, 255);
+
+        private static readonly Color _backgroundColor = new Color(0, 0, 0, 255);
+
+        private static readonly Color _waveColor = new Color(255, 255, 0, 255);
+
+        private static readonly Color _channelSeparatorColor = new Color(0, 0, 255, 255);
+
+        private Window _window = null!;
+
+        private Thread _renderingThread = null!;
+
+        private volatile bool _rendererInvalidated = false;
+
+        private volatile bool _rendering = false;
+
         private WaveFile _waveFile = null!;
 
         private AudioDevice _audioDevice = null!;
@@ -33,42 +52,140 @@ namespace WavePlayer
         private int _wavePosition = 0;
 
         public App()
-        : base(Subsystem.Audio)
+        : base(Subsystem.Video | Subsystem.Audio | Subsystem.Events)
         { }
 
         protected override void OnInit(string[] args)
         {
+            _window = new Window("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+            _window.SizeChanged += OnWindowSizeChanged;
+            _renderingThread = new Thread(Render);
+            _rendererInvalidated = true;
+            _rendering = true;
             _waveFile = new WaveFile(args[0]);
             _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback);
+            _renderingThread.Start();
             _audioDevice.Unpause();
         }
 
         protected override void OnQuit()
         {
+            _audioDevice?.Pause();
+            _rendererInvalidated = false;
+            _rendering = false;
+            _renderingThread?.Join();
             _audioDevice?.Dispose();
             _waveFile?.Dispose();
-        }
-
-        protected override void OnIdle()
-        {
-            if (_wavePosition >= _waveFile.Length)
-            {
-                Quit();
-            }
+            _window?.Dispose();
         }
 
         private void OnAudioDeviceCallback(object userdata, Span<byte> stream)
         {
+            stream.Fill(_waveFile.Spec.Silence);
             var sliceLength = (int)Math.Min(_waveFile.Length - _wavePosition, stream.Length);
             if (sliceLength <= 0)
             {
                 return;
             }
             var slice = _waveFile.Buffer.Slice(_wavePosition, sliceLength);
-            stream.Fill(_waveFile.Spec.Silence);
-            //slice.CopyTo(stream);
             slice.MixAudioFormat(stream, _waveFile.Spec.Format, SDL.SDL_MIX_MAXVOLUME);
             _wavePosition += sliceLength;
+        }
+
+        private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
+        {
+            _rendererInvalidated = true;
+        }
+
+        private void Render()
+        {
+            Renderer renderer = null!;
+            var frameRateUpdatedTime = DateTime.Now;
+            var frameRateUpdateInterval = TimeSpan.FromMilliseconds(500d);
+            var frameRate = 0d;
+            var frameRateText = $"FPS: {frameRate:0.00}";
+            var frameCounter = 0;
+            var channels = _waveFile.Spec.Channels;
+            var waves = new Point[channels][];
+            var sampleFormat = _waveFile.Spec.Format;
+            var sampleSize = sampleFormat.BitSize() / 8;
+
+            try
+            {
+                while (_rendering)
+                {
+                    if (_rendererInvalidated)
+                    {
+                        renderer?.Dispose();
+                        renderer = _window.CreateRenderer(RendererFlags.Accelerated/* | RendererFlags.PresentVSync*/);
+                        for (var channel = 0; channel < channels; ++channel)
+                        {
+                            waves[channel] = new Point[renderer.OutputSize.Width];
+                        };
+                        _rendererInvalidated = false;
+                    }
+
+                    renderer.RenderDrawColor = _backgroundColor;
+
+                    renderer.RenderClear();
+
+                    var currentTime = DateTime.Now;
+                    var elapsedTime = currentTime - frameRateUpdatedTime;
+                    if (elapsedTime > frameRateUpdateInterval)
+                    {
+                        frameRate = frameCounter / elapsedTime.TotalSeconds;
+                        frameRateText = $"FPS: {frameRate:0.00}";
+                        frameRateUpdatedTime = currentTime;
+                        frameCounter = 0;
+                    }
+
+                    renderer.RenderDrawColor = _frameRateColor;
+
+                    renderer.RenderTextBlended(8, 8, _frameRateFont, frameRateText);
+
+                    renderer.RenderDrawColor = _waveColor;
+
+                    var channelHeight = renderer.OutputSize.Height / channels;
+                    var halfGraphHeight = channelHeight * 9 / 20;
+                    for (var channel = 0; channel < channels; ++channel)
+                    {
+                        var centerLine = channel * channelHeight + channelHeight / 2;
+                        var sampleOffset = _wavePosition + sampleSize * channel;
+                        for (var x = 0; x < renderer.OutputSize.Width; ++x)
+                        {
+                            var y = centerLine;
+
+                            if (sampleOffset < _waveFile.Buffer.Length)
+                            {
+                                var normalizedSample = _waveFile.Buffer.ToNormalizedSingle(sampleOffset, sampleFormat);
+                                y = (int)(centerLine + normalizedSample * halfGraphHeight);
+                            }
+
+                            waves[channel][x] = new Point(x, y);
+
+                            sampleOffset += sampleSize * channels;
+                        }
+
+                        renderer.RenderDrawLines(waves[channel]);
+                    }
+
+                    renderer.RenderDrawColor = _channelSeparatorColor;
+
+                    for (var channel = 0; channel <= channels; ++channel)
+                    {
+                        var y = channel * channelHeight;
+                        renderer.RenderDrawLine(0, y, renderer.OutputSize.Width, y);
+                    }
+
+                    renderer.RenderPresent();
+
+                    frameCounter++;
+                }
+            }
+            finally
+            {
+                renderer?.Dispose();
+            }
         }
 
         private static int Main(string[] args)

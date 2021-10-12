@@ -24,10 +24,10 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class WaveFile : IDisposable
+    public sealed unsafe class WaveFile : IDisposable
     {
         private SDL_AudioSpec _waveSpec;
-        
+
         private byte* _waveBuffer;
 
         private uint _waveLength;
@@ -46,7 +46,7 @@ namespace SDL2Sharp
                 var fileStream = Error.ReturnOrThrowOnFailure(
                     SDL.RWFromFile(unmanagedFilename, unmanagedMode)
                 );
-                
+
                 fixed (SDL_AudioSpec* waveSpec = &_waveSpec)
                 fixed (byte** waveBuffer = &_waveBuffer)
                 fixed (uint* waveLength = &_waveLength)
