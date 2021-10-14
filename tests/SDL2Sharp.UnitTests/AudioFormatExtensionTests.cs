@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using SDL2Sharp.Extensions;
 using Xunit;
 
 namespace SDL2Sharp.UnitTests
@@ -46,6 +47,5 @@ namespace SDL2Sharp.UnitTests
             Assert.Equal(16, AudioFormat.AUDIO_U16SYS.BitSize());
             Assert.Equal(8, AudioFormat.AUDIO_U8.BitSize());
         }
-
     }
 }

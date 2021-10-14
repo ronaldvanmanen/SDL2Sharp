@@ -20,6 +20,7 @@
 
 using System;
 using SDL2Sharp;
+using SDL2Sharp.Extensions;
 
 namespace BitmapViewer
 {
@@ -31,19 +32,28 @@ namespace BitmapViewer
 
         private Texture _bitmapTexture = null!;
 
-        public App()
-        : base(Subsystem.Video)
-        { }
-
-        protected override void OnInit(string[] args)
+        protected override void OnInitializing(string[] args)
         {
-            _window = new Window("Bitmap Viewer", 640, 480, WindowFlags.Resizable);
-            _renderer = _window.CreateRenderer(RendererFlags.Accelerated);
-            _bitmapTexture = _renderer.CreateTextureFromBitmap(args[0]);
-            _window.SizeChanged += OnSizeChanged;
+            Subsystems = Subsystems.Video;
         }
 
-        protected override void OnQuit()
+        protected override void OnInitialized(string[] args)
+        {
+            try
+            {
+                _window = new Window("Bitmap Viewer", 640, 480, WindowFlags.Resizable);
+                _renderer = _window.CreateRenderer(RendererFlags.Accelerated);
+                _bitmapTexture = _renderer.CreateTextureFromBitmap(args[0]);
+                _window.SizeChanged += OnSizeChanged;
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Could not run sample: {e.Message}");
+                Quit(1);
+            }
+        }
+
+        protected override void OnQuiting(int exitCode)
         {
             _window.SizeChanged -= OnSizeChanged;
             _bitmapTexture?.Dispose();
@@ -70,23 +80,9 @@ namespace BitmapViewer
 
         private static int Main(string[] args)
         {
-            App app = null!;
-
-            try
-            {
-                app = new App();
-                app.Run(args);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Could not run sample: {0}", e.Message);
-                return 1;
-            }
-            finally
-            {
-                app?.Dispose();
-            }
+            var app = new App();
+            var exitCode = app.Run(args);
+            return exitCode;
         }
     }
 }

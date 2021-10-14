@@ -28,50 +28,38 @@ using SDL2TTFSharp.Interop;
 
 namespace SDL2Sharp
 {
-    public abstract unsafe class Application : IDisposable
+    public abstract unsafe class Application
     {
         private static Application _instance = null!;
 
         public static Application Current => _instance;
 
+        public Subsystems Subsystems { get; set; } = Subsystems.All;
+
         public IReadOnlyList<Window> Windows => WindowsInternal.AsReadOnly();
 
         internal List<Window> WindowsInternal { get; } = new List<Window>();
 
+        private int _exitCode;
+
         protected Application()
-        : this(Subsystem.All)
-        { }
-
-        protected Application(Subsystem subsystems)
         {
+            if (_instance != null)
+            {
+                throw new InvalidOperationException();
+            }
+
             _instance = this;
-            Error.ThrowOnFailure(SDL.Init((uint)subsystems));
-            Error.ThrowOnFailure(TTF.Init());
-            SDL.SetEventFilter(&EventFilter, null);
+            _exitCode = 0;
         }
 
-        ~Application()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(false);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool _)
-        {
-            TTF.Quit();
-            SDL.Quit();
-        }
-
-        public void Run(string[] arguments)
+        public int Run(string[] arguments)
         {
             try
             {
-                OnInit(arguments);
+                OnInitializing(arguments);
+                OnInitialize();
+                OnInitialized(arguments);
 
                 while (true)
                 {
@@ -83,7 +71,7 @@ namespace SDL2Sharp
                         switch (eventType)
                         {
                             case SDL_EventType.SDL_QUIT:
-                                return;
+                                return _exitCode;
 
                             case SDL_EventType.SDL_MOUSEMOTION:
                                 Dispatch(@event.motion);
@@ -100,22 +88,45 @@ namespace SDL2Sharp
             }
             finally
             {
+                OnQuiting(_exitCode);
                 OnQuit();
+                OnQuited(_exitCode);
             }
         }
 
         public void Quit()
         {
-            var @event = new SDL_Event
-            {
-                type = (uint)SDL_EventType.SDL_QUIT
-            };
+            Quit(0);
+        }
+
+        public void Quit(int exitCode)
+        {
+            _exitCode = exitCode;
+            var @event = new SDL_Event { type = (uint)SDL_EventType.SDL_QUIT };
             Error.ThrowOnFailure(SDL.PushEvent(&@event));
         }
 
-        protected virtual void OnInit(string[] arguments) { }
+        protected virtual void OnInitializing(string[] args) { }
 
-        protected virtual void OnQuit() { }
+        private void OnInitialize()
+        {
+            Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
+            Error.ThrowOnFailure(TTF.Init());
+            SDL.SetEventFilter(&EventFilter, null);
+        }
+
+        protected virtual void OnInitialized(string[] args) { }
+
+        protected virtual void OnQuiting(int exitCode) { }
+
+        private void OnQuit()
+        {
+            SDL.SetEventFilter(null, null);
+            TTF.Quit();
+            SDL.Quit();
+        }
+
+        protected virtual void OnQuited(int exitCode) { }
 
         protected virtual void OnIdle() { }
 

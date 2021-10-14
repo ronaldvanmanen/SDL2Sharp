@@ -21,6 +21,7 @@
 using System;
 using System.Threading;
 using SDL2Sharp;
+using SDL2Sharp.Extensions;
 using SDL2Sharp.Interop;
 
 namespace WavePlayer
@@ -51,29 +52,38 @@ namespace WavePlayer
 
         private int _wavePosition = 0;
 
-        public App()
-        : base(Subsystem.Video | Subsystem.Audio | Subsystem.Events)
-        { }
-
-        protected override void OnInit(string[] args)
+        protected override void OnInitializing(string[] args)
         {
-            _window = new Window("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
-            _window.SizeChanged += OnWindowSizeChanged;
-            _renderingThread = new Thread(Render);
-            _rendererInvalidated = true;
-            _rendering = true;
-            _waveFile = new WaveFile(args[0]);
-            _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback);
-            _renderingThread.Start();
-            _audioDevice.Unpause();
+            Subsystems = Subsystems.Audio | Subsystems.Events | Subsystems.Video;
         }
 
-        protected override void OnQuit()
+        protected override void OnInitialized(string[] args)
+        {
+            try
+            {
+                _window = new Window("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+                _window.SizeChanged += OnWindowSizeChanged;
+                _renderingThread = new Thread(Render);
+                _rendererInvalidated = true;
+                _rendering = true;
+                _waveFile = new WaveFile(args[0]);
+                _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback);
+                _renderingThread.Start();
+                _audioDevice.Unpause();
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Could not run sample: {e.Message}");
+                Quit(1);
+            }
+        }
+
+        protected override void OnQuiting(int exitCode)
         {
             _audioDevice?.Pause();
             _rendererInvalidated = false;
             _rendering = false;
-            _renderingThread?.Join();
+            _renderingThread?.SafeJoin();
             _audioDevice?.Dispose();
             _waveFile?.Dispose();
             _window?.Dispose();
@@ -190,24 +200,9 @@ namespace WavePlayer
 
         private static int Main(string[] args)
         {
-            App application = null!;
-
-            try
-            {
-                application = new App();
-                application.Run(args);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Could not run sample: {0}", e.Message);
-                Console.WriteLine();
-                return 1;
-            }
-            finally
-            {
-                application?.Dispose();
-            }
+            var app = new App();
+            var exitCode = app.Run(args);
+            return exitCode;
         }
     }
 }

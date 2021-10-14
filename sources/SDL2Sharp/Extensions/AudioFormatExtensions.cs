@@ -20,43 +20,43 @@
 
 using SDL2Sharp.Interop;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Extensions
 {
     public static class AudioFormatExtensions
     {
         public static int BitSize(this AudioFormat format)
         {
-            return ((ushort)format) & SDL.SDL_AUDIO_MASK_BITSIZE;
+            return (ushort)format & SDL.SDL_AUDIO_MASK_BITSIZE;
         }
 
         public static bool IsFloat(this AudioFormat format)
         {
-            return (((ushort)format) & SDL.SDL_AUDIO_MASK_DATATYPE) != 0;
+            return ((ushort)format & SDL.SDL_AUDIO_MASK_DATATYPE) != 0;
         }
 
         public static bool IsBigEndian(this AudioFormat format)
         {
-            return (((ushort)format) & SDL.SDL_AUDIO_MASK_ENDIAN) != 0;
+            return ((ushort)format & SDL.SDL_AUDIO_MASK_ENDIAN) != 0;
         }
 
         public static bool IsSigned(this AudioFormat format)
         {
-            return (((ushort)format) & SDL.SDL_AUDIO_MASK_SIGNED) != 0;
+            return ((ushort)format & SDL.SDL_AUDIO_MASK_SIGNED) != 0;
         }
 
         public static bool IsInt(this AudioFormat format)
         {
-            return !IsFloat(format);
+            return !format.IsFloat();
         }
 
         public static bool IsLittleEndian(this AudioFormat format)
         {
-            return !IsBigEndian(format);
+            return !format.IsBigEndian();
         }
 
         public static bool IsUnsigned(this AudioFormat format)
         {
-            return !IsSigned(format);
+            return !format.IsSigned();
         }
     }
 }

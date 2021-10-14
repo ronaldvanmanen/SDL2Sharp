@@ -18,10 +18,10 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any bytes distribution.
 
-using SDL2Sharp.Interop;
 using System;
+using SDL2Sharp.Interop;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Extensions
 {
     public static class ReadOnlySpanExtensions
     {
@@ -37,7 +37,7 @@ namespace SDL2Sharp
                 throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, "startIndex cannot be less than zero");
             }
 
-            if (sampleOffset > (bytes.Length - sizeof(short)))
+            if (sampleOffset > bytes.Length - sizeof(short))
             {
                 throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, @"startIndex cannot be greater than the length of bytes minus {sizeof(short)}");
             }
@@ -50,18 +50,18 @@ namespace SDL2Sharp
                     {   // data is aligned 
                         return *(short*)startPointer;
                     }
-                    return (short)((*startPointer) | (*(startPointer + 1) << 8));
+                    return (short)(*startPointer | *(startPointer + 1) << 8);
                 }
                 else
                 {
-                    return (short)((*startPointer << 8) | (*(startPointer + 1)));
+                    return (short)(*startPointer << 8 | *(startPointer + 1));
                 }
             }
         }
 
         public static unsafe ushort ToUInt16(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
         {
-            return (ushort)ToInt16(bytes, sampleOffset, isLittleEndian);
+            return (ushort)bytes.ToInt16(sampleOffset, isLittleEndian);
         }
 
         public static unsafe int ToInt32(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
@@ -76,7 +76,7 @@ namespace SDL2Sharp
                 throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, "startIndex cannot be less than zero");
             }
 
-            if (sampleOffset > (bytes.Length - sizeof(int)))
+            if (sampleOffset > bytes.Length - sizeof(int))
             {
                 throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, @"startIndex cannot be greater than the length of bytes minus {sizeof(int)}");
             }
@@ -87,25 +87,25 @@ namespace SDL2Sharp
                 {
                     if (sampleOffset % 4 == 0)
                     {   // data is aligned 
-                        return *((int*)startPointer);
+                        return *(int*)startPointer;
                     }
-                    return (*startPointer) | (*(startPointer + 1) << 8) | (*(startPointer + 2) << 16) | (*(startPointer + 3) << 24);
+                    return *startPointer | *(startPointer + 1) << 8 | *(startPointer + 2) << 16 | *(startPointer + 3) << 24;
                 }
                 else
                 {
-                    return (*startPointer << 24) | (*(startPointer + 1) << 16) | (*(startPointer + 2) << 8) | (*(startPointer + 3));
+                    return *startPointer << 24 | *(startPointer + 1) << 16 | *(startPointer + 2) << 8 | *(startPointer + 3);
                 }
             }
         }
 
         public static unsafe uint ToUInt32(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
         {
-            return (uint)ToInt32(bytes, sampleOffset, isLittleEndian);
+            return (uint)bytes.ToInt32(sampleOffset, isLittleEndian);
         }
 
         public static unsafe float ToSingle(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
         {
-            var bits = ToInt32(bytes, sampleOffset, isLittleEndian);
+            var bits = bytes.ToInt32(sampleOffset, isLittleEndian);
             var result = *(float*)&bits;
             return result;
         }
@@ -117,7 +117,7 @@ namespace SDL2Sharp
                 case AudioFormat.AUDIO_U8:
                     {
                         var sample = bytes[sampleOffset];
-                        var normalizedSample = (sample - .5f - (byte.MaxValue + 1) / 2) / 255f;
+                        var normalizedSample = (sample - .5f - (byte.MaxValue + 1) / 2) / byte.MaxValue;
                         return normalizedSample;
                     }
                 case AudioFormat.AUDIO_S8:
@@ -164,7 +164,7 @@ namespace SDL2Sharp
                     }
                 case AudioFormat.AUDIO_F32LSB:
                     {
-                        return bytes.ToSingle(sampleOffset, true);
+                        return bytes.ToSingle(sampleOffset, false);
                     }
                 case AudioFormat.AUDIO_F32MSB:
                     {
