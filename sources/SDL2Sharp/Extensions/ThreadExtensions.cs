@@ -18,18 +18,24 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using Xunit;
+using System;
+using System.Threading;
 
-namespace SDL2Sharp.UnitTests
+namespace SDL2Sharp.Extensions
 {
-    public static class ApplicationTests
+    public static class ThreadExtensions
     {
-        private sealed class App : Application { }
-
-        [Fact]
-        public static void TestConstructor()
+        public static void SafeJoin(this Thread thread)
         {
-            Assert.NotNull(new App());
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            if (thread.ThreadState != ThreadState.Unstarted)
+            {
+                thread.Join();
+            }
         }
     }
 }

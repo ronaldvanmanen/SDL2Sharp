@@ -18,20 +18,24 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp.Interop;
 using System;
+using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public static class SpanExtensions
+    [Flags]
+    public enum Subsystems : uint
     {
-        public static unsafe void MixAudioFormat(this Span<byte> source, Span<byte> destination, ushort format, int volume)
-        {
-            fixed (byte* dst = &destination[0])
-            fixed (byte* src = &source[0])
-            {
-                SDL.MixAudioFormat(dst, src, format, (uint)source.Length, volume);
-            }
-        }
+        None = 0,
+        Timer = SDL.SDL_INIT_TIMER,
+        Audio = SDL.SDL_INIT_AUDIO,
+        Video = SDL.SDL_INIT_VIDEO,
+        Joystick = SDL.SDL_INIT_JOYSTICK,
+        Haptic = SDL.SDL_INIT_HAPTIC,
+        GameController = SDL.SDL_INIT_GAMECONTROLLER,
+        Events = SDL.SDL_INIT_EVENTS,
+        Sensor = SDL.SDL_INIT_SENSOR,
+        NoParachute = SDL.SDL_INIT_NOPARACHUTE,
+        All = SDL.SDL_INIT_EVERYTHING,
     }
 }

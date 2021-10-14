@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using SDL2Sharp;
+using SDL2Sharp.Extensions;
 
 namespace ParticleSystem
 {

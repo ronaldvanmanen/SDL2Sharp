@@ -20,6 +20,7 @@
 
 using System;
 using SDL2Sharp;
+using SDL2Sharp.Extensions;
 
 namespace ParticleSystem
 {
@@ -75,6 +76,5 @@ namespace ParticleSystem
             renderer.RenderBlendMode = BlendMode.Blend;
             renderer.RenderFillCircle(Position.X, Position.Y, (int)Math.Ceiling(Radius));
         }
-
     }
 }

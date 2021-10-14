@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Extensions
 {
     public static class RendererExtensions
     {

@@ -38,11 +38,12 @@ namespace AverageFrameRate
 
         private volatile bool _rendering = false;
 
-        public App()
-        : base(Subsystem.Video)
-        { }
+        protected override void OnInitializing(string[] args)
+        {
+            Subsystems = Subsystems.Video;
+        }
 
-        protected override void OnInit(string[] args)
+        protected override void OnInitialized(string[] args)
         {
             _window = new Window("Average Frame Rate", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
             _window.SizeChanged += OnWindowSizeChanged;
@@ -52,7 +53,7 @@ namespace AverageFrameRate
             _renderingThread.Start();
         }
 
-        protected override void OnQuit()
+        protected override void OnQuiting(int exitCode)
         {
             _rendererInvalidated = false;
             _rendering = false;
@@ -120,23 +121,9 @@ namespace AverageFrameRate
 
         private static int Main(string[] args)
         {
-            App app = null!;
-
-            try
-            {
-                app = new App();
-                app.Run(args);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Could not run sample: {0}", e.Message);
-                return 1;
-            }
-            finally
-            {
-                app?.Dispose();
-            }
+            var app = new App();
+            var exitCode = app.Run(args);
+            return exitCode;
         }
     }
 }
