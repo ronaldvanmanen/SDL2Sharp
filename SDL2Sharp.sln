@@ -141,7 +141,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2TTFSharp.Interop", "sou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AverageFrameRate", "samples\AverageFrameRate\AverageFrameRate.csproj", "{7DED9CCC-16B4-4A5C-A3E6-98F80157B609}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParticleSystem", "samples\ParticleSystem\ParticleSystem.csproj", "{484D62C0-58A2-410A-84B5-EC71A64DC975}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParticleSystem", "samples\ParticleSystem\ParticleSystem.csproj", "{484D62C0-58A2-410A-84B5-EC71A64DC975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TunnelEffect", "samples\TunnelEffect\TunnelEffect.csproj", "{629C4F2E-29C2-417A-BB3C-E52EA33CD365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -189,6 +191,10 @@ Global
 		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{484D62C0-58A2-410A-84B5-EC71A64DC975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -217,6 +223,7 @@ Global
 		{F74A756F-6062-43FB-BE62-EE9889AD1D76} = {1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}
 		{7DED9CCC-16B4-4A5C-A3E6-98F80157B609} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 		{484D62C0-58A2-410A-84B5-EC71A64DC975} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{629C4F2E-29C2-417A-BB3C-E52EA33CD365} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
