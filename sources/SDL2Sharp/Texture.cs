@@ -19,6 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.InteropServices;
+using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
@@ -75,12 +77,30 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public Surface Lock(Rectangle rectangle)
+        public Span2D<TPixelFormat> Lock<TPixelFormat>() where TPixelFormat : struct
         {
-            return Lock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+            return Lock<TPixelFormat>(0, 0, Width, Height);
         }
 
-        public Surface Lock()
+        public Span2D<TPixelFormat> Lock<TPixelFormat>(Rectangle rectangle) where TPixelFormat : struct
+        {
+            return Lock<TPixelFormat>(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        public Span2D<TPixelFormat> Lock<TPixelFormat>(int x, int y, int width, int height) where TPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            void* pixels;
+            int pitch;
+            Error.ThrowOnFailure(
+                SDL.LockTexture(_handle, &rect, &pixels, &pitch)
+            );
+            return new Span2D<TPixelFormat>(pixels, height, width, pitch - width * Marshal.SizeOf<TPixelFormat>());
+        }
+
+        public Surface LockToSurface()
         {
             ThrowWhenDisposed();
 
@@ -91,7 +111,12 @@ namespace SDL2Sharp
             return new Surface(surfaceHandle, false);
         }
 
-        public Surface Lock(int x, int y, int width, int height)
+        public Surface LockToSurface(Rectangle rectangle)
+        {
+            return LockToSurface(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        public Surface LockToSurface(int x, int y, int width, int height)
         {
             ThrowWhenDisposed();
 

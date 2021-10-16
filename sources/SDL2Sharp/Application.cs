@@ -58,7 +58,7 @@ namespace SDL2Sharp
             try
             {
                 OnInitializing(arguments);
-                OnInitialize();
+                DoInitialize();
                 OnInitialized(arguments);
 
                 while (true)
@@ -89,7 +89,7 @@ namespace SDL2Sharp
             finally
             {
                 OnQuiting(_exitCode);
-                OnQuit();
+                DoQuit();
                 OnQuited(_exitCode);
             }
         }
@@ -108,7 +108,7 @@ namespace SDL2Sharp
 
         protected virtual void OnInitializing(string[] args) { }
 
-        private void OnInitialize()
+        private void DoInitialize()
         {
             Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
             Error.ThrowOnFailure(TTF.Init());
@@ -119,7 +119,7 @@ namespace SDL2Sharp
 
         protected virtual void OnQuiting(int exitCode) { }
 
-        private void OnQuit()
+        private void DoQuit()
         {
             SDL.SetEventFilter(null, null);
             TTF.Quit();

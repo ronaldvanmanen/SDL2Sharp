@@ -155,6 +155,39 @@ namespace SDL2Sharp
             }
         }
 
+        public Texture RenderTarget
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                var texture = SDL.GetRenderTarget(_handle);
+                if (texture is null)
+                {
+                    return null!;
+                }
+                return new Texture(texture);
+            }
+            set
+            {
+                ThrowWhenDisposed();
+
+                if (value is null)
+                {
+                    Error.ThrowOnFailure(
+                        SDL.SetRenderTarget(_handle, null)
+                    );
+                }
+                else
+                {
+                    Error.ThrowOnFailure(
+                        SDL.SetRenderTarget(_handle, value)
+                    );
+                }
+            }
+        }
+
+
         internal Renderer(SDL_Renderer* renderer)
         {
             if (renderer is null)
@@ -209,7 +242,6 @@ namespace SDL2Sharp
                 SDL.RenderClear(_handle)
             );
         }
-
 
         public void RenderCopy(Texture texture)
         {
@@ -288,6 +320,16 @@ namespace SDL2Sharp
             Error.ThrowOnFailure(
                 SDL.RenderDrawPoint(_handle, x, y)
             );
+        }
+
+        public void RenderDrawPoints(Point[] points)
+        {
+            fixed (Point* point = &points[0])
+            {
+                Error.ThrowOnFailure(
+                    SDL.RenderDrawPoints(_handle, (SDL_Point*)point, points.Length)
+                );
+            }
         }
 
         public void RenderFillRect(int x, int y, int width, int height)
