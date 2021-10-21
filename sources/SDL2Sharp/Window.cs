@@ -208,6 +208,30 @@ namespace SDL2Sharp
             }
         }
 
+        public PixelFormatEnum PixelFormat
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                var pixelFormat = SDL.GetWindowPixelFormat(_handle);
+                Error.ThrowOnFailure(pixelFormat);
+                return (PixelFormatEnum)pixelFormat;
+            }
+        }
+
+        public Surface Surface
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                var surfaceHandle = SDL.GetWindowSurface(_handle);
+                Error.ThrowOnFailure(surfaceHandle);
+                return new Surface(surfaceHandle, false);
+            }
+        }
+
         public bool IsBordered
         {
             get
@@ -432,6 +456,15 @@ namespace SDL2Sharp
                 renderer = new Renderer(handle);
                 return true;
             }
+        }
+
+        public void Update()
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.UpdateWindowSurface(_handle)
+            );
         }
 
         private void ThrowWhenDisposed()

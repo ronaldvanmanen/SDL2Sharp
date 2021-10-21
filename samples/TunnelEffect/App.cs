@@ -19,7 +19,9 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
 
@@ -27,6 +29,19 @@ namespace TunnelEffect
 {
     internal unsafe class App : Application
     {
+        private readonly struct Transform
+        {
+            public Transform(int angle, int distance)
+            {
+                Angle = angle;
+                Distance = distance;
+            }
+
+            public int Angle { get; }
+
+            public int Distance { get; }
+        }
+
         private static readonly Font _frameRateFont = new Font("lazy.ttf", 28);
 
         private static readonly Color _frameRateColor = new Color(255, 255, 255, 255);
@@ -50,7 +65,7 @@ namespace TunnelEffect
         {
             _window = new Window("Tunnel Effect", 640, 480, WindowFlags.Resizable);
             _window.SizeChanged += OnWindowSizeChanged;
-            _renderingThread = new Thread(Render);
+            _renderingThread = new Thread(Render, 32 * 1024 * 1024);
             _rendererInvalidated = true;
             _rendering = true;
             _renderingThread.Start();
@@ -77,11 +92,10 @@ namespace TunnelEffect
             var screenWidth = 0;
             var screenHeight = 0;
             Texture screenTexture = null!;
-            var textureWidth = 0;
-            var textureHeight = 0;
-            uint[,] texture = null!;
-            int[,] distanceTable = null!;
-            int[,] angleTable = null!;
+            Span2D<uint> screenImage = null!;
+            var sourceImageSize = 0;
+            ReadOnlySpan2D<uint> sourceImage = null!;
+            ReadOnlySpan2D<Transform> transformTable = null!;
 
             try
             {
@@ -95,10 +109,10 @@ namespace TunnelEffect
                         screenWidth = renderer.OutputSize.Width;
                         screenHeight = renderer.OutputSize.Height;
                         screenTexture = renderer.CreateTexture(PixelFormatEnum.RGBA8888, TextureAccess.Streaming, screenWidth, screenHeight);
-                        textureWidth = textureHeight = NextPowerOfTwo(Math.Max(screenWidth, screenHeight));
-                        texture = GenerateXorTexture(textureWidth, textureHeight);
-                        distanceTable = GenerateDistanceTable(textureWidth, textureHeight);
-                        angleTable = GenerateAngleTable(textureWidth, textureHeight);
+                        screenImage = new Span2D<uint>(new uint[screenHeight * screenWidth], screenHeight, screenWidth);
+                        sourceImageSize = NextPowerOfTwo(Math.Max(screenWidth, screenHeight));
+                        sourceImage = GenerateXorImage(sourceImageSize, sourceImageSize);
+                        transformTable = GenerateTransformTable(sourceImageSize, sourceImageSize);
                         _rendererInvalidated = false;
                     }
 
@@ -111,22 +125,19 @@ namespace TunnelEffect
                     var animation = elapsedTime.TotalSeconds;
                     var shiftX = (int)(screenWidth * 1.0 * animation);
                     var shiftY = (int)(screenHeight * 0.25 * animation);
-                    var lookX = (textureWidth - screenWidth) / 2;
-                    var lookY = (textureHeight - screenHeight) / 2;
+                    var lookX = (sourceImageSize - screenWidth) / 2;
+                    var lookY = (sourceImageSize - screenHeight) / 2;
 
-                    var surface = screenTexture.Lock<uint>();
-                    for (var y = 0; y < surface.Height; y++)
+                    for (var y = 0; y < screenImage.Height; y++)
                     {
-                        for (var x = 0; x < surface.Width; x++)
+                        for (var x = 0; x < screenImage.Width; x++)
                         {
-                            var cx = Math.Abs((distanceTable[y + lookY, x + lookX] + shiftX + lookX) % textureWidth);
-                            var cy = Math.Abs((angleTable[y + lookY, x + lookX] + shiftY + lookY) % textureHeight);
-                            surface[y, x] = texture[cy, cx];
+                            var transform = transformTable[y + lookY, x + lookX];
+                            var transformX = Math.Abs(transform.Distance + shiftX + lookX) % sourceImageSize;
+                            var transformY = Math.Abs(transform.Angle + shiftY + lookY) % sourceImageSize;
+                            screenImage[y, x] = sourceImage[transformY, transformX];
                         }
                     }
-                    screenTexture.Unlock();
-
-                    renderer.RenderCopy(screenTexture);
 
                     var currentFrameTime = DateTime.UtcNow;
                     var elapsedFrameTime = currentFrameTime - lastFrameTime;
@@ -139,6 +150,8 @@ namespace TunnelEffect
                         frameCounter = 0;
                     }
 
+                    screenTexture.Update(screenImage);
+                    renderer.RenderCopy(screenTexture);
                     renderer.RenderDrawColor = _frameRateColor;
                     renderer.RenderTextBlended(8, 8, _frameRateFont, frameRateText);
                     renderer.RenderPresent();
@@ -152,9 +165,10 @@ namespace TunnelEffect
             }
         }
 
-        private static uint[,] GenerateXorTexture(int width, int height)
+        private static ReadOnlySpan2D<uint> GenerateXorImage(int width, int height)
         {
-            var texture = new uint[height, width];
+            var array = new uint[height * width];
+            var image = new Span2D<uint>(array, height, width);
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -164,40 +178,30 @@ namespace TunnelEffect
                     byte b = (byte)((x * 256 / width) ^ (y * 256 / height));
                     byte a = 0xFF;
                     uint rgba = (uint)(r << 24 | g << 16 | b << 8 | a);
-                    texture[y, x] = rgba;
+                    image[y, x] = rgba;
                 }
             }
-            return texture;
+            return image;
         }
 
-        private static int[,] GenerateAngleTable(int textureWidth, int textureHeight)
-        {
-            var angleTable = new int[textureHeight, textureWidth];
-            for (var y = 0; y < textureHeight; y++)
-            {
-                for (var x = 0; x < textureWidth; x++)
-                {
-                    angleTable[y, x] = (int)(0.5 * textureWidth * Math.Atan2(y - textureHeight / 2.0, x - textureWidth / 2.0) / Math.PI);
-                }
-            }
-            return angleTable;
-        }
-
-        private static int[,] GenerateDistanceTable(int textureWidth, int textureHeight)
+        private static ReadOnlySpan2D<Transform> GenerateTransformTable(int width, int height)
         {
             const double ratio = 32d;
-            var distanceTable = new int[textureHeight, textureWidth];
-            for (var y = 0; y < textureHeight; y++)
+            var array = new Transform[height * width];
+            var table = new Span2D<Transform>(array, height, width);
+            for (var y = 0; y < height; y++)
             {
-                for (var x = 0; x < textureWidth; x++)
+                for (var x = 0; x < width; x++)
                 {
                     unchecked
                     {
-                        distanceTable[y, x] = (int)(ratio * textureHeight / Math.Sqrt((x - textureWidth / 2d) * (x - textureWidth / 2d) + (y - textureHeight / 2d) * (y - textureHeight / 2d)) % textureHeight);
+                        var angle = (int)(0.5 * width * Math.Atan2(y - height / 2.0, x - width / 2.0) / Math.PI);
+                        var distance = (int)(ratio * height / Math.Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d)) % height);
+                        table[y, x] = new Transform(angle, distance);
                     }
                 }
             }
-            return distanceTable;
+            return table;
         }
 
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
@@ -208,11 +212,11 @@ namespace TunnelEffect
         private static int NextPowerOfTwo(int value)
         {
             --value;
-            value |= (value >> 1);
-            value |= (value >> 2);
-            value |= (value >> 4);
-            value |= (value >> 8);
-            value |= (value >> 16);
+            value |= value >> 1;
+            value |= value >> 2;
+            value |= value >> 4;
+            value |= value >> 8;
+            value |= value >> 16;
             ++value;
             return value;
         }

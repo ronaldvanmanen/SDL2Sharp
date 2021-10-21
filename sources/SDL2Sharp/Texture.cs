@@ -128,6 +128,27 @@ namespace SDL2Sharp
             return new Surface(surfaceHandle, false);
         }
 
+        public void Update(Span2D<uint> pixels)
+        {
+            ThrowWhenDisposed();
+
+            fixed (void* pointer = &pixels[0, 0])
+            {
+                Error.ThrowOnFailure(
+                  SDL.UpdateTexture(_handle, null, pointer, pixels.Width * sizeof(uint))
+              );
+            };
+        }
+
+        public void Update(void* pixels, int pitch)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.UpdateTexture(_handle, null, pixels, pitch)
+            );
+        }
+
         public void Unlock()
         {
             ThrowWhenDisposed();

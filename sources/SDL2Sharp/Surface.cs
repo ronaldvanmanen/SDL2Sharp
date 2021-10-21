@@ -19,6 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.InteropServices;
+using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
@@ -63,6 +65,10 @@ namespace SDL2Sharp
             _handle = handle;
             _freeHandle = freeHandle;
         }
+
+        public Surface(int width, int height, int depth, PixelFormatEnum format)
+        : this(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format))
+        { }
 
         ~Surface()
         {
@@ -118,6 +124,23 @@ namespace SDL2Sharp
             Error.ThrowOnFailure(
                 SDL.FillRect(_handle, null, color)
             );
+        }
+
+        public Span2D<TPixelFormat> Lock<TPixelFormat>()
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.LockSurface(_handle)
+            );
+            return new Span2D<TPixelFormat>(_handle->pixels, _handle->h, _handle->w, _handle->pitch - _handle->w * Marshal.SizeOf<TPixelFormat>());
+        }
+
+        public void Unlock()
+        {
+            ThrowWhenDisposed();
+
+            SDL.UnlockSurface(_handle);
         }
 
         public static implicit operator SDL_Surface*(Surface surface)
