@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		editbin.cmd = editbin.cmd
 		generate.cmd = generate.cmd
 		LICENSE = LICENSE
 		nuget.config = nuget.config
@@ -60,6 +61,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724
 		README.md = README.md
 		restore.cmd = restore.cmd
 		test.cmd = test.cmd
+		vsdevcmd.cmd = vsdevcmd.cmd
+		vswhere.cmd = vswhere.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0793D351-B4AF-440D-AEC3-23830CC24DEE}"
