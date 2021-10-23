@@ -55,7 +55,7 @@ namespace SDL2Sharp
             }
         }
 
-        public Color RenderDrawColor
+        public Color DrawColor
         {
             get
             {
@@ -77,7 +77,7 @@ namespace SDL2Sharp
             }
         }
 
-        public BlendMode RenderBlendMode
+        public BlendMode BlendMode
         {
             get
             {
@@ -99,7 +99,7 @@ namespace SDL2Sharp
             }
         }
 
-        public Size RenderLogicalViewSize
+        public Size LogicalViewSize
         {
             get
             {
@@ -119,7 +119,7 @@ namespace SDL2Sharp
             }
         }
 
-        public Scale RenderScale
+        public Scale Scale
         {
             get
             {
@@ -134,7 +134,7 @@ namespace SDL2Sharp
             }
         }
 
-        public Rectangle RenderViewPort
+        public Rectangle ViewPort
         {
             get
             {
@@ -155,7 +155,7 @@ namespace SDL2Sharp
             }
         }
 
-        public Texture RenderTarget
+        public Texture Target
         {
             get
             {
@@ -186,7 +186,6 @@ namespace SDL2Sharp
                 }
             }
         }
-
 
         internal Renderer(SDL_Renderer* renderer)
         {
@@ -234,7 +233,7 @@ namespace SDL2Sharp
             return new Texture(texture);
         }
 
-        public void RenderClear()
+        public void Clear()
         {
             ThrowWhenDisposed();
 
@@ -243,7 +242,7 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderCopy(Texture texture)
+        public void Copy(Texture texture)
         {
             ThrowWhenDisposed();
 
@@ -252,7 +251,7 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderCopy(Texture texture, Rectangle destination)
+        public void Copy(Texture texture, Rectangle destination)
         {
             ThrowWhenDisposed();
 
@@ -269,7 +268,7 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderCopy(Texture texture, Rectangle source, Rectangle destination)
+        public void Copy(Texture texture, Rectangle source, Rectangle destination)
         {
             ThrowWhenDisposed();
 
@@ -294,7 +293,7 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderDrawLine(int x1, int y1, int x2, int y2)
+        public void DrawLine(int x1, int y1, int x2, int y2)
         {
             ThrowWhenDisposed();
 
@@ -303,7 +302,7 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderDrawLines(Point[] points)
+        public void DrawLines(Point[] points)
         {
             fixed (Point* point = &points[0])
             {
@@ -313,7 +312,7 @@ namespace SDL2Sharp
             }
         }
 
-        public void RenderDrawPoint(int x, int y)
+        public void DrawPoint(int x, int y)
         {
             ThrowWhenDisposed();
 
@@ -322,7 +321,7 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderDrawPoints(Point[] points)
+        public void DrawPoints(Point[] points)
         {
             fixed (Point* point = &points[0])
             {
@@ -332,7 +331,7 @@ namespace SDL2Sharp
             }
         }
 
-        public void RenderFillRect(int x, int y, int width, int height)
+        public void FillRect(int x, int y, int width, int height)
         {
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             Error.ThrowOnFailure(
@@ -340,12 +339,12 @@ namespace SDL2Sharp
             );
         }
 
-        public void RenderFillRect(Rectangle rectangle)
+        public void FillRect(Rectangle rectangle)
         {
-            RenderFillRect(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+            FillRect(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
-        public void RenderPresent()
+        public void Present()
         {
             ThrowWhenDisposed();
 

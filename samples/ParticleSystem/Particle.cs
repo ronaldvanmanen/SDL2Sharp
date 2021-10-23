@@ -72,9 +72,9 @@ namespace ParticleSystem
                 throw new ArgumentNullException(nameof(renderer));
             }
 
-            renderer.RenderDrawColor = Color;
-            renderer.RenderBlendMode = BlendMode.Blend;
-            renderer.RenderFillCircle(Position.X, Position.Y, (int)Math.Ceiling(Radius));
+            renderer.DrawColor = Color;
+            renderer.BlendMode = BlendMode.Blend;
+            renderer.FillCircle(Position.X, Position.Y, (int)Math.Ceiling(Radius));
         }
     }
 }

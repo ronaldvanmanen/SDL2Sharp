@@ -73,9 +73,9 @@ namespace BitmapViewer
 
         private void Render()
         {
-            _renderer.RenderClear();
-            _renderer.RenderCopy(_bitmapTexture);
-            _renderer.RenderPresent();
+            _renderer.Clear();
+            _renderer.Copy(_bitmapTexture);
+            _renderer.Present();
         }
 
         private static int Main(string[] args)

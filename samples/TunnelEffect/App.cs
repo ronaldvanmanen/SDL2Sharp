@@ -117,9 +117,9 @@ namespace TunnelEffect
                         _rendererInvalidated = false;
                     }
 
-                    renderer.RenderDrawColor = _backgroundColor;
-                    renderer.RenderBlendMode = BlendMode.None;
-                    renderer.RenderClear();
+                    renderer.DrawColor = _backgroundColor;
+                    renderer.BlendMode = BlendMode.None;
+                    renderer.Clear();
 
                     var currentTime = DateTime.UtcNow;
                     var elapsedTime = currentTime - startTime;
@@ -152,10 +152,10 @@ namespace TunnelEffect
                     }
 
                     screenTexture.Update(screenImage);
-                    renderer.RenderCopy(screenTexture);
-                    renderer.RenderDrawColor = _frameRateColor;
-                    renderer.RenderTextBlended(8, 8, _frameRateFont, frameRateText);
-                    renderer.RenderPresent();
+                    renderer.Copy(screenTexture);
+                    renderer.DrawColor = _frameRateColor;
+                    renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
+                    renderer.Present();
                     frameCounter++;
                     lastFrameTime = currentFrameTime;
                 }

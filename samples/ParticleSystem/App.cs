@@ -99,9 +99,9 @@ namespace ParticleSystem
                     particleEmitter.MoveTo(_mouseX, _mouseY);
                     particleEmitter.Update(currentFrameTime, elapsedTime);
 
-                    renderer.RenderDrawColor = _backgroundColor;
-                    renderer.RenderBlendMode = BlendMode.None;
-                    renderer.RenderClear();
+                    renderer.DrawColor = _backgroundColor;
+                    renderer.BlendMode = BlendMode.None;
+                    renderer.Clear();
 
                     particleEmitter.Render(renderer);
 
@@ -114,9 +114,9 @@ namespace ParticleSystem
                         frameCounter = 0;
                     }
 
-                    renderer.RenderDrawColor = _frameRateColor;
-                    renderer.RenderTextBlended(8, 8, _frameRateFont, frameRateText);
-                    renderer.RenderPresent();
+                    renderer.DrawColor = _frameRateColor;
+                    renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
+                    renderer.Present();
                     frameCounter++;
                     lastFrameTime = currentFrameTime;
                 }
