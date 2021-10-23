@@ -64,6 +64,7 @@ namespace TunnelEffect
         protected override void OnInitialized(string[] args)
         {
             _window = new Window("Tunnel Effect", 640, 480, WindowFlags.Resizable);
+            _window.KeyDown += OnWindowKeyDown;
             _window.SizeChanged += OnWindowSizeChanged;
             _renderingThread = new Thread(Render, 32 * 1024 * 1024);
             _rendererInvalidated = true;
@@ -202,6 +203,17 @@ namespace TunnelEffect
                 }
             }
             return table;
+        }
+
+        private void OnWindowKeyDown(object? sender, KeyEventArgs e)
+        {
+            if (sender is Window window)
+            {
+                if (e.KeyCode == KeyCode.F11 || (e.KeyCode == KeyCode.Return && e.Alt))
+                {
+                    window.IsFullScreenDesktop = !window.IsFullScreenDesktop;
+                }
+            }
         }
 
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)

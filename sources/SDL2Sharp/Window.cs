@@ -61,6 +61,10 @@ namespace SDL2Sharp
 
         public event EventHandler? HitTest;
 
+        public event EventHandler<KeyEventArgs>? KeyDown;
+
+        public event EventHandler<KeyEventArgs>? KeyUp;
+
         public event EventHandler<MouseMotionEventArgs>? MouseMotion;
 
         private SDL_Window* _handle;
@@ -475,12 +479,22 @@ namespace SDL2Sharp
             }
         }
 
-        internal void HandleEvent(SDL_MouseMotionEvent @event)
+        internal void HandleKeyDownEvent(SDL_KeyboardEvent @event)
+        {
+            OnKeyDown(@event.keysym, @event.repeat);
+        }
+
+        internal void HandleKeyUpEvent(SDL_KeyboardEvent @event)
+        {
+            OnKeyUp(@event.keysym, @event.repeat);
+        }
+
+        internal void HandleMouseMotionEvent(SDL_MouseMotionEvent @event)
         {
             OnMouseMotion(@event.x, @event.y, @event.xrel, @event.yrel);
         }
 
-        internal void HandleEvent(SDL_WindowEvent windowEvent)
+        internal void HandleWindowEvent(SDL_WindowEvent windowEvent)
         {
             switch ((SDL_WindowEventID)windowEvent.@event)
             {
@@ -613,6 +627,16 @@ namespace SDL2Sharp
         private void OnHitTest()
         {
             HitTest?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnKeyDown(SDL_Keysym key, int repeat)
+        {
+            KeyDown?.Invoke(this, new KeyEventArgs((Scancode)key.scancode, (KeyCode)key.sym, (KeyModifiers)key.mod, repeat));
+        }
+
+        private void OnKeyUp(SDL_Keysym key, int repeat)
+        {
+            KeyUp?.Invoke(this, new KeyEventArgs((Scancode)key.scancode, (KeyCode)key.sym, (KeyModifiers)key.mod, repeat));
         }
 
         private void OnMouseMotion(int x, int y, int relativeX, int relativeY)
