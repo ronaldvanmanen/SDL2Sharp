@@ -73,12 +73,20 @@ namespace SDL2Sharp
                             case SDL_EventType.SDL_QUIT:
                                 return _exitCode;
 
+                            case SDL_EventType.SDL_KEYUP:
+                                DispatchKeyUpEvent(@event.key);
+                                break;
+
+                            case SDL_EventType.SDL_KEYDOWN:
+                                DispatchKeyDownEvent(@event.key);
+                                break;
+
                             case SDL_EventType.SDL_MOUSEMOTION:
-                                Dispatch(@event.motion);
+                                DispatchMouseMotionEvent(@event.motion);
                                 break;
 
                             case SDL_EventType.SDL_WINDOWEVENT:
-                                Dispatch(@event.window);
+                                DispatchWindowEvent(@event.window);
                                 break;
                         }
                     }
@@ -130,23 +138,42 @@ namespace SDL2Sharp
 
         protected virtual void OnIdle() { }
 
-        private void Dispatch(SDL_MouseMotionEvent @event)
+        private void DispatchKeyDownEvent(SDL_KeyboardEvent @event)
         {
             var windows = WindowsInternal;
             var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
-                window.HandleEvent(@event);
+                window.HandleKeyDownEvent(@event);
             }
         }
 
-        private void Dispatch(SDL_WindowEvent @event)
+        private void DispatchKeyUpEvent(SDL_KeyboardEvent @event)
         {
             var windows = WindowsInternal;
             var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
-                window.HandleEvent(@event);
+                window.HandleKeyUpEvent(@event);
+            }
+        }
+        private void DispatchMouseMotionEvent(SDL_MouseMotionEvent @event)
+        {
+            var windows = WindowsInternal;
+            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            if (window != null)
+            {
+                window.HandleMouseMotionEvent(@event);
+            }
+        }
+
+        private void DispatchWindowEvent(SDL_WindowEvent @event)
+        {
+            var windows = WindowsInternal;
+            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            if (window != null)
+            {
+                window.HandleWindowEvent(@event);
             }
         }
 
@@ -157,7 +184,7 @@ namespace SDL2Sharp
             switch (eventType)
             {
                 case SDL_EventType.SDL_WINDOWEVENT:
-                    Application.Current.Dispatch(@event->window);
+                    Application.Current.DispatchWindowEvent(@event->window);
                     return 0;
             }
             return 1;
