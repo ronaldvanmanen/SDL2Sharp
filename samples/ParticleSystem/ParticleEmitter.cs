@@ -85,9 +85,9 @@ namespace ParticleSystem
                 particle.Render(renderer);
             }
 
-            renderer.RenderDrawColor = Color;
-            renderer.RenderBlendMode = BlendMode.Blend;
-            renderer.RenderFillCircle(Position.X, Position.Y, Radius);
+            renderer.DrawColor = Color;
+            renderer.BlendMode = BlendMode.Blend;
+            renderer.FillCircle(Position.X, Position.Y, Radius);
         }
 
         private static readonly Random _randomizer = new Random();

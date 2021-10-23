@@ -81,11 +81,11 @@ namespace AverageFrameRate
                         {
                             renderer?.Dispose();
                             renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-                            renderer.RenderDrawColor = _drawColor;
+                            renderer.DrawColor = _drawColor;
                             _rendererInvalidated = false;
                         }
 
-                        renderer.RenderClear();
+                        renderer.Clear();
 
                         var frameRate = frameCount / elapsedTime.TotalSeconds;
                         var text = $"Average frame rate = {frameRate:0.00}";
@@ -96,14 +96,14 @@ namespace AverageFrameRate
                             var x = Math.Abs(outputSize.Width - textTexture.Width) / 2;
                             var y = Math.Abs(outputSize.Height - textTexture.Height) / 2;
                             var dest = new Rectangle(x, y, textTexture.Width, textTexture.Height);
-                            renderer.RenderCopy(textTexture, dest);
+                            renderer.Copy(textTexture, dest);
                         }
 
                         lastUpdateTime = currentTime;
                         frameCount = 0;
                     }
 
-                    renderer.RenderPresent();
+                    renderer.Present();
                     frameCount++;
                 }
             }

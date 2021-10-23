@@ -135,9 +135,9 @@ namespace WavePlayer
                         _rendererInvalidated = false;
                     }
 
-                    renderer.RenderDrawColor = _backgroundColor;
+                    renderer.DrawColor = _backgroundColor;
 
-                    renderer.RenderClear();
+                    renderer.Clear();
 
                     var currentTime = DateTime.Now;
                     var elapsedTime = currentTime - frameRateUpdatedTime;
@@ -149,11 +149,11 @@ namespace WavePlayer
                         frameCounter = 0;
                     }
 
-                    renderer.RenderDrawColor = _frameRateColor;
+                    renderer.DrawColor = _frameRateColor;
 
-                    renderer.RenderTextBlended(8, 8, _frameRateFont, frameRateText);
+                    renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
 
-                    renderer.RenderDrawColor = _waveColor;
+                    renderer.DrawColor = _waveColor;
 
                     var channelHeight = renderer.OutputSize.Height / channels;
                     var halfGraphHeight = channelHeight * 9 / 20;
@@ -176,18 +176,18 @@ namespace WavePlayer
                             sampleOffset += sampleSize * channels;
                         }
 
-                        renderer.RenderDrawLines(waves[channel]);
+                        renderer.DrawLines(waves[channel]);
                     }
 
-                    renderer.RenderDrawColor = _channelSeparatorColor;
+                    renderer.DrawColor = _channelSeparatorColor;
 
                     for (var channel = 0; channel <= channels; ++channel)
                     {
                         var y = channel * channelHeight;
-                        renderer.RenderDrawLine(0, y, renderer.OutputSize.Width, y);
+                        renderer.DrawLine(0, y, renderer.OutputSize.Width, y);
                     }
 
-                    renderer.RenderPresent();
+                    renderer.Present();
 
                     frameCounter++;
                 }

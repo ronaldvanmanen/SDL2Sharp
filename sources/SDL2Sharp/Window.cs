@@ -326,7 +326,6 @@ namespace SDL2Sharp
             }
         }
 
-
         public Window(string title, int width, int height)
         : this(title, (int)SDL.SDL_WINDOWPOS_UNDEFINED, (int)SDL.SDL_WINDOWPOS_UNDEFINED, width, height, (uint)0)
         { }

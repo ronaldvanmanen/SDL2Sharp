@@ -42,7 +42,7 @@ namespace SDL2Sharp.Extensions
             }
         }
 
-        public static void RenderDrawCircle(this Renderer renderer, int centerX, int centerY, int radius)
+        public static void DrawCircle(this Renderer renderer, int centerX, int centerY, int radius)
         {
             if (renderer is null)
             {
@@ -64,14 +64,14 @@ namespace SDL2Sharp.Extensions
             while (x >= y)
             {
                 //  Each of the following renders an octant of the circle
-                renderer.RenderDrawPoint(centerX + x, centerY - y);
-                renderer.RenderDrawPoint(centerX + x, centerY + y);
-                renderer.RenderDrawPoint(centerX - x, centerY - y);
-                renderer.RenderDrawPoint(centerX - x, centerY + y);
-                renderer.RenderDrawPoint(centerX + y, centerY - x);
-                renderer.RenderDrawPoint(centerX + y, centerY + x);
-                renderer.RenderDrawPoint(centerX - y, centerY - x);
-                renderer.RenderDrawPoint(centerX - y, centerY + x);
+                renderer.DrawPoint(centerX + x, centerY - y);
+                renderer.DrawPoint(centerX + x, centerY + y);
+                renderer.DrawPoint(centerX - x, centerY - y);
+                renderer.DrawPoint(centerX - x, centerY + y);
+                renderer.DrawPoint(centerX + y, centerY - x);
+                renderer.DrawPoint(centerX + y, centerY + x);
+                renderer.DrawPoint(centerX - y, centerY - x);
+                renderer.DrawPoint(centerX - y, centerY + x);
 
                 if (error <= 0)
                 {
@@ -89,7 +89,7 @@ namespace SDL2Sharp.Extensions
             }
         }
 
-        public static void RenderDrawEllipse(this Renderer renderer, int centerX, int centerY, int radiusX, int radiusY)
+        public static void DrawEllipse(this Renderer renderer, int centerX, int centerY, int radiusX, int radiusY)
         {
             // This is the algorithm documented in the paper "Drawing Ellipses Using Filled Rectangles" by L. Patrick.
             //
@@ -139,17 +139,17 @@ namespace SDL2Sharp.Extensions
 
             while (y >= 0 && x <= radiusX)
             {
-                renderer.RenderDrawPoint(centerX + x, centerY + y);
+                renderer.DrawPoint(centerX + x, centerY + y);
 
                 if (x != 0 || y != 0)
                 {
-                    renderer.RenderDrawPoint(centerX - x, centerY - y);
+                    renderer.DrawPoint(centerX - x, centerY - y);
                 }
 
                 if (x != 0 && y != 0)
                 {
-                    renderer.RenderDrawPoint(centerX + x, centerY - y);
-                    renderer.RenderDrawPoint(centerX - x, centerY + y);
+                    renderer.DrawPoint(centerX + x, centerY - y);
+                    renderer.DrawPoint(centerX - x, centerY + y);
                 }
 
                 if (t + radiusY2 * x <= crit1 ||   /* e(x+1,y-1/2) <= 0 */
@@ -169,12 +169,12 @@ namespace SDL2Sharp.Extensions
             }
         }
 
-        public static void RenderFillCircle(this Renderer renderer, int centerX, int centerY, int radius)
+        public static void FillCircle(this Renderer renderer, int centerX, int centerY, int radius)
         {
-            RenderFillEllipse(renderer, centerX, centerY, radius, radius);
+            FillEllipse(renderer, centerX, centerY, radius, radius);
         }
 
-        public static void RenderFillEllipse(this Renderer renderer, int centerX, int centerY, int radiusX, int radiusY)
+        public static void FillEllipse(this Renderer renderer, int centerX, int centerY, int radiusX, int radiusY)
         {
             // This is the algorithm documented in the paper "Drawing Ellipses Using Filled Rectangles" by L. Patrick.
             //
@@ -228,7 +228,7 @@ namespace SDL2Sharp.Extensions
 
             if (radiusY == 0)
             {
-                renderer.RenderFillRect(centerX - radiusX, centerY, 2 * radiusX + 1, 1);
+                renderer.FillRect(centerX - radiusX, centerY, 2 * radiusX + 1, 1);
                 return;
             }
 
@@ -243,14 +243,14 @@ namespace SDL2Sharp.Extensions
                     }
                     else if (ry * 2 + 1 > (height - 1) * 2)
                     {
-                        renderer.RenderFillRect(centerX - rx, centerY - ry, width, height - 1);
-                        renderer.RenderFillRect(centerX - rx, centerY + ry + 1, width, 1 - height);
+                        renderer.FillRect(centerX - rx, centerY - ry, width, height - 1);
+                        renderer.FillRect(centerX - rx, centerY + ry + 1, width, 1 - height);
                         ry -= height - 1;
                         height = 1;
                     }
                     else
                     {
-                        renderer.RenderFillRect(centerX - rx, centerY - ry, width, ry * 2 + 1);
+                        renderer.FillRect(centerX - rx, centerY - ry, width, ry * 2 + 1);
                         ry -= ry;
                         height = 1;
                     }
@@ -267,12 +267,12 @@ namespace SDL2Sharp.Extensions
                 {
                     if (ry * 2 + 1 > height * 2)
                     {
-                        renderer.RenderFillRect(centerX - rx, centerY - ry, width, height);
-                        renderer.RenderFillRect(centerX - rx, centerY + ry + 1, width, -height);
+                        renderer.FillRect(centerX - rx, centerY - ry, width, height);
+                        renderer.FillRect(centerX - rx, centerY + ry + 1, width, -height);
                     }
                     else
                     {
-                        renderer.RenderFillRect(centerX - rx, centerY - ry, width, ry * 2 + 1);
+                        renderer.FillRect(centerX - rx, centerY - ry, width, ry * 2 + 1);
                     }
                     IncrementX();
                     IncrementY();
@@ -285,16 +285,16 @@ namespace SDL2Sharp.Extensions
 
             if (ry > height)
             {
-                renderer.RenderFillRect(centerX - rx, centerY - ry, width, height);
-                renderer.RenderFillRect(centerX - rx, centerY + ry + 1, width, -height);
+                renderer.FillRect(centerX - rx, centerY - ry, width, height);
+                renderer.FillRect(centerX - rx, centerY + ry + 1, width, -height);
             }
             else
             {
-                renderer.RenderFillRect(centerX - rx, centerY - ry, width, ry * 2 + 1);
+                renderer.FillRect(centerX - rx, centerY - ry, width, ry * 2 + 1);
             }
         }
 
-        public static void RenderTextBlended(this Renderer renderer, int x, int y, Font font, string text)
+        public static void DrawTextBlended(this Renderer renderer, int x, int y, Font font, string text)
         {
             if (renderer is null)
             {
@@ -311,11 +311,11 @@ namespace SDL2Sharp.Extensions
                 throw new ArgumentNullException(nameof(text));
             }
 
-            using (var textSurface = font.RenderBlended(text, renderer.RenderDrawColor))
+            using (var textSurface = font.RenderBlended(text, renderer.DrawColor))
             {
                 using (var textTexture = renderer.CreateTextureFromSurface(textSurface))
                 {
-                    renderer.RenderCopy(textTexture, new Rectangle(x, y, textTexture.Width, textTexture.Height));
+                    renderer.Copy(textTexture, new Rectangle(x, y, textTexture.Width, textTexture.Height));
                 }
             }
         }
