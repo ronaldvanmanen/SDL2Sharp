@@ -23,15 +23,17 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    public readonly struct Rgba
+    public readonly struct Argb
     {
-        private readonly byte _a;
-
         private readonly byte _b;
 
         private readonly byte _g;
 
         private readonly byte _r;
+
+        private readonly byte _a;
+
+        public byte A => _a;
 
         public byte R => _r;
 
@@ -39,14 +41,12 @@ namespace SDL2Sharp
 
         public byte B => _b;
 
-        public byte A => _a;
-
-        public Rgba(byte r, byte g, byte b, byte a)
+        public Argb(byte a, byte r, byte g, byte b)
         {
-            _a = a;
             _b = b;
             _g = g;
             _r = r;
+            _a = a;
         }
     }
 }

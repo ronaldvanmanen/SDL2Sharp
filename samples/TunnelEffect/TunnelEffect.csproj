@@ -19,8 +19,4 @@
     <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="$(SolutionDir)editbin.cmd /stack:67108864,33554432 $(TargetDir)$(TargetName).exe" />
-  </Target>
-
 </Project>
