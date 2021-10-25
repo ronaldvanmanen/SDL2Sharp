@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Interop;
@@ -128,24 +129,39 @@ namespace SDL2Sharp
             return new Surface(surfaceHandle, false);
         }
 
-        public void Update(Span2D<uint> pixels)
+        public void Update<TPixelFormat>(Span2D<TPixelFormat> pixels) where TPixelFormat : struct
         {
             ThrowWhenDisposed();
 
-            fixed (void* pointer = &pixels[0, 0])
-            {
-                Error.ThrowOnFailure(
-                  SDL.UpdateTexture(_handle, null, pointer, pixels.Width * sizeof(uint))
-              );
-            };
+            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
+            var pitch = pixels.Width * Marshal.SizeOf<TPixelFormat>();
+            Update(null, pointer, pitch);
         }
 
-        public void Update(void* pixels, int pitch)
+        public void Update<TPixelFormat>(TPixelFormat[,] pixels, int width) where TPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
+            var pitch = width * Marshal.SizeOf<TPixelFormat>();
+            Update(null, pointer, pitch);
+        }
+
+        public void Update<TPixelFormat>(TPixelFormat[] pixels, int width) where TPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
+            var pitch = width * Marshal.SizeOf<TPixelFormat>();
+            Update(null, pointer, pitch);
+        }
+
+        private void Update(SDL_Rect* rect, void* pixels, int pitch)
         {
             ThrowWhenDisposed();
 
             Error.ThrowOnFailure(
-                SDL.UpdateTexture(_handle, null, pixels, pitch)
+                SDL.UpdateTexture(_handle, rect, pixels, pitch)
             );
         }
 

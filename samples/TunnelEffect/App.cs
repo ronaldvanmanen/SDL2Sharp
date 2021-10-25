@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
@@ -66,7 +66,7 @@ namespace TunnelEffect
             _window = new Window("Tunnel Effect", 640, 480, WindowFlags.Resizable);
             _window.KeyDown += OnWindowKeyDown;
             _window.SizeChanged += OnWindowSizeChanged;
-            _renderingThread = new Thread(Render, 32 * 1024 * 1024);
+            _renderingThread = new Thread(Render);
             _rendererInvalidated = true;
             _rendering = true;
             _renderingThread.Start();
@@ -83,6 +83,10 @@ namespace TunnelEffect
         private void Render()
         {
             Renderer renderer = null!;
+            Texture screenTexture = null!;
+            Rgba[] screenImage = null!;
+            Rgba[] sourceImage = null!;
+            Transform[] transformTable = null!;
             var startTime = DateTime.UtcNow;
             var lastFrameTime = DateTime.UtcNow;
             var lastFrameRateUpdateTime = DateTime.UtcNow;
@@ -92,11 +96,7 @@ namespace TunnelEffect
             var frameCounter = 0;
             var screenWidth = 0;
             var screenHeight = 0;
-            Texture screenTexture = null!;
-            Span2D<uint> screenImage = null!;
             var sourceImageSize = 0;
-            ReadOnlySpan2D<uint> sourceImage = null!;
-            ReadOnlySpan2D<Transform> transformTable = null!;
 
             try
             {
@@ -110,16 +110,12 @@ namespace TunnelEffect
                         screenWidth = renderer.OutputSize.Width;
                         screenHeight = renderer.OutputSize.Height;
                         screenTexture = renderer.CreateTexture(PixelFormatEnum.RGBA8888, TextureAccess.Streaming, screenWidth, screenHeight);
-                        screenImage = new Span2D<uint>(new uint[screenHeight * screenWidth], screenHeight, screenWidth);
+                        screenImage = new Rgba[screenHeight * screenWidth];
                         sourceImageSize = NextPowerOfTwo(Math.Max(screenWidth, screenHeight));
                         sourceImage = GenerateXorImage(sourceImageSize, sourceImageSize);
                         transformTable = GenerateTransformTable(sourceImageSize, sourceImageSize);
                         _rendererInvalidated = false;
                     }
-
-                    renderer.DrawColor = _backgroundColor;
-                    renderer.BlendMode = BlendMode.None;
-                    renderer.Clear();
 
                     var currentTime = DateTime.UtcNow;
                     var elapsedTime = currentTime - startTime;
@@ -129,16 +125,16 @@ namespace TunnelEffect
                     var lookX = (sourceImageSize - screenWidth) / 2;
                     var lookY = (sourceImageSize - screenHeight) / 2;
 
-                    for (var y = 0; y < screenImage.Height; y++)
+                    Parallel.For(0, screenHeight, y =>
                     {
-                        for (var x = 0; x < screenImage.Width; x++)
+                        for (var x = 0; x < screenWidth; x++)
                         {
-                            var transform = transformTable[y + lookY, x + lookX];
+                            var transform = transformTable[(y + lookY) * sourceImageSize + (x + lookX)];
                             var transformX = Math.Abs(transform.Distance + shiftX + lookX) % sourceImageSize;
                             var transformY = Math.Abs(transform.Angle + shiftY + lookY) % sourceImageSize;
-                            screenImage[y, x] = sourceImage[transformY, transformX];
+                            screenImage[y * screenWidth + x] = sourceImage[transformY * sourceImageSize + transformX];
                         }
-                    }
+                    });
 
                     var currentFrameTime = DateTime.UtcNow;
                     var elapsedFrameTime = currentFrameTime - lastFrameTime;
@@ -151,11 +147,15 @@ namespace TunnelEffect
                         frameCounter = 0;
                     }
 
-                    screenTexture.Update(screenImage);
+                    renderer.BlendMode = BlendMode.None;
+                    renderer.DrawColor = _backgroundColor;
+                    renderer.Clear();
+                    screenTexture.Update(screenImage, screenWidth);
                     renderer.Copy(screenTexture);
                     renderer.DrawColor = _frameRateColor;
                     renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
                     renderer.Present();
+
                     frameCounter++;
                     lastFrameTime = currentFrameTime;
                 }
@@ -166,10 +166,9 @@ namespace TunnelEffect
             }
         }
 
-        private static ReadOnlySpan2D<uint> GenerateXorImage(int width, int height)
+        private static Rgba[] GenerateXorImage(int width, int height)
         {
-            var array = new uint[height * width];
-            var image = new Span2D<uint>(array, height, width);
+            var image = new Rgba[height * width];
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -178,18 +177,16 @@ namespace TunnelEffect
                     byte g = 0x0;
                     byte b = (byte)((x * 256 / width) ^ (y * 256 / height));
                     byte a = 0xFF;
-                    uint rgba = (uint)(r << 24 | g << 16 | b << 8 | a);
-                    image[y, x] = rgba;
+                    image[y * width + x] = new Rgba(r, g, b, a);
                 }
             }
             return image;
         }
 
-        private static ReadOnlySpan2D<Transform> GenerateTransformTable(int width, int height)
+        private static Transform[] GenerateTransformTable(int width, int height)
         {
             const double ratio = 32d;
-            var array = new Transform[height * width];
-            var table = new Span2D<Transform>(array, height, width);
+            var table = new Transform[height * width];
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -198,7 +195,7 @@ namespace TunnelEffect
                     {
                         var angle = (int)(0.5 * width * Math.Atan2(y - height / 2.0, x - width / 2.0) / Math.PI);
                         var distance = (int)(ratio * height / Math.Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d)) % height);
-                        table[y, x] = new Transform(angle, distance);
+                        table[y * width + x] = new Transform(angle, distance);
                     }
                 }
             }
