@@ -21,7 +21,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
 
@@ -84,8 +83,8 @@ namespace TunnelEffect
         {
             Renderer renderer = null!;
             Texture screenTexture = null!;
-            Rgba[] screenImage = null!;
-            Rgba[] sourceImage = null!;
+            Image<Rgba> screenImage = null!;
+            Image<Rgba> sourceImage = null!;
             Transform[] transformTable = null!;
             var startTime = DateTime.UtcNow;
             var lastFrameTime = DateTime.UtcNow;
@@ -110,8 +109,8 @@ namespace TunnelEffect
                         screenWidth = renderer.OutputSize.Width;
                         screenHeight = renderer.OutputSize.Height;
                         screenTexture = renderer.CreateTexture(PixelFormatEnum.RGBA8888, TextureAccess.Streaming, screenWidth, screenHeight);
-                        screenImage = new Rgba[screenHeight * screenWidth];
                         sourceImageSize = NextPowerOfTwo(Math.Max(screenWidth, screenHeight));
+                        screenImage = new Image<Rgba>(screenWidth, screenHeight);
                         sourceImage = GenerateXorImage(sourceImageSize, sourceImageSize);
                         transformTable = GenerateTransformTable(sourceImageSize, sourceImageSize);
                         _rendererInvalidated = false;
@@ -150,7 +149,7 @@ namespace TunnelEffect
                     renderer.BlendMode = BlendMode.None;
                     renderer.DrawColor = _backgroundColor;
                     renderer.Clear();
-                    screenTexture.Update(screenImage, screenWidth);
+                    screenTexture.Update(screenImage);
                     renderer.Copy(screenTexture);
                     renderer.DrawColor = _frameRateColor;
                     renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
@@ -166,9 +165,9 @@ namespace TunnelEffect
             }
         }
 
-        private static Rgba[] GenerateXorImage(int width, int height)
+        private static Image<Rgba> GenerateXorImage(int width, int height)
         {
-            var image = new Rgba[height * width];
+            var image = new Image<Rgba>(width, height);
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -177,7 +176,7 @@ namespace TunnelEffect
                     byte g = 0x0;
                     byte b = (byte)((x * 256 / width) ^ (y * 256 / height));
                     byte a = 0xFF;
-                    image[y * width + x] = new Rgba(r, g, b, a);
+                    image[y, x] = new Rgba(r, g, b, a);
                 }
             }
             return image;
@@ -193,8 +192,8 @@ namespace TunnelEffect
                 {
                     unchecked
                     {
-                        var angle = (int)(0.5 * width * Math.Atan2(y - height / 2.0, x - width / 2.0) / Math.PI);
-                        var distance = (int)(ratio * height / Math.Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d)) % height);
+                        var angle = (int)(0.5 * width * Atan2(y - height / 2.0, x - width / 2.0) / PI);
+                        var distance = (int)(ratio * height / Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d)) % height);
                         table[y * width + x] = new Transform(angle, distance);
                     }
                 }
