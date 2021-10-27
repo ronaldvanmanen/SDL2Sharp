@@ -129,6 +129,15 @@ namespace SDL2Sharp
             return new Surface(surfaceHandle, false);
         }
 
+        public void Update<TPixelFormat>(Image<TPixelFormat> image) where TPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            var pointer = Unsafe.AsPointer(ref image.DangerousGetReference());
+            var pitch = image.Width * Marshal.SizeOf<TPixelFormat>();
+            Update(null, pointer, pitch);
+        }
+
         public void Update<TPixelFormat>(Span2D<TPixelFormat> pixels) where TPixelFormat : struct
         {
             ThrowWhenDisposed();
