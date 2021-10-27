@@ -23,6 +23,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
+using static System.Math;
+using static SDL2Sharp.Extensions.MathExtensions;
 
 namespace TunnelEffect
 {
@@ -109,8 +111,8 @@ namespace TunnelEffect
                         screenWidth = renderer.OutputSize.Width;
                         screenHeight = renderer.OutputSize.Height;
                         screenTexture = renderer.CreateTexture(PixelFormatEnum.RGBA8888, TextureAccess.Streaming, screenWidth, screenHeight);
-                        sourceImageSize = NextPowerOfTwo(Math.Max(screenWidth, screenHeight));
                         screenImage = new Image<Rgba>(screenWidth, screenHeight);
+                        sourceImageSize = NextPowerOfTwo(Max(screenWidth, screenHeight));
                         sourceImage = GenerateXorImage(sourceImageSize, sourceImageSize);
                         transformTable = GenerateTransformTable(sourceImageSize, sourceImageSize);
                         _rendererInvalidated = false;
@@ -129,9 +131,9 @@ namespace TunnelEffect
                         for (var x = 0; x < screenWidth; x++)
                         {
                             var transform = transformTable[(y + lookY) * sourceImageSize + (x + lookX)];
-                            var transformX = Math.Abs(transform.Distance + shiftX + lookX) % sourceImageSize;
-                            var transformY = Math.Abs(transform.Angle + shiftY + lookY) % sourceImageSize;
-                            screenImage[y * screenWidth + x] = sourceImage[transformY * sourceImageSize + transformX];
+                            var transformX = Mod(transform.Distance + shiftX + lookX, sourceImageSize);
+                            var transformY = Mod(transform.Angle + shiftY + lookY, sourceImageSize);
+                            screenImage[y, x] = sourceImage[transformY, transformX];
                         }
                     });
 
@@ -217,17 +219,6 @@ namespace TunnelEffect
             _rendererInvalidated = true;
         }
 
-        private static int NextPowerOfTwo(int value)
-        {
-            --value;
-            value |= value >> 1;
-            value |= value >> 2;
-            value |= value >> 4;
-            value |= value >> 8;
-            value |= value >> 16;
-            ++value;
-            return value;
-        }
 
         private static int Main(string[] args)
         {
