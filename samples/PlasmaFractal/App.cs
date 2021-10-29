@@ -235,13 +235,45 @@ namespace PlasmaFractal
 
         private static void Diamond(Image<byte> map, int centerX, int centerY, int distance, int randomness)
         {
-            var top = Mod(centerY - distance, map.Height);
-            var left = Mod(centerX - distance, map.Width);
-            var bottom = Mod(centerY + distance, map.Height);
-            var right = Mod(centerX + distance, map.Width);
+            var sum = 0;
+            var count = 0;
+            var top = centerY - distance;
+            if (top >= 0 && top < map.Height)
+            {
+                var left = centerX - distance;
+                if (left >= 0 && left < map.Width)
+                {
+                    sum += map[top, left];
+                    count++;
+                }
 
-            var sum = map[top, left] + map[top, right] + map[bottom, left] + map[bottom, right];
-            var average = sum / 4;
+                var right = centerX + distance;
+                if (right >= 0 && right < map.Height)
+                {
+                    sum += map[top, right];
+                    count++;
+                }
+            }
+
+            var bottom = centerY + distance;
+            if (bottom >= 0 && bottom < map.Height)
+            {
+                var left = centerX - distance;
+                if (left >= 0 && left < map.Width)
+                {
+                    sum += map[bottom, left];
+                    count++;
+                }
+
+                var right = centerX + distance;
+                if (right >= 0 && right < map.Height)
+                {
+                    sum += map[bottom, right];
+                    count++;
+                }
+            }
+
+            var average = sum / count;
             var random = _random.Next(-randomness, randomness);
             var value = Clamp(average + random, 0, 255);
 
@@ -250,13 +282,37 @@ namespace PlasmaFractal
 
         private static void Square(Image<byte> map, int centerX, int centerY, int distance, int randomness)
         {
-            var top = Mod(centerY - distance, map.Height);
-            var left = Mod(centerX - distance, map.Width);
-            var bottom = Mod(centerY + distance, map.Height);
-            var right = Mod(centerX + distance, map.Width);
+            var sum = 0;
+            var count = 0;
+            var top = centerY - distance;
+            if (top >= 0 && top < map.Height)
+            {
+                sum += map[top, centerX];
+                count++;
+            }
 
-            var sum = map[top, centerX] + map[centerY, left] + map[bottom, centerX] + map[centerY, right];
-            var average = sum / 4;
+            var left = centerX - distance;
+            if (left >= 0 && left < map.Width)
+            {
+                sum += map[centerY, left];
+                count++;
+            }
+
+            var bottom = centerY + distance;
+            if (bottom >= 0 && bottom < map.Height)
+            {
+                sum += map[bottom, centerX];
+                count++;
+            }
+
+            var right = centerX + distance;
+            if (right >= 0 && right < map.Height)
+            {
+                sum += map[centerY, right];
+                count++;
+            }
+
+            var average = sum / count;
             var random = _random.Next(-randomness, randomness);
             var value = Clamp(average + random, 0, 255);
 
