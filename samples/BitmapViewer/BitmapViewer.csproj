@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <Platforms>AnyCPU</Platforms>
     <PackageTags>SDL2</PackageTags>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
