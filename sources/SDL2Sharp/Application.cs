@@ -24,7 +24,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
-using SDL2TTFSharp.Interop;
 
 namespace SDL2Sharp
 {

@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -21,7 +21,7 @@
 using System.Runtime.InteropServices;
 using Xunit;
 
-namespace SDL2TTFSharp.Interop.UnitTests
+namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="_TTF_Font" /> struct.</summary>
     public static unsafe class _TTF_FontTests

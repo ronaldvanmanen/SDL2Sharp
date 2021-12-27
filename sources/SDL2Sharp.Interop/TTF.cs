@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,10 +18,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp.Interop;
 using System.Runtime.InteropServices;
 
-namespace SDL2TTFSharp.Interop
+namespace SDL2Sharp.Interop
 {
     public static unsafe partial class TTF
     {
