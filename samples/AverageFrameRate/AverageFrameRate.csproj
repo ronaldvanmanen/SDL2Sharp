@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
-    <ProjectReference Include="..\..\sources\SDL2TTFSharp.Interop\SDL2TTFSharp.Interop.csproj" />
   </ItemGroup>
 
 </Project>

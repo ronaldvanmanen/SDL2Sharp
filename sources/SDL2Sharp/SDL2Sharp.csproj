@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
-    <ProjectReference Include="..\SDL2TTFSharp.Interop\SDL2TTFSharp.Interop.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

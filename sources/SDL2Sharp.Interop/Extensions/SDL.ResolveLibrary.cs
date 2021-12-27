@@ -33,7 +33,7 @@ namespace SDL2Sharp.Interop
 
         static SDL()
         {
-            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), OnDllImport);
+            NativeLibrary.SetDllImportResolver(OnDllImport);
         }
 
         private static IntPtr OnDllImport(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
@@ -42,12 +42,18 @@ namespace SDL2Sharp.Interop
                 ? nativeLibrary
                 : libraryName.Equals("SDL2.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
                 ? nativeLibrary
+                : libraryName.Equals("libfreetype-6.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
+                ? nativeLibrary
+                : libraryName.Equals("SDL2_ttf.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
+                ? nativeLibrary
+                : libraryName.Equals("zlib1.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
+                ? nativeLibrary
                 : IntPtr.Zero;
         }
 
         private static bool TryResolveNativeLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath, out IntPtr nativeLibrary)
         {
-            if (NativeLibrary.TryLoad(libraryName, assembly, searchPath, out nativeLibrary))
+            if (System.Runtime.InteropServices.NativeLibrary.TryLoad(libraryName, assembly, searchPath, out nativeLibrary))
             {
                 return true;
             }
@@ -58,7 +64,7 @@ namespace SDL2Sharp.Interop
             }
 
             var libraryPath = Path.Combine(LibraryDirectory, libraryName);
-            var result = NativeLibrary.TryLoad(libraryPath, out nativeLibrary);
+            var result = System.Runtime.InteropServices.NativeLibrary.TryLoad(libraryPath, out nativeLibrary);
             return result;
         }
 

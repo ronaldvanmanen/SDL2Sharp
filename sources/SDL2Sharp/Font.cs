@@ -20,7 +20,7 @@
 
 using System;
 using SDL2Sharp.Internals;
-using SDL2TTFSharp.Interop;
+using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {

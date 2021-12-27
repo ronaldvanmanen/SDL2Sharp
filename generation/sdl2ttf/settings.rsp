@@ -13,12 +13,10 @@ SDL2_ttf.dll
 --methodClassName
 TTF
 --namespace
-SDL2TTFSharp.Interop
+SDL2Sharp.Interop
 --output
-..\..\sources\SDL2TTFSharp.Interop
+..\..\sources\SDL2Sharp.Interop
 --prefixStrip
 TTF_
 --test-output
-..\..\tests\SDL2TTFSharp.Interop.UnitTests
---with-using
-TTF=SDL2Sharp.Interop
+..\..\tests\SDL2Sharp.Interop.UnitTests

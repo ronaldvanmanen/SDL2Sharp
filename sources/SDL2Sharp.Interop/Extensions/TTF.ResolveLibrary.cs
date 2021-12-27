@@ -23,7 +23,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace SDL2TTFSharp.Interop
+namespace SDL2Sharp.Interop
 {
     public static unsafe partial class TTF
     {
@@ -33,7 +33,7 @@ namespace SDL2TTFSharp.Interop
 
         static TTF()
         {
-            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), OnDllImport);
+            NativeLibrary.SetDllImportResolver(OnDllImport);
         }
 
         private static IntPtr OnDllImport(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
@@ -51,7 +51,7 @@ namespace SDL2TTFSharp.Interop
 
         private static bool TryResolveNativeLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath, out IntPtr nativeLibrary)
         {
-            if (NativeLibrary.TryLoad(libraryName, assembly, searchPath, out nativeLibrary))
+            if (System.Runtime.InteropServices.NativeLibrary.TryLoad(libraryName, assembly, searchPath, out nativeLibrary))
             {
                 return true;
             }
@@ -62,7 +62,7 @@ namespace SDL2TTFSharp.Interop
             }
 
             var libraryPath = Path.Combine(LibraryDirectory, libraryName);
-            var result = NativeLibrary.TryLoad(libraryPath, out nativeLibrary);
+            var result = System.Runtime.InteropServices.NativeLibrary.TryLoad(libraryPath, out nativeLibrary);
             return result;
         }
 
