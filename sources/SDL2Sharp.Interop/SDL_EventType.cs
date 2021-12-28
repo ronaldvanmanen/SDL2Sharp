@@ -77,6 +77,7 @@ namespace SDL2Sharp.Interop
         SDL_SENSORUPDATE = 0x1200,
         SDL_RENDER_TARGETS_RESET = 0x2000,
         SDL_RENDER_DEVICE_RESET,
+        SDL_POLLSENTINEL = 0x7F00,
         SDL_USEREVENT = 0x8000,
         SDL_LASTEVENT = 0xFFFF,
     }

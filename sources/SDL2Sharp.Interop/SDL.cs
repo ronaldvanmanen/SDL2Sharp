@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -420,6 +420,9 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_HINT_ANDROID_TRAP_BACK_BUTTON \"SDL_ANDROID_TRAP_BACK_BUTTON\"")]
         public static ReadOnlySpan<byte> SDL_HINT_ANDROID_TRAP_BACK_BUTTON => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x5F, 0x54, 0x52, 0x41, 0x50, 0x5F, 0x42, 0x41, 0x43, 0x4B, 0x5F, 0x42, 0x55, 0x54, 0x54, 0x4F, 0x4E, 0x00 };
 
+        [NativeTypeName("#define SDL_HINT_APP_NAME \"SDL_APP_NAME\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_APP_NAME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x50, 0x50, 0x5F, 0x4E, 0x41, 0x4D, 0x45, 0x00 };
+
         [NativeTypeName("#define SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS \"SDL_APPLE_TV_CONTROLLER_UI_EVENTS\"")]
         public static ReadOnlySpan<byte> SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x50, 0x50, 0x4C, 0x45, 0x5F, 0x54, 0x56, 0x5F, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x5F, 0x55, 0x49, 0x5F, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x53, 0x00 };
 
@@ -495,6 +498,9 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_HINT_IME_INTERNAL_EDITING \"SDL_IME_INTERNAL_EDITING\"")]
         public static ReadOnlySpan<byte> SDL_HINT_IME_INTERNAL_EDITING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4D, 0x45, 0x5F, 0x49, 0x4E, 0x54, 0x45, 0x52, 0x4E, 0x41, 0x4C, 0x5F, 0x45, 0x44, 0x49, 0x54, 0x49, 0x4E, 0x47, 0x00 };
 
+        [NativeTypeName("#define SDL_HINT_IME_SHOW_UI \"SDL_IME_SHOW_UI\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_IME_SHOW_UI => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4D, 0x45, 0x5F, 0x53, 0x48, 0x4F, 0x57, 0x5F, 0x55, 0x49, 0x00 };
+
         [NativeTypeName("#define SDL_HINT_IOS_HIDE_HOME_INDICATOR \"SDL_IOS_HIDE_HOME_INDICATOR\"")]
         public static ReadOnlySpan<byte> SDL_HINT_IOS_HIDE_HOME_INDICATOR => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4F, 0x53, 0x5F, 0x48, 0x49, 0x44, 0x45, 0x5F, 0x48, 0x4F, 0x4D, 0x45, 0x5F, 0x49, 0x4E, 0x44, 0x49, 0x43, 0x41, 0x54, 0x4F, 0x52, 0x00 };
 
@@ -555,6 +561,12 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER \"SDL_KMSDRM_REQUIRE_DRM_MASTER\"")]
         public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4B, 0x4D, 0x53, 0x44, 0x52, 0x4D, 0x5F, 0x52, 0x45, 0x51, 0x55, 0x49, 0x52, 0x45, 0x5F, 0x44, 0x52, 0x4D, 0x5F, 0x4D, 0x41, 0x53, 0x54, 0x45, 0x52, 0x00 };
 
+        [NativeTypeName("#define SDL_HINT_JOYSTICK_DEVICE \"SDL_JOYSTICK_DEVICE\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_DEVICE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x00 };
+
+        [NativeTypeName("#define SDL_HINT_LINUX_JOYSTICK_CLASSIC \"SDL_LINUX_JOYSTICK_CLASSIC\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_LINUX_JOYSTICK_CLASSIC => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4C, 0x49, 0x4E, 0x55, 0x58, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x43, 0x4C, 0x41, 0x53, 0x53, 0x49, 0x43, 0x00 };
+
         [NativeTypeName("#define SDL_HINT_LINUX_JOYSTICK_DEADZONES \"SDL_LINUX_JOYSTICK_DEADZONES\"")]
         public static ReadOnlySpan<byte> SDL_HINT_LINUX_JOYSTICK_DEADZONES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4C, 0x49, 0x4E, 0x55, 0x58, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x44, 0x45, 0x41, 0x44, 0x5A, 0x4F, 0x4E, 0x45, 0x53, 0x00 };
 
@@ -597,6 +609,9 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_HINT_ORIENTATIONS \"SDL_IOS_ORIENTATIONS\"")]
         public static ReadOnlySpan<byte> SDL_HINT_ORIENTATIONS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4F, 0x53, 0x5F, 0x4F, 0x52, 0x49, 0x45, 0x4E, 0x54, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x53, 0x00 };
 
+        [NativeTypeName("#define SDL_HINT_POLL_SENTINEL \"SDL_POLL_SENTINEL\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_POLL_SENTINEL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x50, 0x4F, 0x4C, 0x4C, 0x5F, 0x53, 0x45, 0x4E, 0x54, 0x49, 0x4E, 0x45, 0x4C, 0x00 };
+
         [NativeTypeName("#define SDL_HINT_PREFERRED_LOCALES \"SDL_PREFERRED_LOCALES\"")]
         public static ReadOnlySpan<byte> SDL_HINT_PREFERRED_LOCALES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x50, 0x52, 0x45, 0x46, 0x45, 0x52, 0x52, 0x45, 0x44, 0x5F, 0x4C, 0x4F, 0x43, 0x41, 0x4C, 0x45, 0x53, 0x00 };
 
@@ -636,6 +651,9 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_HINT_RPI_VIDEO_LAYER \"SDL_RPI_VIDEO_LAYER\"")]
         public static ReadOnlySpan<byte> SDL_HINT_RPI_VIDEO_LAYER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x50, 0x49, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x00 };
 
+        [NativeTypeName("#define SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME \"SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x53, 0x43, 0x52, 0x45, 0x45, 0x4E, 0x53, 0x41, 0x56, 0x45, 0x52, 0x5F, 0x49, 0x4E, 0x48, 0x49, 0x42, 0x49, 0x54, 0x5F, 0x41, 0x43, 0x54, 0x49, 0x56, 0x49, 0x54, 0x59, 0x5F, 0x4E, 0x41, 0x4D, 0x45, 0x00 };
+
         [NativeTypeName("#define SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL \"SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL\"")]
         public static ReadOnlySpan<byte> SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x52, 0x45, 0x41, 0x4C, 0x54, 0x49, 0x4D, 0x45, 0x5F, 0x54, 0x49, 0x4D, 0x45, 0x5F, 0x43, 0x52, 0x49, 0x54, 0x49, 0x43, 0x41, 0x4C, 0x00 };
 
@@ -659,6 +677,9 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("#define SDL_HINT_VIDEO_DOUBLE_BUFFER \"SDL_VIDEO_DOUBLE_BUFFER\"")]
         public static ReadOnlySpan<byte> SDL_HINT_VIDEO_DOUBLE_BUFFER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x44, 0x4F, 0x55, 0x42, 0x4C, 0x45, 0x5F, 0x42, 0x55, 0x46, 0x46, 0x45, 0x52, 0x00 };
+
+        [NativeTypeName("#define SDL_HINT_VIDEO_EGL_ALLOW_TRANSPARENCY \"SDL_VIDEO_EGL_ALLOW_TRANSPARENCY\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_EGL_ALLOW_TRANSPARENCY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x45, 0x47, 0x4C, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x54, 0x52, 0x41, 0x4E, 0x53, 0x50, 0x41, 0x52, 0x45, 0x4E, 0x43, 0x59, 0x00 };
 
         [NativeTypeName("#define SDL_HINT_VIDEO_EXTERNAL_CONTEXT \"SDL_VIDEO_EXTERNAL_CONTEXT\"")]
         public static ReadOnlySpan<byte> SDL_HINT_VIDEO_EXTERNAL_CONTEXT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x45, 0x58, 0x54, 0x45, 0x52, 0x4E, 0x41, 0x4C, 0x5F, 0x43, 0x4F, 0x4E, 0x54, 0x45, 0x58, 0x54, 0x00 };
@@ -737,6 +758,9 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("#define SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN \"SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN\"")]
         public static ReadOnlySpan<byte> SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x5F, 0x55, 0x53, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x57, 0x48, 0x49, 0x4C, 0x45, 0x5F, 0x43, 0x55, 0x52, 0x53, 0x4F, 0x52, 0x5F, 0x48, 0x49, 0x44, 0x44, 0x45, 0x4E, 0x00 };
+
+        [NativeTypeName("#define SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN \"SDL_WINDOW_NO_ACTIVATION_WHEN_SHOWN\"")]
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x4E, 0x4F, 0x5F, 0x41, 0x43, 0x54, 0x49, 0x56, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x5F, 0x57, 0x48, 0x45, 0x4E, 0x5F, 0x53, 0x48, 0x4F, 0x57, 0x4E, 0x00 };
 
         [NativeTypeName("#define SDL_HINT_WINRT_HANDLE_BACK_BUTTON \"SDL_WINRT_HANDLE_BACK_BUTTON\"")]
         public static ReadOnlySpan<byte> SDL_HINT_WINRT_HANDLE_BACK_BUTTON => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x52, 0x54, 0x5F, 0x48, 0x41, 0x4E, 0x44, 0x4C, 0x45, 0x5F, 0x42, 0x41, 0x43, 0x4B, 0x5F, 0x42, 0x55, 0x54, 0x54, 0x4F, 0x4E, 0x00 };
@@ -1086,6 +1110,12 @@ namespace SDL2Sharp.Interop
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTextureScaleMode", ExactSpelling = true)]
         public static extern int GetTextureScaleMode(SDL_Texture* texture, SDL_ScaleMode* scaleMode);
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetTextureUserData", ExactSpelling = true)]
+        public static extern int SetTextureUserData(SDL_Texture* texture, void* userdata);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetTextureUserData", ExactSpelling = true)]
+        public static extern void* GetTextureUserData(SDL_Texture* texture);
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_UpdateTexture", ExactSpelling = true)]
         public static extern int UpdateTexture(SDL_Texture* texture, [NativeTypeName("const SDL_Rect *")] SDL_Rect* rect, [NativeTypeName("const void *")] void* pixels, int pitch);
 
@@ -1145,6 +1175,12 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderGetScale", ExactSpelling = true)]
         public static extern void RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderWindowToLogical", ExactSpelling = true)]
+        public static extern void RenderWindowToLogical(SDL_Renderer* renderer, int windowX, int windowY, float* logicalX, float* logicalY);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderLogicalToWindow", ExactSpelling = true)]
+        public static extern void RenderLogicalToWindow(SDL_Renderer* renderer, float logicalX, float logicalY, int* windowX, int* windowY);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetRenderDrawColor", ExactSpelling = true)]
         public static extern int SetRenderDrawColor(SDL_Renderer* renderer, [NativeTypeName("Uint8")] byte r, [NativeTypeName("Uint8")] byte g, [NativeTypeName("Uint8")] byte b, [NativeTypeName("Uint8")] byte a);
@@ -1221,6 +1257,12 @@ namespace SDL2Sharp.Interop
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderCopyExF", ExactSpelling = true)]
         public static extern int RenderCopyExF(SDL_Renderer* renderer, SDL_Texture* texture, [NativeTypeName("const SDL_Rect *")] SDL_Rect* srcrect, [NativeTypeName("const SDL_FRect *")] SDL_FRect* dstrect, [NativeTypeName("const double")] double angle, [NativeTypeName("const SDL_FPoint *")] SDL_FPoint* center, [NativeTypeName("const SDL_RendererFlip")] SDL_RendererFlip flip);
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderGeometry", ExactSpelling = true)]
+        public static extern int RenderGeometry(SDL_Renderer* renderer, SDL_Texture* texture, [NativeTypeName("const SDL_Vertex *")] SDL_Vertex* vertices, int num_vertices, [NativeTypeName("const int *")] int* indices, int num_indices);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderGeometryRaw", ExactSpelling = true)]
+        public static extern int RenderGeometryRaw(SDL_Renderer* renderer, SDL_Texture* texture, [NativeTypeName("const float *")] float* xy, int xy_stride, [NativeTypeName("const int *")] int* color, int color_stride, [NativeTypeName("const float *")] float* uv, int uv_stride, int num_vertices, [NativeTypeName("const void *")] void* indices, int num_indices, int size_indices);
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderReadPixels", ExactSpelling = true)]
         public static extern int RenderReadPixels(SDL_Renderer* renderer, [NativeTypeName("const SDL_Rect *")] SDL_Rect* rect, [NativeTypeName("Uint32")] uint format, void* pixels, int pitch);
 
@@ -1247,6 +1289,9 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderGetMetalCommandEncoder", ExactSpelling = true)]
         public static extern void* RenderGetMetalCommandEncoder(SDL_Renderer* renderer);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RenderSetVSync", ExactSpelling = true)]
+        public static extern int RenderSetVSync(SDL_Renderer* renderer, int vsync);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWFromFile", ExactSpelling = true)]
         public static extern SDL_RWops* RWFromFile([NativeTypeName("const char *")] sbyte* file, [NativeTypeName("const char *")] sbyte* mode);
@@ -1627,6 +1672,12 @@ namespace SDL2Sharp.Interop
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_vsnprintf", ExactSpelling = true)]
         public static extern int vsnprintf([NativeTypeName("char *")] sbyte* text, [NativeTypeName("size_t")] nuint maxlen, [NativeTypeName("const char *")] sbyte* fmt, [NativeTypeName("va_list")] sbyte* ap);
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_asprintf", ExactSpelling = true)]
+        public static extern int asprintf([NativeTypeName("char **")] sbyte** strp, [NativeTypeName("const char *")] sbyte* fmt);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_vasprintf", ExactSpelling = true)]
+        public static extern int vasprintf([NativeTypeName("char **")] sbyte** strp, [NativeTypeName("const char *")] sbyte* fmt, [NativeTypeName("va_list")] sbyte* ap);
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_acos", ExactSpelling = true)]
         public static extern double acos(double x);
 
@@ -1646,10 +1697,10 @@ namespace SDL2Sharp.Interop
         public static extern float atanf(float x);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_atan2", ExactSpelling = true)]
-        public static extern double atan2(double x, double y);
+        public static extern double atan2(double y, double x);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_atan2f", ExactSpelling = true)]
-        public static extern float atan2f(float x, float y);
+        public static extern float atan2f(float y, float x);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ceil", ExactSpelling = true)]
         public static extern double ceil(double x);
@@ -1938,6 +1989,9 @@ namespace SDL2Sharp.Interop
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ConvertPixels", ExactSpelling = true)]
         public static extern int ConvertPixels(int width, int height, [NativeTypeName("Uint32")] uint src_format, [NativeTypeName("const void *")] void* src, int src_pitch, [NativeTypeName("Uint32")] uint dst_format, void* dst, int dst_pitch);
 
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_PremultiplyAlpha", ExactSpelling = true)]
+        public static extern int PremultiplyAlpha(int width, int height, [NativeTypeName("Uint32")] uint src_format, [NativeTypeName("const void *")] void* src, int src_pitch, [NativeTypeName("Uint32")] uint dst_format, void* dst, int dst_pitch);
+
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FillRect", ExactSpelling = true)]
         public static extern int FillRect(SDL_Surface* dst, [NativeTypeName("const SDL_Rect *")] SDL_Rect* rect, [NativeTypeName("Uint32")] uint color);
 
@@ -2044,11 +2098,11 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_MINOR_VERSION 0")]
         public const int SDL_MINOR_VERSION = 0;
 
-        [NativeTypeName("#define SDL_PATCHLEVEL 16")]
-        public const int SDL_PATCHLEVEL = 16;
+        [NativeTypeName("#define SDL_PATCHLEVEL 18")]
+        public const int SDL_PATCHLEVEL = 18;
 
         [NativeTypeName("#define SDL_COMPILEDVERSION SDL_VERSIONNUM(SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL)")]
-        public const int SDL_COMPILEDVERSION = ((2) * 1000 + (0) * 100 + (16));
+        public const int SDL_COMPILEDVERSION = ((2) * 1000 + (0) * 100 + (18));
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumVideoDrivers", ExactSpelling = true)]
         public static extern int GetNumVideoDrivers();
@@ -2109,6 +2163,9 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowDisplayMode", ExactSpelling = true)]
         public static extern int GetWindowDisplayMode(SDL_Window* window, SDL_DisplayMode* mode);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowICCProfile", ExactSpelling = true)]
+        public static extern void* GetWindowICCProfile(SDL_Window* window, [NativeTypeName("size_t *")] nuint* size);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowPixelFormat", ExactSpelling = true)]
         [return: NativeTypeName("Uint32")]
@@ -2233,6 +2290,13 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetGrabbedWindow", ExactSpelling = true)]
         public static extern SDL_Window* GetGrabbedWindow();
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowMouseRect", ExactSpelling = true)]
+        public static extern int SetWindowMouseRect(SDL_Window* window, [NativeTypeName("const SDL_Rect *")] SDL_Rect* rect);
+
+        [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowMouseRect", ExactSpelling = true)]
+        [return: NativeTypeName("const SDL_Rect *")]
+        public static extern SDL_Rect* GetWindowMouseRect(SDL_Window* window);
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowBrightness", ExactSpelling = true)]
         public static extern int SetWindowBrightness(SDL_Window* window, float brightness);

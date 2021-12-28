@@ -42,5 +42,9 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("Uint32")]
         public uint direction;
+
+        public float preciseX;
+
+        public float preciseY;
     }
 }

@@ -23,28 +23,28 @@ using Xunit;
 
 namespace SDL2Sharp.Interop.UnitTests
 {
-    /// <summary>Provides validation of the <see cref="SDL_MouseWheelEvent" /> struct.</summary>
-    public static unsafe class SDL_MouseWheelEventTests
+    /// <summary>Provides validation of the <see cref="SDL_Vertex" /> struct.</summary>
+    public static unsafe class SDL_VertexTests
     {
-        /// <summary>Validates that the <see cref="SDL_MouseWheelEvent" /> struct is blittable.</summary>
+        /// <summary>Validates that the <see cref="SDL_Vertex" /> struct is blittable.</summary>
         [Fact]
         public static void IsBlittableTest()
         {
-            Assert.Equal(sizeof(SDL_MouseWheelEvent), Marshal.SizeOf<SDL_MouseWheelEvent>());
+            Assert.Equal(sizeof(SDL_Vertex), Marshal.SizeOf<SDL_Vertex>());
         }
 
-        /// <summary>Validates that the <see cref="SDL_MouseWheelEvent" /> struct has the right <see cref="LayoutKind" />.</summary>
+        /// <summary>Validates that the <see cref="SDL_Vertex" /> struct has the right <see cref="LayoutKind" />.</summary>
         [Fact]
         public static void IsLayoutSequentialTest()
         {
-            Assert.True(typeof(SDL_MouseWheelEvent).IsLayoutSequential);
+            Assert.True(typeof(SDL_Vertex).IsLayoutSequential);
         }
 
-        /// <summary>Validates that the <see cref="SDL_MouseWheelEvent" /> struct has the correct size.</summary>
+        /// <summary>Validates that the <see cref="SDL_Vertex" /> struct has the correct size.</summary>
         [Fact]
         public static void SizeOfTest()
         {
-            Assert.Equal(36, sizeof(SDL_MouseWheelEvent));
+            Assert.Equal(20, sizeof(SDL_Vertex));
         }
     }
 }
