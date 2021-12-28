@@ -20,26 +20,12 @@
 
 namespace SDL2Sharp.Interop
 {
-    public enum SDL_WindowEventID
+    public partial struct SDL_Vertex
     {
-        SDL_WINDOWEVENT_NONE,
-        SDL_WINDOWEVENT_SHOWN,
-        SDL_WINDOWEVENT_HIDDEN,
-        SDL_WINDOWEVENT_EXPOSED,
-        SDL_WINDOWEVENT_MOVED,
-        SDL_WINDOWEVENT_RESIZED,
-        SDL_WINDOWEVENT_SIZE_CHANGED,
-        SDL_WINDOWEVENT_MINIMIZED,
-        SDL_WINDOWEVENT_MAXIMIZED,
-        SDL_WINDOWEVENT_RESTORED,
-        SDL_WINDOWEVENT_ENTER,
-        SDL_WINDOWEVENT_LEAVE,
-        SDL_WINDOWEVENT_FOCUS_GAINED,
-        SDL_WINDOWEVENT_FOCUS_LOST,
-        SDL_WINDOWEVENT_CLOSE,
-        SDL_WINDOWEVENT_TAKE_FOCUS,
-        SDL_WINDOWEVENT_HIT_TEST,
-        SDL_WINDOWEVENT_ICCPROF_CHANGED,
-        SDL_WINDOWEVENT_DISPLAY_CHANGED,
+        public SDL_FPoint position;
+
+        public SDL_Color color;
+
+        public SDL_FPoint tex_coord;
     }
 }

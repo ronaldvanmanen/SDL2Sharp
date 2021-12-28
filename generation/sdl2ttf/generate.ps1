@@ -1,1 +1,1 @@
-& dotnet tool run ClangSharpPInvokeGenerator "@settings.rsp" --file-directory "$HOME\.nuget\packages\libsdl2ttf\2.0.15-1261613243\lib\native\include" --include-directory "$HOME\.nuget\packages\libsdl2\2.0.16-1261613060\lib\native\include"
+& dotnet tool run ClangSharpPInvokeGenerator "@settings.rsp" --file-directory "$HOME\.nuget\packages\libsdl2ttf\2.0.15-1629963746\lib\native\include" --include-directory "$HOME\.nuget\packages\libsdl2\2.0.18-1629963310\lib\native\include"
