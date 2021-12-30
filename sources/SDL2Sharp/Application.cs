@@ -35,10 +35,6 @@ namespace SDL2Sharp
 
         public Subsystems Subsystems { get; set; } = Subsystems.All;
 
-        public IReadOnlyList<Window> Windows => WindowsInternal.AsReadOnly();
-
-        internal List<Window> WindowsInternal { get; } = new List<Window>();
-
         private int _exitCode;
 
         protected Application()
@@ -139,8 +135,7 @@ namespace SDL2Sharp
 
         private void DispatchKeyDownEvent(SDL_KeyboardEvent @event)
         {
-            var windows = WindowsInternal;
-            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
                 window.HandleKeyDownEvent(@event);
@@ -149,8 +144,7 @@ namespace SDL2Sharp
 
         private void DispatchKeyUpEvent(SDL_KeyboardEvent @event)
         {
-            var windows = WindowsInternal;
-            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
                 window.HandleKeyUpEvent(@event);
@@ -158,8 +152,7 @@ namespace SDL2Sharp
         }
         private void DispatchMouseMotionEvent(SDL_MouseMotionEvent @event)
         {
-            var windows = WindowsInternal;
-            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
                 window.HandleMouseMotionEvent(@event);
@@ -168,8 +161,7 @@ namespace SDL2Sharp
 
         private void DispatchWindowEvent(SDL_WindowEvent @event)
         {
-            var windows = WindowsInternal;
-            var window = windows.FirstOrDefault(w => w.Id == @event.windowID);
+            var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
             {
                 window.HandleWindowEvent(@event);
