@@ -24,6 +24,7 @@ using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 namespace SDL2Sharp
 {
@@ -67,7 +68,11 @@ namespace SDL2Sharp
 
         public event EventHandler<MouseMotionEventArgs>? MouseMotion;
 
+        private static List<Window> _all = new List<Window>();
+
         private SDL_Window* _handle;
+
+        public static IReadOnlyList<Window> All => _all;
 
         public uint Id
         {
@@ -354,7 +359,8 @@ namespace SDL2Sharp
                     SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
                 );
             }
-            Application.Current.WindowsInternal.Add(this);
+
+            _all.Add(this);
         }
 
         ~Window()
@@ -370,8 +376,13 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle is null) return;
+            if (_handle is null)
+            {
+                return;
+            }
+
             SDL.DestroyWindow(_handle);
+            _all.Remove(this);
             _handle = null;
         }
 
