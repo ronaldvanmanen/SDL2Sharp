@@ -68,7 +68,7 @@ namespace SDL2Sharp
 
         public event EventHandler<MouseMotionEventArgs>? MouseMotion;
 
-        private static List<Window> _all = new List<Window>();
+        private static readonly List<Window> _all = new List<Window>();
 
         private SDL_Window* _handle;
 
