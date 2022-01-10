@@ -250,34 +250,27 @@ namespace SDL2Sharp
 
         public static unsafe bool SetValue(string name, string value)
         {
-            using (var marshaledName = new MarshaledString(name))
-            using (var marshaledValue = new MarshaledString(value))
-            {
-                return 0 != SDL.SetHint(marshaledName, marshaledValue);
-            }
+            using var marshaledName = new MarshaledString(name);
+            using var marshaledValue = new MarshaledString(value);
+            return 0 != SDL.SetHint(marshaledName, marshaledValue);
         }
 
         public static unsafe bool SetValue(string name, string value, HintPriority priority)
         {
-            using (var marshaledName = new MarshaledString(name))
-            using (var marshaledValue = new MarshaledString(value))
-            {
-                return 0 != SDL.SetHintWithPriority(marshaledName, marshaledValue, (SDL_HintPriority)priority);
-            }
+            using var marshaledName = new MarshaledString(name);
+            using var marshaledValue = new MarshaledString(value);
+            return 0 != SDL.SetHintWithPriority(marshaledName, marshaledValue, (SDL_HintPriority)priority);
         }
 
         public static unsafe string GetValue(string name)
         {
-            using (var marshaledName = new MarshaledString(name))
+            using var marshaledName = new MarshaledString(name);
+            var value = SDL.GetHint(marshaledName);
+            if (value is null)
             {
-                var value = SDL.GetHint(marshaledName);
-                if (value is null)
-                {
-                    return null!;
-                }
-                return new string(value);
+                return null!;
             }
-
+            return new string(value);
         }
     }
 }
