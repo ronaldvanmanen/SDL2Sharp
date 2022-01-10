@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -133,7 +132,7 @@ namespace SDL2Sharp
 
         protected virtual void OnIdle() { }
 
-        private void DispatchKeyDownEvent(SDL_KeyboardEvent @event)
+        private static void DispatchKeyDownEvent(SDL_KeyboardEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
@@ -142,7 +141,7 @@ namespace SDL2Sharp
             }
         }
 
-        private void DispatchKeyUpEvent(SDL_KeyboardEvent @event)
+        private static void DispatchKeyUpEvent(SDL_KeyboardEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
@@ -150,7 +149,8 @@ namespace SDL2Sharp
                 window.HandleKeyUpEvent(@event);
             }
         }
-        private void DispatchMouseMotionEvent(SDL_MouseMotionEvent @event)
+
+        private static void DispatchMouseMotionEvent(SDL_MouseMotionEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
@@ -159,7 +159,7 @@ namespace SDL2Sharp
             }
         }
 
-        private void DispatchWindowEvent(SDL_WindowEvent @event)
+        private static void DispatchWindowEvent(SDL_WindowEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
             if (window != null)
@@ -175,7 +175,7 @@ namespace SDL2Sharp
             switch (eventType)
             {
                 case SDL_EventType.SDL_WINDOWEVENT:
-                    Application.Current.DispatchWindowEvent(@event->window);
+                    DispatchWindowEvent(@event->window);
                     return 0;
             }
             return 1;
