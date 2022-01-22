@@ -167,10 +167,29 @@ namespace SDL2Sharp
 
         private void Update(SDL_Rect* rect, void* pixels, int pitch)
         {
-            ThrowWhenDisposed();
-
             Error.ThrowOnFailure(
                 SDL.UpdateTexture(_handle, rect, pixels, pitch)
+            );
+        }
+
+        public void UpdateYUV(Span2D<byte> yPixels, Span2D<byte> uPixels, Span2D<byte> vPixels)
+        {
+            ThrowWhenDisposed();
+
+            var yPlane = (byte*)Unsafe.AsPointer(ref yPixels.DangerousGetReference());
+            var yPitch = yPixels.Width * sizeof(byte);
+            var uPlane = (byte*)Unsafe.AsPointer(ref uPixels.DangerousGetReference());
+            var uPitch = uPixels.Width * sizeof(byte);
+            var vPlane = (byte*)Unsafe.AsPointer(ref vPixels.DangerousGetReference());
+            var vPitch = vPixels.Width * sizeof(byte);
+
+            UpdateYUV(null, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch);
+        }
+
+        private void UpdateYUV(SDL_Rect* rect, byte* yPlane, int yPitch, byte* uPlane, int uPitch, byte* vPlane, int vPitch)
+        {
+            Error.ThrowOnFailure(
+                SDL.UpdateYUVTexture(_handle, rect, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch)
             );
         }
 
