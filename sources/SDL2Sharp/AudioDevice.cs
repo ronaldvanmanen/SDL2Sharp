@@ -123,7 +123,16 @@ namespace SDL2Sharp
             ThrowIfDisposed();
             ThrowIfOpen();
 
-            SDL_AudioSpec desiredSpec = (SDL_AudioSpec)spec;
+            var desiredSpec = new SDL_AudioSpec
+            {
+                freq = spec.Frequency,
+                format = (ushort)spec.Format,
+                channels = spec.Channels,
+                silence = spec.Silence,
+                samples = spec.Samples,
+                padding = spec.Padding,
+                size = spec.Size
+            };
 
             if (callback != null)
             {
