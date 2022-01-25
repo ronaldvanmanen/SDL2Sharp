@@ -24,6 +24,8 @@ namespace SDL2Sharp
 {
     public sealed unsafe class AudioSpec
     {
+        public AudioSpec() { }
+
         public AudioSpec(SDL_AudioSpec audioSpec)
         {
             Frequency = audioSpec.freq;
@@ -48,21 +50,5 @@ namespace SDL2Sharp
         public ushort Padding { get; set; }
 
         public uint Size { get; private set; }
-
-        public static explicit operator SDL_AudioSpec(AudioSpec value)
-        {
-            return new SDL_AudioSpec
-            {
-                freq = value.Frequency,
-                format = (ushort)value.Format,
-                channels = value.Channels,
-                silence = value.Silence,
-                samples = value.Samples,
-                padding = value.Padding,
-                size = value.Size,
-                callback = null,
-                userdata = null
-            };
-        }
     }
 }
