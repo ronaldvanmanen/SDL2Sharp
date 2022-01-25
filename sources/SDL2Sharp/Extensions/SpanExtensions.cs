@@ -25,12 +25,12 @@ namespace SDL2Sharp.Extensions
 {
     public static class SpanExtensions
     {
-        public static unsafe void MixAudioFormat(this Span<byte> source, Span<byte> destination, ushort format, int volume)
+        public static unsafe void MixAudioFormat(this Span<byte> source, Span<byte> destination, AudioFormat format, int volume)
         {
             fixed (byte* dst = &destination[0])
             fixed (byte* src = &source[0])
             {
-                SDL.MixAudioFormat(dst, src, format, (uint)source.Length, volume);
+                SDL.MixAudioFormat(dst, src, (ushort)format, (uint)source.Length, volume);
             }
         }
     }
