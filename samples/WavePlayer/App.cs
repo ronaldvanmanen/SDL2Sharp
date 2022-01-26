@@ -98,7 +98,7 @@ namespace WavePlayer
                 return;
             }
             var slice = _waveFile.Buffer.Slice(_wavePosition, sliceLength);
-            slice.MixAudioFormat(stream, _waveFile.Spec.Format, SDL.SDL_MIX_MAXVOLUME);
+            stream.MixAudioFormat(slice, _waveFile.Spec.Format, SDL.SDL_MIX_MAXVOLUME);
             _wavePosition += sliceLength;
         }
 

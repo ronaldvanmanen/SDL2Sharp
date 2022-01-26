@@ -173,14 +173,5 @@ namespace SDL2Sharp.Extensions
             }
             return float.NaN;
         }
-
-        public static unsafe void MixAudioFormat(this ReadOnlySpan<byte> source, Span<byte> destination, AudioFormat format, int volume)
-        {
-            fixed (byte* dst = &destination[0])
-            fixed (byte* src = &source[0])
-            {
-                SDL.MixAudioFormat(dst, src, (ushort)format, (uint)source.Length, volume);
-            }
-        }
     }
 }
