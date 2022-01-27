@@ -31,6 +31,8 @@ namespace SDL2Sharp
 
         private AudioDeviceCallback _callback = null!;
 
+        private SDL_AudioSpec _obtainedSpec;
+
         private object _userdata = null!;
 
         private GCHandle _handle = default;
@@ -40,6 +42,16 @@ namespace SDL2Sharp
         public bool IsDisposed => _disposed;
 
         public bool IsOpen => _deviceID != 0;
+
+        public AudioSpec ObtainedSpec
+        {
+            get
+            {
+                ThrowIfDisposed();
+                ThrowIfClosed();
+                return new AudioSpec(_obtainedSpec);
+            }
+        }
 
         public AudioDevice()
         : this(null!)
@@ -143,17 +155,20 @@ namespace SDL2Sharp
                 desiredSpec.userdata = (void*)(IntPtr)_handle;
             }
 
-            SDL_AudioSpec obtainedSpec;
-            _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, &obtainedSpec, 0);
-            if (_deviceID == 0)
+            fixed (SDL_AudioSpec* obtainedSpec = &_obtainedSpec)
             {
-                error = new Error(new string(SDL.GetError()));
-                return false;
-            }
-            else
-            {
-                error = null!;
-                return true;
+                _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, obtainedSpec, 0);
+
+                if (_deviceID == 0)
+                {
+                    error = new Error(new string(SDL.GetError()));
+                    return false;
+                }
+                else
+                {
+                    error = null!;
+                    return true;
+                }
             }
         }
 
