@@ -30,6 +30,26 @@ namespace SDL2Sharp
     {
         private SDL_Texture* _handle;
 
+        public PixelFormatEnum Format
+        {
+            get
+            {
+                uint format;
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, &format, null, null, null));
+                return (PixelFormatEnum)format;
+            }
+        }
+
+        public TextureAccess Access
+        {
+            get
+            {
+                int access;
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, &access, null, null));
+                return (TextureAccess)access;
+            }
+        }
+
         public int Width
         {
             get
@@ -48,6 +68,11 @@ namespace SDL2Sharp
                 Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, null, &height));
                 return height;
             }
+        }
+
+        public bool IsValid
+        {
+            get => 0 == SDL.QueryTexture(_handle, null, null, null, null);
         }
 
         internal Texture(SDL_Texture* texture)
