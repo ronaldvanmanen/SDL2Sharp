@@ -68,7 +68,7 @@ namespace SDL2Sharp
         ABGR32 = SDL_PixelFormatEnum.SDL_PIXELFORMAT_ABGR32,
         YV12 = SDL_PixelFormatEnum.SDL_PIXELFORMAT_YV12,
         IYUV = SDL_PixelFormatEnum.SDL_PIXELFORMAT_IYUV,
-        YUV2 = SDL_PixelFormatEnum.SDL_PIXELFORMAT_YUY2,
+        YUY2 = SDL_PixelFormatEnum.SDL_PIXELFORMAT_YUY2,
         UYVY = SDL_PixelFormatEnum.SDL_PIXELFORMAT_UYVY,
         YVYU = SDL_PixelFormatEnum.SDL_PIXELFORMAT_YVYU,
         NV12 = SDL_PixelFormatEnum.SDL_PIXELFORMAT_NV12,
