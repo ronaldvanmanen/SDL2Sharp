@@ -28,24 +28,24 @@ namespace SDL2Sharp.UnitTests
         [Fact]
         public static void BitSizeTest()
         {
-            Assert.Equal(32, AudioFormat.AUDIO_F32.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_F32LSB.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_F32MSB.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_F32SYS.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_S16.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_S16LSB.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_S16MSB.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_S16SYS.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_S32.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_S32LSB.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_S32MSB.BitSize());
-            Assert.Equal(32, AudioFormat.AUDIO_S32SYS.BitSize());
-            Assert.Equal(8, AudioFormat.AUDIO_S8.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_U16.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_U16LSB.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_U16MSB.BitSize());
-            Assert.Equal(16, AudioFormat.AUDIO_U16SYS.BitSize());
-            Assert.Equal(8, AudioFormat.AUDIO_U8.BitSize());
+            Assert.Equal(32, AudioFormat.F32.BitSize());
+            Assert.Equal(32, AudioFormat.F32LSB.BitSize());
+            Assert.Equal(32, AudioFormat.F32MSB.BitSize());
+            Assert.Equal(32, AudioFormat.F32SYS.BitSize());
+            Assert.Equal(16, AudioFormat.S16.BitSize());
+            Assert.Equal(16, AudioFormat.S16LSB.BitSize());
+            Assert.Equal(16, AudioFormat.S16MSB.BitSize());
+            Assert.Equal(16, AudioFormat.S16SYS.BitSize());
+            Assert.Equal(32, AudioFormat.S32.BitSize());
+            Assert.Equal(32, AudioFormat.S32LSB.BitSize());
+            Assert.Equal(32, AudioFormat.S32MSB.BitSize());
+            Assert.Equal(32, AudioFormat.S32SYS.BitSize());
+            Assert.Equal(8, AudioFormat.S8.BitSize());
+            Assert.Equal(16, AudioFormat.U16.BitSize());
+            Assert.Equal(16, AudioFormat.U16LSB.BitSize());
+            Assert.Equal(16, AudioFormat.U16MSB.BitSize());
+            Assert.Equal(16, AudioFormat.U16SYS.BitSize());
+            Assert.Equal(8, AudioFormat.U8.BitSize());
         }
     }
 }
