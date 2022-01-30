@@ -114,59 +114,59 @@ namespace SDL2Sharp.Extensions
         {
             switch (sampleFormat)
             {
-                case AudioFormat.AUDIO_U8:
+                case AudioFormat.U8:
                     {
                         var sample = bytes[sampleOffset];
                         var normalizedSample = (sample - .5f - (byte.MaxValue + 1) / 2) / byte.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_S8:
+                case AudioFormat.S8:
                     {
                         var sample = (sbyte)bytes[sampleOffset];
                         var normalizedSample = (sample - .5f) / 255f;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_U16LSB:
+                case AudioFormat.U16LSB:
                     {
                         var sample = bytes.ToUInt16(sampleOffset, true);
                         var normalizedSample = (sample - .5f - (ushort.MaxValue + 1) / 2) / short.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_S16LSB:
+                case AudioFormat.S16LSB:
                     {
                         var sample = bytes.ToInt16(sampleOffset, true);
                         var normalizedSample = (sample - .5f) / short.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_U16MSB:
+                case AudioFormat.U16MSB:
                     {
                         var sample = bytes.ToUInt16(sampleOffset, false);
                         var normalizedSample = (sample - .5f - (ushort.MaxValue + 1) / 2) / short.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_S16MSB:
+                case AudioFormat.S16MSB:
                     {
                         var sample = bytes.ToInt16(sampleOffset, false);
                         var normalizedSample = (sample - .5f) / short.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_S32LSB:
+                case AudioFormat.S32LSB:
                     {
                         var sample = bytes.ToInt32(sampleOffset, false);
                         var normalizedSample = (sample - .5f) / int.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_S32MSB:
+                case AudioFormat.S32MSB:
                     {
                         var sample = bytes.ToInt32(sampleOffset, false);
                         var normalizedSample = (sample - .5f) / int.MaxValue;
                         return normalizedSample;
                     }
-                case AudioFormat.AUDIO_F32LSB:
+                case AudioFormat.F32LSB:
                     {
                         return bytes.ToSingle(sampleOffset, false);
                     }
-                case AudioFormat.AUDIO_F32MSB:
+                case AudioFormat.F32MSB:
                     {
                         return bytes.ToSingle(sampleOffset, true);
                     }
