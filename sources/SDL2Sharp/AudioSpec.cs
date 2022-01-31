@@ -24,7 +24,7 @@ namespace SDL2Sharp
 {
     public sealed unsafe class AudioSpec
     {
-        public AudioSpec(int frequency, AudioFormat format, byte channels, ushort samples)
+        public AudioSpec(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples)
         {
             Frequency = frequency;
             Format = format;
@@ -39,7 +39,7 @@ namespace SDL2Sharp
         {
             Frequency = audioSpec.freq;
             Format = (AudioFormat)audioSpec.format;
-            Channels = audioSpec.channels;
+            Channels = (AudioChannelLayout)audioSpec.channels;
             Silence = audioSpec.silence;
             Samples = audioSpec.samples;
             Padding = audioSpec.padding;
@@ -50,7 +50,7 @@ namespace SDL2Sharp
 
         public AudioFormat Format { get; set; }
 
-        public byte Channels { get; set; }
+        public AudioChannelLayout Channels { get; set; }
 
         public byte Silence { get; private set; }
 

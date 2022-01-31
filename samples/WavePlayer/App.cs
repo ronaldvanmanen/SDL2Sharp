@@ -115,8 +115,8 @@ namespace WavePlayer
             var frameRate = 0d;
             var frameRateText = $"FPS: {frameRate:0.00}";
             var frameCounter = 0;
-            var channels = _waveFile.Spec.Channels;
-            var waves = new Point[channels][];
+            var channelCount = (int)_waveFile.Spec.Channels;
+            var waves = new Point[channelCount][];
             var sampleFormat = _waveFile.Spec.Format;
             var sampleSize = sampleFormat.BitSize() / 8;
 
@@ -128,7 +128,7 @@ namespace WavePlayer
                     {
                         renderer?.Dispose();
                         renderer = _window.CreateRenderer(RendererFlags.Accelerated/* | RendererFlags.PresentVSync*/);
-                        for (var channel = 0; channel < channels; ++channel)
+                        for (var channel = 0; channel < channelCount; ++channel)
                         {
                             waves[channel] = new Point[renderer.OutputSize.Width];
                         };
@@ -155,9 +155,9 @@ namespace WavePlayer
 
                     renderer.DrawColor = _waveColor;
 
-                    var channelHeight = renderer.OutputSize.Height / channels;
+                    var channelHeight = renderer.OutputSize.Height / channelCount;
                     var halfGraphHeight = channelHeight * 9 / 20;
-                    for (var channel = 0; channel < channels; ++channel)
+                    for (var channel = 0; channel < channelCount; ++channel)
                     {
                         var centerLine = channel * channelHeight + channelHeight / 2;
                         var sampleOffset = _wavePosition + sampleSize * channel;
@@ -173,7 +173,7 @@ namespace WavePlayer
 
                             waves[channel][x] = new Point(x, y);
 
-                            sampleOffset += sampleSize * channels;
+                            sampleOffset += sampleSize * channelCount;
                         }
 
                         renderer.DrawLines(waves[channel]);
@@ -181,7 +181,7 @@ namespace WavePlayer
 
                     renderer.DrawColor = _channelSeparatorColor;
 
-                    for (var channel = 0; channel <= channels; ++channel)
+                    for (var channel = 0; channel <= channelCount; ++channel)
                     {
                         var y = channel * channelHeight;
                         renderer.DrawLine(0, y, renderer.OutputSize.Width, y);
