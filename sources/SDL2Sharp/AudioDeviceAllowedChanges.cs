@@ -24,7 +24,7 @@ using System;
 namespace SDL2Sharp
 {
     [Flags]
-    public enum AudioAllowedChanges
+    public enum AudioDeviceAllowedChanges
     {
         None = 0,
         Frequency = SDL.SDL_AUDIO_ALLOW_FREQUENCY_CHANGE,
