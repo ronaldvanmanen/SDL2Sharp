@@ -43,13 +43,13 @@ namespace SDL2Sharp
 
         public bool IsOpen => _deviceID != 0;
 
-        public AudioSpec ObtainedSpec
+        public AudioDeviceSpec ObtainedSpec
         {
             get
             {
                 ThrowIfDisposed();
                 ThrowIfClosed();
-                return new AudioSpec(_obtainedSpec);
+                return new AudioDeviceSpec(_obtainedSpec);
             }
         }
 
@@ -57,17 +57,22 @@ namespace SDL2Sharp
         : this(null!)
         { }
 
-        public AudioDevice(AudioSpec spec)
+        public AudioDevice(AudioDeviceSpec spec)
         : this(spec, null!)
         { }
 
-        public AudioDevice(AudioSpec spec, AudioDeviceCallback callback)
+        public AudioDevice(AudioDeviceSpec spec, AudioDeviceCallback callback)
         : this(spec, callback, null!)
         { }
 
-        public AudioDevice(AudioSpec spec, AudioDeviceCallback callback, object userdata)
+        public AudioDevice(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata)
         {
             Open(spec, callback, userdata);
+        }
+
+        public AudioDevice(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
+        {
+            Open(spec, callback, userdata, allowedChanges);
         }
 
         ~AudioDevice()
@@ -96,7 +101,7 @@ namespace SDL2Sharp
             }
         }
 
-        public void Open(AudioSpec spec)
+        public void Open(AudioDeviceSpec spec)
         {
             if (!TryOpen(spec, null!, null!, out var error))
             {
@@ -104,7 +109,7 @@ namespace SDL2Sharp
             }
         }
 
-        public void Open(AudioSpec spec, AudioDeviceCallback callback)
+        public void Open(AudioDeviceSpec spec, AudioDeviceCallback callback)
         {
             if (!TryOpen(spec, callback, null!, out var error))
             {
@@ -112,7 +117,7 @@ namespace SDL2Sharp
             }
         }
 
-        public void Open(AudioSpec spec, AudioDeviceCallback callback, object userdata)
+        public void Open(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata)
         {
             if (!TryOpen(spec, callback, userdata, out var error))
             {
@@ -120,17 +125,30 @@ namespace SDL2Sharp
             }
         }
 
-        public bool TryOpen(AudioSpec spec, out Error error)
+        public void Open(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
+        {
+            if (!TryOpen(spec, callback, userdata, allowedChanges, out var error))
+            {
+                throw error;
+            }
+        }
+
+        public bool TryOpen(AudioDeviceSpec spec, out Error error)
         {
             return TryOpen(spec, null!, null!, out error);
         }
 
-        public bool TryOpen(AudioSpec spec, AudioDeviceCallback callback, out Error error)
+        public bool TryOpen(AudioDeviceSpec spec, AudioDeviceCallback callback, out Error error)
         {
             return TryOpen(spec, callback, null!, out error);
         }
 
-        public bool TryOpen(AudioSpec spec, AudioDeviceCallback callback, object userdata, out Error error)
+        public bool TryOpen(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, out Error error)
+        {
+            return TryOpen(spec, callback, userdata, AudioDeviceAllowedChanges.None, out error);
+        }
+
+        public bool TryOpen(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges, out Error error)
         {
             ThrowIfDisposed();
             ThrowIfOpen();
@@ -157,7 +175,7 @@ namespace SDL2Sharp
 
             fixed (SDL_AudioSpec* obtainedSpec = &_obtainedSpec)
             {
-                _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, obtainedSpec, 0);
+                _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, obtainedSpec, (int)allowedChanges);
 
                 if (_deviceID == 0)
                 {
