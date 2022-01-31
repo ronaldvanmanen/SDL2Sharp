@@ -24,7 +24,16 @@ namespace SDL2Sharp
 {
     public sealed unsafe class AudioSpec
     {
-        public AudioSpec() { }
+        public AudioSpec(int frequency, AudioFormat format, byte channels, ushort samples)
+        {
+            Frequency = frequency;
+            Format = format;
+            Channels = channels;
+            Silence = 0;
+            Samples = samples;
+            Padding = 0;
+            Size = 0;
+        }
 
         public AudioSpec(SDL_AudioSpec audioSpec)
         {
