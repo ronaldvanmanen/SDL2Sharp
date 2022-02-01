@@ -31,7 +31,6 @@ namespace SDL2Sharp
             Channels = channels;
             Silence = 0;
             Samples = samples;
-            Padding = 0;
             Size = 0;
         }
 
@@ -42,7 +41,6 @@ namespace SDL2Sharp
             Channels = (AudioChannelLayout)audioSpec.channels;
             Silence = audioSpec.silence;
             Samples = audioSpec.samples;
-            Padding = audioSpec.padding;
             Size = audioSpec.size;
         }
 
@@ -55,8 +53,6 @@ namespace SDL2Sharp
         public byte Silence { get; private set; }
 
         public ushort Samples { get; set; }
-
-        public ushort Padding { get; set; }
 
         public uint Size { get; private set; }
     }
