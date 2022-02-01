@@ -158,9 +158,9 @@ namespace SDL2Sharp
                 freq = spec.Frequency,
                 format = (ushort)spec.Format,
                 channels = (byte)spec.Channels,
-                silence = spec.Silence,
-                samples = spec.Samples,
-                padding = spec.Padding,
+                silence = 0,
+                samples = 0,
+                padding = 0,
                 size = spec.Size
             };
 
