@@ -51,11 +51,11 @@ namespace SDL2Sharp
             }
         }
 
-        public unsafe Surface(SDL_Surface* handle)
+        public Surface(SDL_Surface* handle)
         : this(handle, true)
         { }
 
-        public unsafe Surface(SDL_Surface* handle, bool freeHandle)
+        public Surface(SDL_Surface* handle, bool freeHandle)
         {
             if (handle is null)
             {
@@ -68,6 +68,18 @@ namespace SDL2Sharp
 
         public Surface(int width, int height, int depth, PixelFormatEnum format)
         : this(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format))
+        { }
+
+        public Surface(int width, int height, int depth, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
+        : this(SDL.CreateRGBSurface(0, width, height, depth, redMask, greenMask, blueMask, alphaMask))
+        { }
+
+        public Surface(void* pixels, int width, int height, int depth, int pitch, PixelFormatEnum format)
+        : this(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, (uint)format))
+        { }
+
+        public Surface(void* pixels, int width, int height, int depth, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
+        : this(SDL.CreateRGBSurfaceFrom(pixels, width, height, depth, pitch, redMask, greenMask, blueMask, alphaMask))
         { }
 
         ~Surface()
@@ -143,6 +155,14 @@ namespace SDL2Sharp
             SDL.UnlockSurface(_handle);
         }
 
+        private void ThrowWhenDisposed()
+        {
+            if (_handle is null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
+        }
+
         public static implicit operator SDL_Surface*(Surface surface)
         {
             if (surface is null)
@@ -151,14 +171,6 @@ namespace SDL2Sharp
             }
 
             return surface._handle;
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
         }
     }
 }
