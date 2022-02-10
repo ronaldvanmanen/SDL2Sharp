@@ -32,11 +32,13 @@ namespace SDL2Sharp
 
         private readonly bool _freeHandle;
 
+        public PixelFormat Format => new PixelFormat(_handle->format);
+
         public int Width => _handle->w;
 
         public int Height => _handle->h;
 
-        public PixelFormatEnum PixelFormat => (PixelFormatEnum)_handle->format->format;
+        public int Pitch => _handle->pitch;
 
         public static Surface LoadBitmap(string filename)
         {
