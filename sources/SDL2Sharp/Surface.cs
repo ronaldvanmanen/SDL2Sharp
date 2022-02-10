@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.InteropServices;
 using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
@@ -39,6 +38,19 @@ namespace SDL2Sharp
         public int Height => _handle->h;
 
         public int Pitch => _handle->pitch;
+
+        public Span2D<byte> Pixels
+        {
+            get
+            {
+                // In SDL pitch is synonymous to stride, and is defined as the
+                // length of a row of pixels in bytes. Span2D, however, defines
+                // pitch as the difference between stride and width.
+                return new Span2D<byte>(_handle->pixels, _handle->h, _handle->w, _handle->pitch - _handle->w);
+            }
+        }
+
+        public bool MustLock => ((_handle->flags & SDL.SDL_RLEACCEL) != 0);
 
         public static Surface LoadBitmap(string filename)
         {
@@ -140,14 +152,13 @@ namespace SDL2Sharp
             );
         }
 
-        public Span2D<TPixelFormat> Lock<TPixelFormat>()
+        public void Lock()
         {
             ThrowWhenDisposed();
 
             Error.ThrowOnFailure(
                 SDL.LockSurface(_handle)
             );
-            return new Span2D<TPixelFormat>(_handle->pixels, _handle->h, _handle->w, _handle->pitch - _handle->w * Marshal.SizeOf<TPixelFormat>());
         }
 
         public void Unlock()
