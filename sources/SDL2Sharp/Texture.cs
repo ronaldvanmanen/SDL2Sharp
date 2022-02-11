@@ -70,6 +70,24 @@ namespace SDL2Sharp
             }
         }
 
+        public BlendMode BlendMode
+        {
+            get
+            {
+                SDL_BlendMode blendMode;
+                Error.ThrowOnFailure(
+                    SDL.GetTextureBlendMode(_handle, &blendMode)
+                );
+                return (BlendMode)blendMode;
+            }
+            set
+            {
+                Error.ThrowOnFailure(
+                    SDL.SetTextureBlendMode(_handle, (SDL_BlendMode)value)
+                );
+            }
+        }
+
         public bool IsValid
         {
             get => 0 == SDL.QueryTexture(_handle, null, null, null, null);
