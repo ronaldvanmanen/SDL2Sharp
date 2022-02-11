@@ -45,8 +45,9 @@ namespace SDL2Sharp
             {
                 // In SDL pitch is synonymous to stride, and is defined as the
                 // length of a row of pixels in bytes. Span2D, however, defines
-                // pitch as the difference between stride and width.
-                return new Span2D<byte>(_handle->pixels, _handle->h, _handle->w, _handle->pitch - _handle->w);
+                // pitch as the difference between stride and width in pixels.
+                return new Span2D<byte>(_handle->pixels, _handle->h, _handle->w,
+                    _handle->pitch - _handle->w * _handle->format->BytesPerPixel);
             }
         }
 
