@@ -56,6 +56,7 @@ namespace ParticleSystem
             _window.KeyDown += OnWindowKeyDown;
             _window.MouseMotion += OnWindowMouseMotion;
             _window.SizeChanged += OnWindowSizeChanged;
+            _window.MouseMotion += OnWindowMouseMotion;
             _renderingThread = new Thread(Render);
             _rendererInvalidated = true;
             _rendering = true;
@@ -85,6 +86,11 @@ namespace ParticleSystem
 
             try
             {
+                if (Cursor.Shown)
+                {
+                    Cursor.Hide();
+                }
+
                 while (_rendering)
                 {
                     if (_rendererInvalidated)
@@ -124,6 +130,11 @@ namespace ParticleSystem
             finally
             {
                 renderer?.Dispose();
+
+                if (Cursor.Hidden)
+                {
+                    Cursor.Show();
+                }
             }
         }
 

@@ -30,6 +30,8 @@ namespace PlasmaFractal
 {
     internal unsafe class App : Application
     {
+        private static readonly TimeSpan HideCursorDelay = TimeSpan.FromSeconds(1);
+
         private static readonly Font _frameRateFont = new Font("lazy.ttf", 28);
 
         private static readonly Color _frameRateColor = new Color(255, 255, 255, 255);
@@ -46,6 +48,8 @@ namespace PlasmaFractal
 
         private volatile bool _reversePaletteRotation = false;
 
+        private DateTime _cursorLastActive = DateTime.UtcNow;
+
         protected override void OnInitializing(string[] args)
         {
             Subsystems = Subsystems.Video;
@@ -56,6 +60,7 @@ namespace PlasmaFractal
             _window = new Window("Plasma Fractal", 512, 512, WindowFlags.Shown | WindowFlags.Resizable);
             _window.KeyDown += OnWindowKeyDown;
             _window.SizeChanged += OnWindowSizeChanged;
+            _window.MouseMotion += OnWindowMouseMotion;
             _renderingThread = new Thread(Render);
             _rendererInvalidated = true;
             _rendering = true;
@@ -68,6 +73,18 @@ namespace PlasmaFractal
             _rendering = false;
             _renderingThread?.Join();
             _window?.Dispose();
+        }
+
+        protected override void OnIdle()
+        {
+            if (Cursor.Shown)
+            {
+                var cursorInactivity = DateTime.UtcNow - _cursorLastActive;
+                if (cursorInactivity >= HideCursorDelay)
+                {
+                    Cursor.Hide();
+                }
+            }
         }
 
         private void Render()
@@ -184,6 +201,16 @@ namespace PlasmaFractal
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
         {
             _rendererInvalidated = true;
+        }
+
+        private void OnWindowMouseMotion(object? sender, MouseMotionEventArgs e)
+        {
+            if (Cursor.Hidden)
+            {
+                Cursor.Show();
+            }
+
+            _cursorLastActive = DateTime.UtcNow;
         }
 
         private static readonly Random _random = new Random();
