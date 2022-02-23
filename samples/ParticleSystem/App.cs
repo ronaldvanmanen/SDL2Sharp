@@ -45,12 +45,12 @@ namespace ParticleSystem
 
         private volatile int _mouseY;
 
-        protected override void OnInitializing(string[] args)
+        protected override void OnInitializing()
         {
             Subsystems = Subsystems.Video;
         }
 
-        protected override void OnInitialized(string[] args)
+        protected override void OnInitialized()
         {
             _window = new Window("Particle System", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
             _window.KeyDown += OnWindowKeyDown;
@@ -63,7 +63,7 @@ namespace ParticleSystem
             _renderingThread.Start();
         }
 
-        protected override void OnQuiting(int exitCode)
+        protected override void OnQuiting()
         {
             _rendererInvalidated = false;
             _rendering = false;

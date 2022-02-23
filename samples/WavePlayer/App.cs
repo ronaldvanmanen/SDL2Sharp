@@ -52,13 +52,15 @@ namespace WavePlayer
 
         private int _wavePosition = 0;
 
-        protected override void OnInitializing(string[] args)
+        protected override void OnInitializing()
         {
-            Subsystems = Subsystems.Audio | Subsystems.Events | Subsystems.Video;
+            Subsystems = Subsystems.Audio | Subsystems.Video;
         }
 
-        protected override void OnInitialized(string[] args)
+        protected override void OnInitialized()
         {
+            Environment.SetEnvironmentVariable("SDL_AUDIODRIVER", "directsound");
+
             try
             {
                 _window = new Window("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
@@ -66,8 +68,8 @@ namespace WavePlayer
                 _renderingThread = new Thread(Render);
                 _rendererInvalidated = true;
                 _rendering = true;
-                _waveFile = new WaveFile(args[0]);
-                _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback);
+                _waveFile = new WaveFile(CommandLineArgs[0]);
+                _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback, null!, AudioDeviceAllowedChanges.None);
                 _renderingThread.Start();
                 _audioDevice.Unpause();
             }
@@ -78,7 +80,7 @@ namespace WavePlayer
             }
         }
 
-        protected override void OnQuiting(int exitCode)
+        protected override void OnQuiting()
         {
             _audioDevice?.Pause();
             _rendererInvalidated = false;

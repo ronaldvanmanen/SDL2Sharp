@@ -30,30 +30,48 @@ namespace SDL2Sharp
     {
         private static Application _instance = null!;
 
-        public static Application Current => _instance;
+        public static Application Instance
+        {
+            get
+            {
+                return _instance;
+            }
+            private set
+            {
+                if (_instance != null)
+                {
+                    throw new InvalidOperationException();
+                }
 
-        public Subsystems Subsystems { get; set; } = Subsystems.All;
+                _instance = value;
+            }
+        }
 
-        private int _exitCode;
+        public string[] CommandLineArgs { get; private set; }
+
+        public Subsystems Subsystems { get; protected set; }
+
+        public int ExitCode { get; protected set; }
 
         protected Application()
         {
-            if (_instance != null)
-            {
-                throw new InvalidOperationException();
-            }
-
-            _instance = this;
-            _exitCode = 0;
+            Instance = this;
+            CommandLineArgs = Array.Empty<string>();
+            Subsystems = Subsystems.All;
+            ExitCode = 0;
         }
 
-        public int Run(string[] arguments)
+        public int Run(string[] commandLineArgs)
         {
+            CommandLineArgs = commandLineArgs;
+
             try
             {
-                OnInitializing(arguments);
-                DoInitialize();
-                OnInitialized(arguments);
+                OnInitializing();
+                Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
+                Error.ThrowOnFailure(TTF.Init());
+                SDL.SetEventFilter(&EventFilter, null);
+                OnInitialized();
 
                 while (true)
                 {
@@ -65,7 +83,7 @@ namespace SDL2Sharp
                         switch (eventType)
                         {
                             case SDL_EventType.SDL_QUIT:
-                                return _exitCode;
+                                return ExitCode;
 
                             case SDL_EventType.SDL_KEYUP:
                                 DispatchKeyUpEvent(@event.key);
@@ -90,9 +108,11 @@ namespace SDL2Sharp
             }
             finally
             {
-                OnQuiting(_exitCode);
-                DoQuit();
-                OnQuited(_exitCode);
+                OnQuiting();
+                SDL.SetEventFilter(null, null);
+                TTF.Quit();
+                SDL.Quit();
+                OnQuited();
             }
         }
 
@@ -103,32 +123,18 @@ namespace SDL2Sharp
 
         public void Quit(int exitCode)
         {
-            _exitCode = exitCode;
+            ExitCode = exitCode;
             var @event = new SDL_Event { type = (uint)SDL_EventType.SDL_QUIT };
             Error.ThrowOnFailure(SDL.PushEvent(&@event));
         }
 
-        protected virtual void OnInitializing(string[] args) { }
+        protected virtual void OnInitializing() { }
 
-        private void DoInitialize()
-        {
-            Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
-            Error.ThrowOnFailure(TTF.Init());
-            SDL.SetEventFilter(&EventFilter, null);
-        }
+        protected virtual void OnInitialized() { }
 
-        protected virtual void OnInitialized(string[] args) { }
+        protected virtual void OnQuiting() { }
 
-        protected virtual void OnQuiting(int exitCode) { }
-
-        private void DoQuit()
-        {
-            SDL.SetEventFilter(null, null);
-            TTF.Quit();
-            SDL.Quit();
-        }
-
-        protected virtual void OnQuited(int exitCode) { }
+        protected virtual void OnQuited() { }
 
         protected virtual void OnIdle() { }
 

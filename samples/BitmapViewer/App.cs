@@ -32,18 +32,18 @@ namespace BitmapViewer
 
         private Texture _bitmapTexture = null!;
 
-        protected override void OnInitializing(string[] args)
+        protected override void OnInitializing()
         {
             Subsystems = Subsystems.Video;
         }
 
-        protected override void OnInitialized(string[] args)
+        protected override void OnInitialized()
         {
             try
             {
                 _window = new Window("Bitmap Viewer", 640, 480, WindowFlags.Resizable);
                 _renderer = _window.CreateRenderer(RendererFlags.Accelerated);
-                _bitmapTexture = _renderer.CreateTextureFromBitmap(args[0]);
+                _bitmapTexture = _renderer.CreateTextureFromBitmap(CommandLineArgs[0]);
                 _window.SizeChanged += OnSizeChanged;
             }
             catch (Exception e)
@@ -53,7 +53,7 @@ namespace BitmapViewer
             }
         }
 
-        protected override void OnQuiting(int exitCode)
+        protected override void OnQuiting()
         {
             _window.SizeChanged -= OnSizeChanged;
             _bitmapTexture?.Dispose();
