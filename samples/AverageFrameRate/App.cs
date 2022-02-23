@@ -38,12 +38,12 @@ namespace AverageFrameRate
 
         private volatile bool _rendering = false;
 
-        protected override void OnInitializing(string[] args)
+        protected override void OnInitializing()
         {
             Subsystems = Subsystems.Video;
         }
 
-        protected override void OnInitialized(string[] args)
+        protected override void OnInitialized()
         {
             _window = new Window("Average Frame Rate", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
             _window.SizeChanged += OnWindowSizeChanged;
@@ -53,7 +53,7 @@ namespace AverageFrameRate
             _renderingThread.Start();
         }
 
-        protected override void OnQuiting(int exitCode)
+        protected override void OnQuiting()
         {
             _rendererInvalidated = false;
             _rendering = false;
