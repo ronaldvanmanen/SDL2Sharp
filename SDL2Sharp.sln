@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp", "sources\SDL2Sharp\SDL2Sharp.csproj", "{648556E3-AFD4-4432-8424-89EED2126F82}"
 EndProject
@@ -145,6 +145,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlasmaFractal", "samples\PlasmaFractal\PlasmaFractal.csproj", "{73FBFF5C-8D51-48C6-9321-0A9532864E32}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TunnelEffect", "samples\TunnelEffect\TunnelEffect.csproj", "{629C4F2E-29C2-417A-BB3C-E52EA33CD365}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{8869893C-2683-46BC-984B-E4100E62A35A}"
+	ProjectSection(SolutionItems) = preProject
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
