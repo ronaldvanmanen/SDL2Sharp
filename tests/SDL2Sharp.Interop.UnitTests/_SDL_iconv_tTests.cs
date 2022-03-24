@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="_SDL_iconv_t" /> struct.</summary>
-    public static unsafe class _SDL_iconv_tTests
+    public static unsafe partial class _SDL_iconv_tTests
     {
         /// <summary>Validates that the <see cref="_SDL_iconv_t" /> struct is blittable.</summary>
         [Fact]

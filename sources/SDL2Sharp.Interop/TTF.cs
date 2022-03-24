@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //

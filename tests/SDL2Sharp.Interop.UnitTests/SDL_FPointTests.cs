@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_FPoint" /> struct.</summary>
-    public static unsafe class SDL_FPointTests
+    public static unsafe partial class SDL_FPointTests
     {
         /// <summary>Validates that the <see cref="SDL_FPoint" /> struct is blittable.</summary>
         [Fact]

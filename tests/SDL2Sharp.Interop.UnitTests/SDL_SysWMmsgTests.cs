@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_SysWMmsg" /> struct.</summary>
-    public static unsafe class SDL_SysWMmsgTests
+    public static unsafe partial class SDL_SysWMmsgTests
     {
         /// <summary>Validates that the <see cref="SDL_SysWMmsg" /> struct is blittable.</summary>
         [Fact]

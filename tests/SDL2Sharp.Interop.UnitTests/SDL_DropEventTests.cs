@@ -25,7 +25,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_DropEvent" /> struct.</summary>
-    public static unsafe class SDL_DropEventTests
+    public static unsafe partial class SDL_DropEventTests
     {
         /// <summary>Validates that the <see cref="SDL_DropEvent" /> struct is blittable.</summary>
         [Fact]

@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_MouseWheelEvent" /> struct.</summary>
-    public static unsafe class SDL_MouseWheelEventTests
+    public static unsafe partial class SDL_MouseWheelEventTests
     {
         /// <summary>Validates that the <see cref="SDL_MouseWheelEvent" /> struct is blittable.</summary>
         [Fact]

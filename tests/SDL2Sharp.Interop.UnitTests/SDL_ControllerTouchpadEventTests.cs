@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_ControllerTouchpadEvent" /> struct.</summary>
-    public static unsafe class SDL_ControllerTouchpadEventTests
+    public static unsafe partial class SDL_ControllerTouchpadEventTests
     {
         /// <summary>Validates that the <see cref="SDL_ControllerTouchpadEvent" /> struct is blittable.</summary>
         [Fact]

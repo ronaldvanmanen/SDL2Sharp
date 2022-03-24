@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_MouseButtonEvent" /> struct.</summary>
-    public static unsafe class SDL_MouseButtonEventTests
+    public static unsafe partial class SDL_MouseButtonEventTests
     {
         /// <summary>Validates that the <see cref="SDL_MouseButtonEvent" /> struct is blittable.</summary>
         [Fact]

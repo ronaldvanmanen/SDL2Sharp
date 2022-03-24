@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="_TTF_Font" /> struct.</summary>
-    public static unsafe class _TTF_FontTests
+    public static unsafe partial class _TTF_FontTests
     {
         /// <summary>Validates that the <see cref="_TTF_Font" /> struct is blittable.</summary>
         [Fact]
