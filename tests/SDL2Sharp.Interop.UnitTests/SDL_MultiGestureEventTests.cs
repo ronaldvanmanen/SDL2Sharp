@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_MultiGestureEvent" /> struct.</summary>
-    public static unsafe class SDL_MultiGestureEventTests
+    public static unsafe partial class SDL_MultiGestureEventTests
     {
         /// <summary>Validates that the <see cref="SDL_MultiGestureEvent" /> struct is blittable.</summary>
         [Fact]

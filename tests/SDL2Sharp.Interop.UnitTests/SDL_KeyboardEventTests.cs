@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_KeyboardEvent" /> struct.</summary>
-    public static unsafe class SDL_KeyboardEventTests
+    public static unsafe partial class SDL_KeyboardEventTests
     {
         /// <summary>Validates that the <see cref="SDL_KeyboardEvent" /> struct is blittable.</summary>
         [Fact]

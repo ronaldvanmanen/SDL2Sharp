@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_Cursor" /> struct.</summary>
-    public static unsafe class SDL_CursorTests
+    public static unsafe partial class SDL_CursorTests
     {
         /// <summary>Validates that the <see cref="SDL_Cursor" /> struct is blittable.</summary>
         [Fact]

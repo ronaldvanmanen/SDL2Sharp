@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="ID3D11Device" /> struct.</summary>
-    public static unsafe class ID3D11DeviceTests
+    public static unsafe partial class ID3D11DeviceTests
     {
         /// <summary>Validates that the <see cref="ID3D11Device" /> struct is blittable.</summary>
         [Fact]

@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_QuitEvent" /> struct.</summary>
-    public static unsafe class SDL_QuitEventTests
+    public static unsafe partial class SDL_QuitEventTests
     {
         /// <summary>Validates that the <see cref="SDL_QuitEvent" /> struct is blittable.</summary>
         [Fact]

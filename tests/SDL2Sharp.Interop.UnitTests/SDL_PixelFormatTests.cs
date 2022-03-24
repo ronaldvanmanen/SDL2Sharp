@@ -25,7 +25,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_PixelFormat" /> struct.</summary>
-    public static unsafe class SDL_PixelFormatTests
+    public static unsafe partial class SDL_PixelFormatTests
     {
         /// <summary>Validates that the <see cref="SDL_PixelFormat" /> struct is blittable.</summary>
         [Fact]

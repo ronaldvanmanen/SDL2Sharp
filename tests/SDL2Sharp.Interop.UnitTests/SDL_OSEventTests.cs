@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_OSEvent" /> struct.</summary>
-    public static unsafe class SDL_OSEventTests
+    public static unsafe partial class SDL_OSEventTests
     {
         /// <summary>Validates that the <see cref="SDL_OSEvent" /> struct is blittable.</summary>
         [Fact]

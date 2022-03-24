@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_AudioDeviceEvent" /> struct.</summary>
-    public static unsafe class SDL_AudioDeviceEventTests
+    public static unsafe partial class SDL_AudioDeviceEventTests
     {
         /// <summary>Validates that the <see cref="SDL_AudioDeviceEvent" /> struct is blittable.</summary>
         [Fact]

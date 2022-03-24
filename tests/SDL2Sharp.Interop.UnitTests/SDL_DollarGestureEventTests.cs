@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_DollarGestureEvent" /> struct.</summary>
-    public static unsafe class SDL_DollarGestureEventTests
+    public static unsafe partial class SDL_DollarGestureEventTests
     {
         /// <summary>Validates that the <see cref="SDL_DollarGestureEvent" /> struct is blittable.</summary>
         [Fact]

@@ -25,7 +25,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_RWops" /> struct.</summary>
-    public static unsafe class SDL_RWopsTests
+    public static unsafe partial class SDL_RWopsTests
     {
         /// <summary>Validates that the <see cref="SDL_RWops" /> struct is blittable.</summary>
         [Fact]

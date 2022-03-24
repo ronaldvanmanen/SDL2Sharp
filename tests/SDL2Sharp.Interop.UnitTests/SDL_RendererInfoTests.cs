@@ -25,7 +25,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_RendererInfo" /> struct.</summary>
-    public static unsafe class SDL_RendererInfoTests
+    public static unsafe partial class SDL_RendererInfoTests
     {
         /// <summary>Validates that the <see cref="SDL_RendererInfo" /> struct is blittable.</summary>
         [Fact]

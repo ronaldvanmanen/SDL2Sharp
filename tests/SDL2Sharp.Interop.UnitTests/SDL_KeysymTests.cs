@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_Keysym" /> struct.</summary>
-    public static unsafe class SDL_KeysymTests
+    public static unsafe partial class SDL_KeysymTests
     {
         /// <summary>Validates that the <see cref="SDL_Keysym" /> struct is blittable.</summary>
         [Fact]

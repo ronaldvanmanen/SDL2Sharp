@@ -24,7 +24,7 @@ using Xunit;
 namespace SDL2Sharp.Interop.UnitTests
 {
     /// <summary>Provides validation of the <see cref="SDL_TextInputEvent" /> struct.</summary>
-    public static unsafe class SDL_TextInputEventTests
+    public static unsafe partial class SDL_TextInputEventTests
     {
         /// <summary>Validates that the <see cref="SDL_TextInputEvent" /> struct is blittable.</summary>
         [Fact]
