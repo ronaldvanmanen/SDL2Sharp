@@ -32,6 +32,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.UnitTests", "tests\SDL2Sharp.Interop.UnitTests\SDL2Sharp.Interop.UnitTests.csproj", "{C4E13408-B833-4B51-BC7B-BABBC759FB1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generation", "generation", "{7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}"
+	ProjectSection(SolutionItems) = preProject
+		generation\header.txt = generation\header.txt
+		generation\settings.rsp = generation\settings.rsp
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BABC58-A31C-4658-BB81-FB21DD86F87B}"
 	ProjectSection(SolutionItems) = preProject
@@ -104,14 +108,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2", "sdl2", "{7A5BBA71-D7E0-4074-B1F1-656E9A632EC3}"
 	ProjectSection(SolutionItems) = preProject
 		generation\sdl2\generate.ps1 = generation\sdl2\generate.ps1
-		generation\sdl2\HeaderFile.txt = generation\sdl2\HeaderFile.txt
 		generation\sdl2\settings.rsp = generation\sdl2\settings.rsp
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2ttf", "sdl2ttf", "{DA2D9B5A-2791-43DC-A3D0-81B1C23D2D9B}"
 	ProjectSection(SolutionItems) = preProject
 		generation\sdl2ttf\generate.ps1 = generation\sdl2ttf\generate.ps1
-		generation\sdl2ttf\HeaderFile.txt = generation\sdl2ttf\HeaderFile.txt
 		generation\sdl2ttf\settings.rsp = generation\sdl2ttf\settings.rsp
 	EndProjectSection
 EndProject

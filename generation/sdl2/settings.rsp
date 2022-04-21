@@ -32,7 +32,7 @@ SDL_system.h
 SDL_version.h
 SDL_video.h
 --headerFile
-HeaderFile.txt
+..\header.txt
 --libraryPath
 SDL2.dll
 --methodClassName
