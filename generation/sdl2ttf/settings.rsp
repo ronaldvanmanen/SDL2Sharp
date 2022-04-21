@@ -7,7 +7,7 @@ multi-file
 --file
 SDL_ttf.h
 --headerFile
-HeaderFile.txt
+..\header.txt
 --libraryPath
 SDL2_ttf.dll
 --methodClassName
