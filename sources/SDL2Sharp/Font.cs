@@ -32,7 +32,9 @@ namespace SDL2Sharp
         {
             using (var marshaledPath = new MarshaledString(path))
             {
-                _handle = TTF.OpenFont(marshaledPath, pointSize);
+                var handle = TTF.OpenFont(marshaledPath, pointSize);
+                FontError.ThrowOnFailure(handle);
+                _handle = handle;
             }
         }
 
