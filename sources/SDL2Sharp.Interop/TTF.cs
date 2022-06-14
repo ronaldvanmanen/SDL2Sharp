@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -231,9 +231,9 @@ namespace SDL2Sharp.Interop
         public const int TTF_HINTING_NONE = 3;
 
         [NativeTypeName("#define TTF_SetError SDL_SetError")]
-        public static readonly delegate*<sbyte*, int> TTF_SetError = &SDL.SetError;
+        public static readonly delegate*<sbyte*, int> SetError = &SDL.SetError;
 
         [NativeTypeName("#define TTF_GetError SDL_GetError")]
-        public static readonly delegate*<sbyte*> TTF_GetError = &SDL.GetError;
+        public static readonly delegate*<sbyte*> GetError = &SDL.GetError;
     }
 }
