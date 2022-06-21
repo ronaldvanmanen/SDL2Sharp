@@ -20,7 +20,6 @@
 
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
-using System.Text;
 
 namespace SDL2Sharp
 {
