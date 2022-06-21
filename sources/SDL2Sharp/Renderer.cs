@@ -55,6 +55,34 @@ namespace SDL2Sharp
             }
         }
 
+        public int OutputWidth
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                int width;
+                Error.ThrowOnFailure(
+                    SDL.GetRendererOutputSize(_handle, &width, null)
+                );
+                return width;
+            }
+        }
+
+        public int OutputHeight
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                int height;
+                Error.ThrowOnFailure(
+                    SDL.GetRendererOutputSize(_handle, null, &height)
+                );
+                return height;
+            }
+        }
+
         public Color DrawColor
         {
             get
