@@ -55,15 +55,13 @@ namespace SDL2Sharp
 
         public static Surface LoadBitmap(string filename)
         {
-            using (var file = new MarshaledString(filename))
-            using (var mode = new MarshaledString("rb"))
-            {
-                var source = SDL.RWFromFile(file, mode);
-                Error.ThrowOnFailure(source);
-                var bitmap = SDL.LoadBMP_RW(source, 1);
-                Error.ThrowOnFailure(bitmap);
-                return new Surface(bitmap);
-            }
+            using var file = new MarshaledString(filename);
+            using var mode = new MarshaledString("rb");
+            var source = SDL.RWFromFile(file, mode);
+            Error.ThrowOnFailure(source);
+            var bitmap = SDL.LoadBMP_RW(source, 1);
+            Error.ThrowOnFailure(bitmap);
+            return new Surface(bitmap);
         }
 
         public Surface(SDL_Surface* handle)

@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace SDL2Sharp
 {
-    public unsafe sealed class RendererInfo
+    public sealed unsafe class RendererInfo
     {
         private readonly SDL_RendererInfo _handle;
 
