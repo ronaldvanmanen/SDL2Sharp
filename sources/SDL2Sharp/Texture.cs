@@ -118,17 +118,17 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public Span2D<TPixelFormat> Lock<TPixelFormat>() where TPixelFormat : struct
+        public Span2D<byte> Lock()
         {
-            return Lock<TPixelFormat>(0, 0, Width, Height);
+            return Lock(0, 0, Width, Height);
         }
 
-        public Span2D<TPixelFormat> Lock<TPixelFormat>(Rectangle rectangle) where TPixelFormat : struct
+        public Span2D<byte> Lock(Rectangle rectangle)
         {
-            return Lock<TPixelFormat>(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+            return Lock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
-        public Span2D<TPixelFormat> Lock<TPixelFormat>(int x, int y, int width, int height) where TPixelFormat : struct
+        public Span2D<byte> Lock(int x, int y, int width, int height)
         {
             ThrowWhenDisposed();
 
@@ -138,7 +138,13 @@ namespace SDL2Sharp
             Error.ThrowOnFailure(
                 SDL.LockTexture(_handle, &rect, &pixels, &pitch)
             );
-            return new Span2D<TPixelFormat>(pixels, height, width, pitch - width * Marshal.SizeOf<TPixelFormat>());
+
+            // In SDL pitch is synonymous to stride, and is defined as the
+            // length of a row of pixels in bytes. Span2D, however, defines
+            // pitch as the difference between stride and width.
+            var bytesPerPixel = Format.GetBytesPerPixel();
+            var bytes = new Span2D<byte>(pixels, height, width, (int)(pitch - width * bytesPerPixel));
+            return bytes;
         }
 
         public Surface LockToSurface()
