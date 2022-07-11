@@ -88,10 +88,7 @@ namespace SDL2Sharp
             }
         }
 
-        public bool IsValid
-        {
-            get => 0 == SDL.QueryTexture(_handle, null, null, null, null);
-        }
+        public bool IsValid => 0 == SDL.QueryTexture(_handle, null, null, null, null);
 
         internal Texture(SDL_Texture* texture)
         {
