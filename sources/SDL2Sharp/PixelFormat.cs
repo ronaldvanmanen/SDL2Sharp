@@ -23,9 +23,11 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class PixelFormat
+    public sealed unsafe class PixelFormat : IDisposable
     {
-        private readonly SDL_PixelFormat* _handle;
+        private SDL_PixelFormat* _handle;
+
+        private readonly bool _ownsHandle;
 
         public PixelFormatEnum Format => (PixelFormatEnum)_handle->format;
 
@@ -57,7 +59,7 @@ namespace SDL2Sharp
 
         public byte AlphaShift => _handle->Ashift;
 
-        public unsafe PixelFormat(SDL_PixelFormat* handle)
+        internal PixelFormat(SDL_PixelFormat* handle, bool ownsHandle)
         {
             if (handle == null)
             {
@@ -65,6 +67,28 @@ namespace SDL2Sharp
             }
 
             _handle = handle;
+            _ownsHandle = ownsHandle;
+        }
+
+        public PixelFormat(PixelFormatEnum pixelFormat)
+        : this(Error.ReturnOrThrowOnFailure(SDL.AllocFormat((uint)pixelFormat)), true)
+        { }
+
+        ~PixelFormat()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        private void Dispose(bool _)
+        {
+            if (!_ownsHandle || _handle == null) return;
+            SDL.FreeFormat(_handle);
+            _handle = null;
         }
     }
 }

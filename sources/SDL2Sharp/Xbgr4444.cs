@@ -19,34 +19,25 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Runtime.InteropServices;
+using SDL2Sharp.Internals;
 
 namespace SDL2Sharp
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    public readonly struct Rgba
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2)]
+    [PixelFormat(PixelFormatEnum.XBGR4444)]
+    public readonly record struct Xbgr4444
     {
-        private readonly byte _a;
+        private readonly ushort _value;
 
-        private readonly byte _b;
+        public byte B => (byte)(_value >> 8 & 0xF);
 
-        private readonly byte _g;
+        public byte G => (byte)(_value >> 4 & 0xF);
 
-        private readonly byte _r;
+        public byte R => (byte)(_value & 0xFF);
 
-        public byte R => _r;
-
-        public byte G => _g;
-
-        public byte B => _b;
-
-        public byte A => _a;
-
-        public Rgba(byte r, byte g, byte b, byte a)
+        public Xbgr4444(byte b, byte g, byte r)
         {
-            _a = a;
-            _b = b;
-            _g = g;
-            _r = r;
+            _value = (ushort)((b & 0xF) << 8 | (g & 0xF) << 4 | (r & 0xF));
         }
     }
 }

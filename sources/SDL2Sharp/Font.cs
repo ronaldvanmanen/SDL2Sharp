@@ -66,13 +66,13 @@ namespace SDL2Sharp
             }
         }
 
-        public Surface RenderBlended(string text, Color color)
+        public Surface<Argb8888> RenderBlended(string text, Color color)
         {
             ThrowWhenDisposed();
 
             using (var marshaledText = new MarshaledString(text))
             {
-                return new Surface(TTF.RenderText_Blended(_handle, marshaledText, color));
+                return new Surface<Argb8888>(TTF.RenderText_Blended(_handle, marshaledText, color));
             }
         }
 

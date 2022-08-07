@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
@@ -26,6 +27,8 @@ namespace SDL2Sharp
     public sealed unsafe class Renderer : IDisposable
     {
         private SDL_Renderer* _handle;
+
+        private Texture? _renderTarget;
 
         public RendererInfo Info
         {
@@ -183,18 +186,13 @@ namespace SDL2Sharp
             }
         }
 
-        public Texture Target
+        public Texture? Target
         {
             get
             {
                 ThrowWhenDisposed();
 
-                var texture = SDL.GetRenderTarget(_handle);
-                if (texture is null)
-                {
-                    return null!;
-                }
-                return new Texture(texture);
+                return _renderTarget;
             }
             set
             {
@@ -212,6 +210,8 @@ namespace SDL2Sharp
                         SDL.SetRenderTarget(_handle, value)
                     );
                 }
+
+                _renderTarget = value;
             }
         }
 
@@ -243,13 +243,34 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public Texture CreateTexture(PixelFormatEnum format, TextureAccess access, int width, int height)
+        public Texture<TPixelFormat> CreateTexture<TPixelFormat>(TextureAccess access, Size size) where TPixelFormat : struct
+        {
+            return CreateTexture<TPixelFormat>(access, size.Width, size.Height);
+        }
+
+        public Texture<TPixelFormat> CreateTexture<TPixelFormat>(TextureAccess access, int width, int height) where TPixelFormat : struct
         {
             ThrowWhenDisposed();
 
-            var texture = SDL.CreateTexture(_handle, (uint)format, (int)access, width, height);
+            var pixelFormat = PixelFormatAttribute.GetPixelFormatFor<TPixelFormat>();
+            var texture = SDL.CreateTexture(_handle, (uint)pixelFormat, (int)access, width, height);
             Error.ThrowOnFailure(texture);
-            return new Texture(texture);
+            return new Texture<TPixelFormat>(texture);
+        }
+
+        public YuvTexture CreateYuvTexture(TextureAccess access, Size size)
+        {
+            return CreateYuvTexture(access, size.Width, size.Height);
+        }
+
+        public YuvTexture CreateYuvTexture(TextureAccess access, int width, int height)
+        {
+            ThrowWhenDisposed();
+
+            const uint format = (uint)SDL_PixelFormatEnum.SDL_PIXELFORMAT_IYUV;
+            var texture = SDL.CreateTexture(_handle, format, (int)access, width, height);
+            Error.ThrowOnFailure(texture);
+            return new YuvTexture(texture);
         }
 
         public Texture CreateTextureFromSurface(Surface surface)
@@ -259,6 +280,16 @@ namespace SDL2Sharp
             var texture = SDL.CreateTextureFromSurface(_handle, surface);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
+        }
+
+
+        public Texture<TPixelFormat> CreateTextureFromSurface<TPixelFormat>(Surface<TPixelFormat> surface) where TPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            var texture = SDL.CreateTextureFromSurface(_handle, surface);
+            Error.ThrowOnFailure(texture);
+            return new Texture<TPixelFormat>(texture);
         }
 
         public void Clear()
