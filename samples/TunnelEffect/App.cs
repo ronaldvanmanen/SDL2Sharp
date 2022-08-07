@@ -28,7 +28,7 @@ using static SDL2Sharp.Extensions.MathExtensions;
 
 namespace TunnelEffect
 {
-    internal unsafe class App : Application
+    internal sealed class App : Application
     {
         private readonly struct Transform
         {

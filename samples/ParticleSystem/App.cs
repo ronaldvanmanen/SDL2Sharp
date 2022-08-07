@@ -25,7 +25,7 @@ using SDL2Sharp.Extensions;
 
 namespace ParticleSystem
 {
-    internal unsafe class App : Application
+    internal sealed class App : Application
     {
         private static readonly Font _frameRateFont = new Font("lazy.ttf", 28);
 
