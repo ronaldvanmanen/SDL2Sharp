@@ -68,6 +68,8 @@ namespace SDL2Sharp
 
         public event EventHandler<MouseMotionEventArgs>? MouseMotion;
 
+        public event EventHandler<MouseWheelEventArgs>? MouseWheel;
+
         private static readonly List<Window> _all = new List<Window>();
 
         private SDL_Window* _handle;
@@ -491,17 +493,52 @@ namespace SDL2Sharp
 
         internal void HandleKeyDownEvent(SDL_KeyboardEvent @event)
         {
-            OnKeyDown(@event.keysym, @event.repeat);
+            OnKeyDown(
+                new KeyEventArgs(
+                    (Scancode)@event.keysym.scancode,
+                    (KeyCode)@event.keysym.sym,
+                    (KeyModifiers)@event.keysym.mod,
+                    @event.repeat
+                )
+            );
         }
 
         internal void HandleKeyUpEvent(SDL_KeyboardEvent @event)
         {
-            OnKeyUp(@event.keysym, @event.repeat);
+            OnKeyUp(
+                new KeyEventArgs(
+                    (Scancode)@event.keysym.scancode,
+                    (KeyCode)@event.keysym.sym,
+                    (KeyModifiers)@event.keysym.mod,
+                    @event.repeat
+                )
+            );
         }
 
         internal void HandleMouseMotionEvent(SDL_MouseMotionEvent @event)
         {
-            OnMouseMotion(@event.x, @event.y, @event.xrel, @event.yrel);
+            OnMouseMotion(
+                new MouseMotionEventArgs(
+                    @event.x,
+                    @event.y,
+                    @event.xrel,
+                    @event.yrel
+                )
+            );
+        }
+
+        internal void HandleMouseWheelEvent(SDL_MouseWheelEvent @event)
+        {
+            OnMouseWheelEvent(
+                new MouseWheelEventArgs(
+                    @event.which,
+                    (MouseWheelDirection)@event.direction,
+                    @event.x,
+                    @event.y,
+                    @event.preciseX,
+                    @event.preciseY
+                )
+            );
         }
 
         internal void HandleWindowEvent(SDL_WindowEvent windowEvent)
@@ -639,19 +676,24 @@ namespace SDL2Sharp
             HitTest?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnKeyDown(SDL_Keysym key, int repeat)
+        private void OnKeyDown(KeyEventArgs eventArgs)
         {
-            KeyDown?.Invoke(this, new KeyEventArgs((Scancode)key.scancode, (KeyCode)key.sym, (KeyModifiers)key.mod, repeat));
+            KeyDown?.Invoke(this, eventArgs);
         }
 
-        private void OnKeyUp(SDL_Keysym key, int repeat)
+        private void OnKeyUp(KeyEventArgs eventArgs)
         {
-            KeyUp?.Invoke(this, new KeyEventArgs((Scancode)key.scancode, (KeyCode)key.sym, (KeyModifiers)key.mod, repeat));
+            KeyUp?.Invoke(this, eventArgs);
         }
 
-        private void OnMouseMotion(int x, int y, int relativeX, int relativeY)
+        private void OnMouseMotion(MouseMotionEventArgs eventArgs)
         {
-            MouseMotion?.Invoke(this, new MouseMotionEventArgs(x, y, relativeX, relativeY));
+            MouseMotion?.Invoke(this, eventArgs);
+        }
+
+        private void OnMouseWheelEvent(MouseWheelEventArgs eventArgs)
+        {
+            MouseWheel?.Invoke(this, eventArgs);
         }
 
         [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
