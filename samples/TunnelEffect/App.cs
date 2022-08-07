@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
 using static System.Math;
@@ -51,11 +51,21 @@ namespace TunnelEffect
 
         private Window _window = null!;
 
-        private Thread _renderingThread = null!;
+        private Renderer _renderer = null!;
 
-        private volatile bool _rendererInvalidated = false;
+        private Texture<Rgba8888> _screenTexture = null!;
 
-        private volatile bool _rendering = false;
+        private Memory2D<Rgba8888> _sourceImage = null!;
+
+        private Memory2D<Transform> _transformTable = null!;
+
+        private Stopwatch _realTime = null!;
+
+        private Stopwatch _frameTime = null!;
+
+        private int _frameCount;
+
+        private double _frameRate;
 
         protected override void OnInitializing()
         {
@@ -67,127 +77,115 @@ namespace TunnelEffect
             _window = new Window("Tunnel Effect", 640, 480, WindowFlags.Resizable);
             _window.KeyDown += OnWindowKeyDown;
             _window.SizeChanged += OnWindowSizeChanged;
-            _renderingThread = new Thread(Render);
-            _rendererInvalidated = true;
-            _rendering = true;
-            _renderingThread.Start();
+            _realTime = new Stopwatch();
+            _frameTime = new Stopwatch();
+            _frameCount = 0;
+            _frameRate = double.NaN;
+
+            OnWindowSizeChanged(null, new WindowSizeChangedEventArgs(_window.Width, _window.Height));
+
+            _realTime.Start();
         }
 
         protected override void OnQuiting()
         {
-            _rendererInvalidated = false;
-            _rendering = false;
-            _renderingThread?.Join();
+            _realTime.Stop();
+            _renderer?.Dispose();
             _window?.Dispose();
         }
 
-        private void Render()
+        protected override void OnIdle()
         {
-            Renderer renderer = null!;
-            Texture screenTexture = null!;
-            Image<Rgba> screenImage = null!;
-            Image<Rgba> sourceImage = null!;
-            Transform[] transformTable = null!;
-            var startTime = DateTime.UtcNow;
-            var lastFrameTime = DateTime.UtcNow;
-            var lastFrameRateUpdateTime = DateTime.UtcNow;
-            var frameRateUpdateInterval = TimeSpan.FromMilliseconds(500d);
-            var frameRate = 0d;
-            var frameRateText = $"FPS: {frameRate:0.00}";
-            var frameCounter = 0;
-            var screenWidth = 0;
-            var screenHeight = 0;
-            var sourceImageSize = 0;
+            _frameTime.Start();
+            Render(_realTime.Elapsed);
+            _frameTime.Stop();
+            _frameCount++;
 
-            try
+            if (_frameTime.ElapsedMilliseconds >= 1000d)
             {
-                while (_rendering)
-                {
-                    if (_rendererInvalidated)
-                    {
-                        screenTexture?.Dispose();
-                        renderer?.Dispose();
-                        renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-                        screenWidth = renderer.OutputSize.Width;
-                        screenHeight = renderer.OutputSize.Height;
-                        screenTexture = renderer.CreateTexture(PixelFormatEnum.RGBA8888, TextureAccess.Streaming, screenWidth, screenHeight);
-                        screenImage = new Image<Rgba>(screenWidth, screenHeight);
-                        sourceImageSize = NextPowerOfTwo(Max(screenWidth, screenHeight));
-                        sourceImage = GenerateXorImage(sourceImageSize, sourceImageSize);
-                        transformTable = GenerateTransformTable(sourceImageSize, sourceImageSize);
-                        _rendererInvalidated = false;
-                    }
-
-                    var currentTime = DateTime.UtcNow;
-                    var elapsedTime = currentTime - startTime;
-                    var animation = elapsedTime.TotalSeconds;
-                    var shiftX = (int)(screenWidth * 1.0 * animation);
-                    var shiftY = (int)(screenHeight * 0.25 * animation);
-                    var lookX = (sourceImageSize - screenWidth) / 2;
-                    var lookY = (sourceImageSize - screenHeight) / 2;
-
-                    Parallel.For(0, screenHeight, y =>
-                    {
-                        for (var x = 0; x < screenWidth; x++)
-                        {
-                            var transform = transformTable[(y + lookY) * sourceImageSize + (x + lookX)];
-                            var transformX = Mod(transform.Distance + shiftX + lookX, sourceImageSize);
-                            var transformY = Mod(transform.Angle + shiftY + lookY, sourceImageSize);
-                            screenImage[y, x] = sourceImage[transformY, transformX];
-                        }
-                    });
-
-                    var currentFrameTime = DateTime.UtcNow;
-                    var elapsedFrameTime = currentFrameTime - lastFrameTime;
-                    var elapsedFrameRateTime = currentFrameTime - lastFrameRateUpdateTime;
-                    if (elapsedFrameRateTime > frameRateUpdateInterval)
-                    {
-                        frameRate = frameCounter / elapsedFrameRateTime.TotalSeconds;
-                        frameRateText = $"FPS: {frameRate:0.00}";
-                        lastFrameRateUpdateTime = currentFrameTime;
-                        frameCounter = 0;
-                    }
-
-                    renderer.BlendMode = BlendMode.None;
-                    renderer.DrawColor = _backgroundColor;
-                    renderer.Clear();
-                    screenTexture.Update(screenImage);
-                    renderer.Copy(screenTexture);
-                    renderer.DrawColor = _frameRateColor;
-                    renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
-                    renderer.Present();
-
-                    frameCounter++;
-                    lastFrameTime = currentFrameTime;
-                }
-            }
-            finally
-            {
-                renderer?.Dispose();
+                _frameRate = _frameCount * 1000d / _frameTime.ElapsedMilliseconds;
+                _frameCount = 0;
+                _frameTime.Reset();
             }
         }
 
-        private static Image<Rgba> GenerateXorImage(int width, int height)
+        private void Render(TimeSpan realTime)
         {
-            var image = new Image<Rgba>(width, height);
+            var screenImage = _screenTexture.Lock();
+            var screenWidth = screenImage.Width;
+            var screenHeight = screenImage.Height;
+
+            var sourceImage = _sourceImage.Span;
+            var sourceWidth = _sourceImage.Width;
+            var sourceHeight = _sourceImage.Height;
+            var sourceWidthMask = sourceWidth - 1;
+            var sourceHeightMask = sourceHeight - 1;
+
+            var transformTable = _transformTable.Span;
+
+            var shiftX = (int)(screenWidth * 1.0 * realTime.TotalSeconds);
+            var shiftY = (int)(screenHeight * 0.25 * realTime.TotalSeconds);
+            var lookX = (sourceWidth - screenWidth) / 2;
+            var lookY = (sourceHeight - screenHeight) / 2;
+            var shiftLookX = shiftX + lookX;
+            var shiftLookY = shiftY + lookY;
+
+            for (var screenY = 0; screenY < screenHeight; ++screenY)
+            {
+                var transformY = screenY + lookY;
+                for (var screenX = 0; screenX < screenWidth; ++screenX)
+                {
+                    var transformX = screenX + lookX;
+                    var transform = transformTable[transformY, transformX];
+                    var sourceX = (transform.Distance + shiftLookX) & sourceWidthMask;
+                    var sourceY = (transform.Angle + shiftLookY) & sourceHeightMask;
+                    screenImage[screenY, screenX] = sourceImage[sourceY, sourceX];
+                }
+            }
+
+            _screenTexture.Unlock();
+
+            _renderer.BlendMode = BlendMode.None;
+            _renderer.DrawColor = _backgroundColor;
+            _renderer.Clear();
+            _renderer.Copy(_screenTexture);
+            _renderer.DrawColor = _frameRateColor;
+            _renderer.DrawTextBlended(8, 8, _frameRateFont, $"FPS: {_frameRate:0.0}");
+            _renderer.Present();
+        }
+
+        private static Memory2D<Rgba8888> GenerateXorImage(int size)
+        {
+            return GenerateXorImage(size, size);
+        }
+
+        private static Memory2D<Rgba8888> GenerateXorImage(int width, int height)
+        {
+            var image = new Rgba8888[height, width];
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
                 {
-                    byte r = 0x0;
-                    byte g = 0x0;
-                    byte b = (byte)((x * 256 / width) ^ (y * 256 / height));
-                    byte a = 0xFF;
-                    image[y, x] = new Rgba(r, g, b, a);
+                    image[y, x] = new Rgba8888(
+                        r: 0x00,
+                        g: 0x00,
+                        b: (byte)((x * 256 / width) ^ (y * 256 / height)),
+                        a: 0xFF
+                    );
                 }
             }
-            return image;
+            return new Memory2D<Rgba8888>(image);
         }
 
-        private static Transform[] GenerateTransformTable(int width, int height)
+        private static Memory2D<Transform> GenerateTransformTable(int size)
+        {
+            return GenerateTransformTable(size, size);
+        }
+
+        private static Memory2D<Transform> GenerateTransformTable(int width, int height)
         {
             const double ratio = 32d;
-            var table = new Transform[height * width];
+            var transformTable = new Transform[height, width];
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -195,12 +193,12 @@ namespace TunnelEffect
                     unchecked
                     {
                         var angle = (int)(0.5 * width * Atan2(y - height / 2.0, x - width / 2.0) / PI);
-                        var distance = (int)(ratio * height / Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d)) % height);
-                        table[y * width + x] = new Transform(angle, distance);
+                        var distance = (int)(ratio * height / Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d))) % height;
+                        transformTable[y, x] = new Transform(angle, distance);
                     }
                 }
             }
-            return table;
+            return new Memory2D<Transform>(transformTable);
         }
 
         private void OnWindowKeyDown(object? sender, KeyEventArgs e)
@@ -216,9 +214,17 @@ namespace TunnelEffect
 
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
         {
-            _rendererInvalidated = true;
-        }
+            _screenTexture?.Dispose();
 
+            _renderer?.Dispose();
+
+            _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
+            _screenTexture = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, _renderer.OutputSize);
+            _sourceImage = GenerateXorImage(NextPowerOfTwo(Max(_renderer.OutputWidth, _renderer.OutputHeight)));
+            _transformTable = GenerateTransformTable(NextPowerOfTwo(Max(_renderer.OutputWidth, _renderer.OutputHeight)));
+
+            _renderer.Present();
+        }
 
         private static int Main(string[] args)
         {
