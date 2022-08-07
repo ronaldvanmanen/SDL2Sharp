@@ -19,8 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
 using static System.Math;
@@ -28,7 +27,7 @@ using static SDL2Sharp.Extensions.MathExtensions;
 
 namespace PlasmaFractal
 {
-    internal unsafe class App : Application
+    internal sealed unsafe class App : Application
     {
         private static readonly TimeSpan HideCursorDelay = TimeSpan.FromSeconds(1);
 
@@ -40,11 +39,21 @@ namespace PlasmaFractal
 
         private Window _window = null!;
 
-        private Thread _renderingThread = null!;
+        private Renderer _renderer = null!;
 
-        private volatile bool _rendererInvalidated = false;
+        private Texture<Rgba8888> _screenImage = null!;
 
-        private volatile bool _rendering = false;
+        private Image<byte> _sourceImage = null!;
+
+        private Palette<Rgba8888> _palette = null!;
+
+        private Stopwatch _realTime = null!;
+
+        private Stopwatch _frameTime = null!;
+
+        private int _frameCount;
+
+        private double _frameRate;
 
         private volatile bool _reversePaletteRotation = false;
 
@@ -61,17 +70,21 @@ namespace PlasmaFractal
             _window.KeyDown += OnWindowKeyDown;
             _window.SizeChanged += OnWindowSizeChanged;
             _window.MouseMotion += OnWindowMouseMotion;
-            _renderingThread = new Thread(Render);
-            _rendererInvalidated = true;
-            _rendering = true;
-            _renderingThread.Start();
+            _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
+            _screenImage = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, _renderer.OutputSize);
+            _sourceImage = GenerateDiamondSquareImage(_renderer.OutputSize);
+            _palette = GeneratePalette();
+            _realTime = new Stopwatch();
+            _frameTime = new Stopwatch();
+            _frameCount = 0;
+            _frameRate = double.NaN;
+            _realTime.Start();
         }
 
         protected override void OnQuiting()
         {
-            _rendererInvalidated = false;
-            _rendering = false;
-            _renderingThread?.Join();
+            _realTime.Stop();
+            _renderer?.Dispose();
             _window?.Dispose();
         }
 
@@ -85,100 +98,49 @@ namespace PlasmaFractal
                     Cursor.Hide();
                 }
             }
+
+            _frameTime.Start();
+            Render(_realTime.Elapsed);
+            _frameTime.Stop();
+            _frameCount++;
+
+            if (_frameTime.ElapsedMilliseconds >= 1000d)
+            {
+                _frameRate = _frameCount * 1000d / _frameTime.ElapsedMilliseconds;
+                _frameCount = 0;
+                _frameTime.Reset();
+            }
         }
 
-        private void Render()
+        private void Render(TimeSpan realTime)
         {
-            Renderer renderer = null!;
-            Texture screenTexture = null!;
-            Image<Rgba> screenImage = null!;
-            Image<byte> sourceImage = null!;
+            var screenImage = _screenImage.Lock();
 
-            var lastFrameTime = DateTime.UtcNow;
-            var lastFrameRateUpdateTime = DateTime.UtcNow;
-            var frameRateUpdateInterval = TimeSpan.FromMilliseconds(500d);
-            var frameRate = 0d;
-            var frameRateText = $"FPS: {frameRate:0.00}";
-            var frameCounter = 0;
-            var screenWidth = 0;
-            var screenHeight = 0;
-
-            var palette = new Palette<Rgba>(256);
-            for (var i = 0; i < 32; ++i)
+            for (var y = 0; y < screenImage.Height; ++y)
             {
-                var l = (byte)(i * 255 / 31);
-                var h = (byte)(255 - l);
-                palette[i] = new Rgba(l, 0, 0, 0xFF);
-                palette[i + 32] = new Rgba(h, 0, 0, 0xFF);
-                palette[i + 64] = new Rgba(0, l, 0, 0xFF);
-                palette[i + 96] = new Rgba(0, h, 0, 0xFF);
-                palette[i + 128] = new Rgba(0, 0, l, 0xFF);
-                palette[i + 160] = new Rgba(0, 0, h, 0xFF);
-                palette[i + 192] = new Rgba(l, 0, l, 0xFF);
-                palette[i + 224] = new Rgba(h, 0, h, 0xFF);
-            }
-
-            try
-            {
-                while (_rendering)
+                for (var x = 0; x < screenImage.Width; ++x)
                 {
-                    if (_rendererInvalidated)
-                    {
-                        screenTexture?.Dispose();
-                        renderer?.Dispose();
-                        renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-                        screenWidth = renderer.OutputSize.Width;
-                        screenHeight = renderer.OutputSize.Height;
-                        screenTexture = renderer.CreateTexture(PixelFormatEnum.RGBA8888, TextureAccess.Streaming, screenWidth, screenHeight);
-                        screenImage = new Image<Rgba>(screenWidth, screenHeight);
-                        sourceImage = GenerateDiamondSquareImage(screenWidth, screenHeight);
-
-                        _rendererInvalidated = false;
-                    }
-
-                    Parallel.For(0, screenImage.Height, y =>
-                    {
-                        for (var x = 0; x < screenImage.Width; ++x)
-                        {
-                            screenImage[y, x] = palette[sourceImage[y, x]];
-                        }
-                    });
-
-                    var currentFrameTime = DateTime.UtcNow;
-                    var elapsedTime = currentFrameTime - lastFrameTime;
-                    var elapsedFrameRateTime = currentFrameTime - lastFrameRateUpdateTime;
-                    if (elapsedFrameRateTime > frameRateUpdateInterval)
-                    {
-                        frameRate = frameCounter / elapsedFrameRateTime.TotalSeconds;
-                        frameRateText = $"FPS: {frameRate:0.00}";
-                        lastFrameRateUpdateTime = currentFrameTime;
-                        frameCounter = 0;
-                    }
-
-                    renderer.BlendMode = BlendMode.None;
-                    renderer.DrawColor = _backgroundColor;
-                    renderer.Clear();
-                    screenTexture.Update(screenImage);
-                    renderer.Copy(screenTexture);
-                    renderer.DrawColor = _frameRateColor;
-                    renderer.DrawTextBlended(8, 8, _frameRateFont, frameRateText);
-                    renderer.Present();
-                    frameCounter++;
-                    lastFrameTime = currentFrameTime;
-
-                    if (_reversePaletteRotation)
-                    {
-                        palette.RotateRight();
-                    }
-                    else
-                    {
-                        palette.RotateLeft();
-                    }
+                    screenImage[y, x] = _palette[_sourceImage[y, x]];
                 }
             }
-            finally
+
+            _screenImage.Unlock();
+
+            _renderer.BlendMode = BlendMode.None;
+            _renderer.DrawColor = _backgroundColor;
+            _renderer.Clear();
+            _renderer.Copy(_screenImage);
+            _renderer.DrawColor = _frameRateColor;
+            _renderer.DrawTextBlended(8, 8, _frameRateFont, $"FPS: {_frameRate:0.0}");
+            _renderer.Present();
+
+            if (_reversePaletteRotation)
             {
-                renderer?.Dispose();
+                _palette.RotateRight();
+            }
+            else
+            {
+                _palette.RotateLeft();
             }
         }
 
@@ -200,7 +162,11 @@ namespace PlasmaFractal
 
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
         {
-            _rendererInvalidated = true;
+            _screenImage?.Dispose();
+            _renderer?.Dispose();
+            _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
+            _screenImage = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, _renderer.OutputSize);
+            _sourceImage = GenerateDiamondSquareImage(_renderer.OutputSize);
         }
 
         private void OnWindowMouseMotion(object? sender, MouseMotionEventArgs e)
@@ -214,6 +180,30 @@ namespace PlasmaFractal
         }
 
         private static readonly Random _random = new Random();
+
+        private static Palette<Rgba8888> GeneratePalette()
+        {
+            var palette = new Palette<Rgba8888>(256);
+            for (var i = 0; i < 32; ++i)
+            {
+                var lo = (byte)(i * 255 / 31);
+                var hi = (byte)(255 - lo);
+                palette[i] = new Rgba8888(lo, 0, 0, 0xFF);
+                palette[i + 32] = new Rgba8888(hi, 0, 0, 0xFF);
+                palette[i + 64] = new Rgba8888(0, lo, 0, 0xFF);
+                palette[i + 96] = new Rgba8888(0, hi, 0, 0xFF);
+                palette[i + 128] = new Rgba8888(0, 0, lo, 0xFF);
+                palette[i + 160] = new Rgba8888(0, 0, hi, 0xFF);
+                palette[i + 192] = new Rgba8888(lo, 0, lo, 0xFF);
+                palette[i + 224] = new Rgba8888(hi, 0, hi, 0xFF);
+            }
+            return palette;
+        }
+
+        private static Image<byte> GenerateDiamondSquareImage(Size size)
+        {
+            return GenerateDiamondSquareImage(size.Width, size.Height);
+        }
 
         private static Image<byte> GenerateDiamondSquareImage(int width, int height)
         {
