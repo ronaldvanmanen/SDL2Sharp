@@ -27,7 +27,7 @@ using static SDL2Sharp.Extensions.MathExtensions;
 
 namespace PlasmaFractal
 {
-    internal sealed unsafe class App : Application
+    internal sealed class App : Application
     {
         private static readonly TimeSpan HideCursorDelay = TimeSpan.FromSeconds(1);
 

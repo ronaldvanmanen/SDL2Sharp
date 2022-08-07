@@ -24,7 +24,7 @@ using SDL2Sharp.Extensions;
 
 namespace BitmapViewer
 {
-    internal unsafe class App : Application
+    internal sealed class App : Application
     {
         private Window _window = null!;
 

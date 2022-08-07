@@ -24,7 +24,7 @@ using SDL2Sharp;
 
 namespace AverageFrameRate
 {
-    internal unsafe class App : Application
+    internal sealed class App : Application
     {
         private static readonly Color _drawColor = new Color(255, 255, 255, 0);
 
