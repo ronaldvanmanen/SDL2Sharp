@@ -97,6 +97,10 @@ namespace SDL2Sharp
                                 DispatchMouseMotionEvent(@event.motion);
                                 break;
 
+                            case SDL_EventType.SDL_MOUSEWHEEL:
+                                DispatchMouseWheelEvent(@event.wheel);
+                                break;
+
                             case SDL_EventType.SDL_WINDOWEVENT:
                                 DispatchWindowEvent(@event.window);
                                 break;
@@ -162,6 +166,15 @@ namespace SDL2Sharp
             if (window != null)
             {
                 window.HandleMouseMotionEvent(@event);
+            }
+        }
+
+        private void DispatchMouseWheelEvent(SDL_MouseWheelEvent @event)
+        {
+            var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
+            if (window != null)
+            {
+                window.HandleMouseWheelEvent(@event);
             }
         }
 
