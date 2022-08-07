@@ -20,12 +20,11 @@
 
 using System;
 using Microsoft.Toolkit.HighPerformance;
-using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Surface : IDisposable
+    public sealed unsafe class Surface<TPixelFormat> : IDisposable where TPixelFormat : struct
     {
         private SDL_Surface* _handle;
 
@@ -39,36 +38,25 @@ namespace SDL2Sharp
 
         public int Pitch => _handle->pitch;
 
-        public Span2D<byte> Pixels
+        public Span2D<TPixelFormat> Pixels
         {
             get
             {
                 // In SDL pitch is synonymous to stride, and is defined as the
                 // length of a row of pixels in bytes. Span2D, however, defines
                 // pitch as the difference between stride and width in pixels.
-                return new Span2D<byte>(_handle->pixels, _handle->h, _handle->w,
+                return new Span2D<TPixelFormat>(_handle->pixels, _handle->h, _handle->w,
                     _handle->pitch - _handle->w * _handle->format->BytesPerPixel);
             }
         }
 
         public bool MustLock => ((_handle->flags & SDL.SDL_RLEACCEL) != 0);
 
-        public static Surface LoadBitmap(string filename)
-        {
-            using var file = new MarshaledString(filename);
-            using var mode = new MarshaledString("rb");
-            var source = SDL.RWFromFile(file, mode);
-            Error.ThrowOnFailure(source);
-            var bitmap = SDL.LoadBMP_RW(source, 1);
-            Error.ThrowOnFailure(bitmap);
-            return new Surface(bitmap);
-        }
-
-        public Surface(SDL_Surface* handle)
+        internal Surface(SDL_Surface* handle)
         : this(handle, true)
         { }
 
-        public Surface(SDL_Surface* handle, bool freeHandle)
+        internal Surface(SDL_Surface* handle, bool freeHandle)
         {
             if (handle is null)
             {
@@ -79,19 +67,19 @@ namespace SDL2Sharp
             _freeHandle = freeHandle;
         }
 
-        public Surface(int width, int height, int depth, PixelFormatEnum format)
+        internal Surface(int width, int height, int depth, PixelFormatEnum format)
         : this(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format))
         { }
 
-        public Surface(int width, int height, int depth, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
+        internal Surface(int width, int height, int depth, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
         : this(SDL.CreateRGBSurface(0, width, height, depth, redMask, greenMask, blueMask, alphaMask))
         { }
 
-        public Surface(void* pixels, int width, int height, int depth, int pitch, PixelFormatEnum format)
+        internal Surface(void* pixels, int width, int height, int depth, int pitch, PixelFormatEnum format)
         : this(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, (uint)format))
         { }
 
-        public Surface(void* pixels, int width, int height, int depth, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
+        internal Surface(void* pixels, int width, int height, int depth, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
         : this(SDL.CreateRGBSurfaceFrom(pixels, width, height, depth, pitch, redMask, greenMask, blueMask, alphaMask))
         { }
 
@@ -121,7 +109,7 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public void Blit(Surface surface)
+        public void Blit(Surface<TPixelFormat> surface)
         {
             ThrowWhenDisposed();
 
@@ -175,7 +163,7 @@ namespace SDL2Sharp
             }
         }
 
-        public static implicit operator SDL_Surface*(Surface surface)
+        public static implicit operator SDL_Surface*(Surface<TPixelFormat> surface)
         {
             if (surface is null)
             {

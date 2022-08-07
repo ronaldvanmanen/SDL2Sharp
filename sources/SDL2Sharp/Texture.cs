@@ -19,14 +19,11 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Texture : IDisposable
+    public unsafe class Texture : IDisposable
     {
         private SDL_Texture* _handle;
 
@@ -118,35 +115,6 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public Span2D<byte> Lock()
-        {
-            return Lock(0, 0, Width, Height);
-        }
-
-        public Span2D<byte> Lock(Rectangle rectangle)
-        {
-            return Lock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-        }
-
-        public Span2D<byte> Lock(int x, int y, int width, int height)
-        {
-            ThrowWhenDisposed();
-
-            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
-            void* pixels;
-            int pitch;
-            Error.ThrowOnFailure(
-                SDL.LockTexture(_handle, &rect, &pixels, &pitch)
-            );
-
-            // In SDL pitch is synonymous to stride, and is defined as the
-            // length of a row of pixels in bytes. Span2D, however, defines
-            // pitch as the difference between stride and width.
-            var bytesPerPixel = Format.GetBytesPerPixel();
-            var bytes = new Span2D<byte>(pixels, height, width, (int)(pitch - width * bytesPerPixel));
-            return bytes;
-        }
-
         public Surface LockToSurface()
         {
             ThrowWhenDisposed();
@@ -175,75 +143,12 @@ namespace SDL2Sharp
             return new Surface(surfaceHandle, false);
         }
 
-        public void Update<TPixelFormat>(Image<TPixelFormat> image) where TPixelFormat : struct
+        protected void ThrowWhenDisposed()
         {
-            ThrowWhenDisposed();
-
-            var pointer = Unsafe.AsPointer(ref image.DangerousGetReference());
-            var pitch = image.Width * Marshal.SizeOf<TPixelFormat>();
-            Update(null, pointer, pitch);
-        }
-
-        public void Update<TPixelFormat>(Span2D<TPixelFormat> pixels) where TPixelFormat : struct
-        {
-            ThrowWhenDisposed();
-
-            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = pixels.Width * Marshal.SizeOf<TPixelFormat>();
-            Update(null, pointer, pitch);
-        }
-
-        public void Update<TPixelFormat>(TPixelFormat[,] pixels, int width) where TPixelFormat : struct
-        {
-            ThrowWhenDisposed();
-
-            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = width * Marshal.SizeOf<TPixelFormat>();
-            Update(null, pointer, pitch);
-        }
-
-        public void Update<TPixelFormat>(TPixelFormat[] pixels, int width) where TPixelFormat : struct
-        {
-            ThrowWhenDisposed();
-
-            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = width * Marshal.SizeOf<TPixelFormat>();
-            Update(null, pointer, pitch);
-        }
-
-        private void Update(SDL_Rect* rect, void* pixels, int pitch)
-        {
-            Error.ThrowOnFailure(
-                SDL.UpdateTexture(_handle, rect, pixels, pitch)
-            );
-        }
-
-        public void UpdateYUV(Span2D<byte> yPixels, Span2D<byte> uPixels, Span2D<byte> vPixels)
-        {
-            ThrowWhenDisposed();
-
-            var yPlane = (byte*)Unsafe.AsPointer(ref yPixels.DangerousGetReference());
-            var yPitch = yPixels.Width * sizeof(byte);
-            var uPlane = (byte*)Unsafe.AsPointer(ref uPixels.DangerousGetReference());
-            var uPitch = uPixels.Width * sizeof(byte);
-            var vPlane = (byte*)Unsafe.AsPointer(ref vPixels.DangerousGetReference());
-            var vPitch = vPixels.Width * sizeof(byte);
-
-            UpdateYUV(null, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch);
-        }
-
-        private void UpdateYUV(SDL_Rect* rect, byte* yPlane, int yPitch, byte* uPlane, int uPitch, byte* vPlane, int vPitch)
-        {
-            Error.ThrowOnFailure(
-                SDL.UpdateYUVTexture(_handle, rect, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch)
-            );
-        }
-
-        public void Unlock()
-        {
-            ThrowWhenDisposed();
-
-            SDL.UnlockTexture(_handle);
+            if (_handle is null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
         }
 
         public static implicit operator SDL_Texture*(Texture texture)
@@ -254,14 +159,6 @@ namespace SDL2Sharp
             }
 
             return texture._handle;
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
         }
     }
 }

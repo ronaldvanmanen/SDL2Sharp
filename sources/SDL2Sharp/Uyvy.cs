@@ -19,34 +19,30 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Runtime.InteropServices;
+using SDL2Sharp.Internals;
 
 namespace SDL2Sharp
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    public readonly struct Argb
+    [PixelFormat(PixelFormatEnum.UYVY)]
+    public readonly record struct Uyvy
     {
-        private readonly byte _b;
+        private readonly uint _value;
 
-        private readonly byte _g;
+        public byte U => (byte)(_value >> 24 & 0xFF);
 
-        private readonly byte _r;
+        public byte Y0 => (byte)(_value >> 16 & 0xFF);
 
-        private readonly byte _a;
+        public byte V => (byte)(_value >> 8 & 0xFF);
 
-        public byte A => _a;
+        public byte Y1 => (byte)(_value & 0xFF);
 
-        public byte R => _r;
-
-        public byte G => _g;
-
-        public byte B => _b;
-
-        public Argb(byte a, byte r, byte g, byte b)
+        public Uyvy(byte u, byte y0, byte v, byte y1)
         {
-            _b = b;
-            _g = g;
-            _r = r;
-            _a = a;
+            unchecked
+            {
+                _value = (uint)(u << 24 | y0 << 16 | v << 8 | y1);
+            }
         }
     }
 }
