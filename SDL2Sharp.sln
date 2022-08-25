@@ -153,6 +153,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{8869
 		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Sharp.Extensions", "sources\SDL2Sharp.Extensions\SDL2Sharp.Extensions.csproj", "{AEA6EAFA-AB09-4B19-A103-DDD7E672D506}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +201,10 @@ Global
 		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{629C4F2E-29C2-417A-BB3C-E52EA33CD365}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEA6EAFA-AB09-4B19-A103-DDD7E672D506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEA6EAFA-AB09-4B19-A103-DDD7E672D506}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEA6EAFA-AB09-4B19-A103-DDD7E672D506}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEA6EAFA-AB09-4B19-A103-DDD7E672D506}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +233,7 @@ Global
 		{484D62C0-58A2-410A-84B5-EC71A64DC975} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 		{73FBFF5C-8D51-48C6-9321-0A9532864E32} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
 		{629C4F2E-29C2-417A-BB3C-E52EA33CD365} = {3B3053A4-91F3-4C66-A6A9-773B6CEEE34C}
+		{AEA6EAFA-AB09-4B19-A103-DDD7E672D506} = {1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
