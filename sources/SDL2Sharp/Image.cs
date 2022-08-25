@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
 using Microsoft.Toolkit.HighPerformance;
 
 namespace SDL2Sharp
@@ -38,23 +39,91 @@ namespace SDL2Sharp
         {
             get
             {
-                return _pixels[y * Width + x];
+                return _pixels[y * _width + x];
             }
             set
             {
-                _pixels[y * Width + x] = value;
+                _pixels[y * _width + x] = value;
             }
         }
 
         public Image(int width, int height)
         {
+            if (width <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(width),
+                    width,
+                    "The width of the image must be a positive integer.");
+            }
+
+            if (height <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(height),
+                    height,
+                    "The height of the image must be a positive integer.");
+            }
+
             _width = width;
             _height = height;
-            _pixels = new TPixelFormat[_height * Width];
+            _pixels = new TPixelFormat[_height * _width];
         }
+
+        public Image(Size size)
+        : this(size.Width, size.Height)
+        { }
 
         public Image<TPixelFormat> Crop(int top, int left, int bottom, int right)
         {
+            if (top < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(top),
+                    top,
+                    "The top of the crop rectangle cannot be less than zero.");
+            }
+
+            if (left < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(left),
+                    left,
+                    "The left of the crop rectangle cannot be less than zero.");
+            }
+
+            if (bottom >= _height)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(bottom),
+                    bottom,
+                    "The bottom of the crop rectangle cannot be greater than or equal to the width of the image.");
+            }
+
+            if (right >= _width)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(right),
+                    right,
+                    "The right of the crop rectangle cannot be greater than or equal to the width of the image.");
+            }
+
+            if (bottom <= top)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(bottom),
+                    bottom,
+                    "The bottom of the crop rectangle cannot be less than or equal to the top of the crop rectangle.");
+            }
+
+            if (right <= left)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(right),
+                    right,
+                    "The right of the crop rectangle cannot be less than or equal to the left of the crop rectangle.");
+            }
+
             var croppedImage = new Image<TPixelFormat>(right - left, bottom - top);
             for (var y = 0; y < croppedImage.Height; ++y)
             {
