@@ -219,9 +219,11 @@ namespace TunnelEffect
             _renderer?.Dispose();
 
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-            _screenTexture = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, _renderer.OutputSize);
-            _sourceImage = GenerateXorImage(NextPowerOfTwo(Max(_renderer.OutputWidth, _renderer.OutputHeight)));
-            _transformTable = GenerateTransformTable(NextPowerOfTwo(Max(_renderer.OutputWidth, _renderer.OutputHeight)));
+            var screenSize = _renderer.OutputSize;
+            _screenTexture = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, screenSize);
+            var sourceImageSize = NextPowerOfTwo(Max(screenSize.Width, screenSize.Height));
+            _sourceImage = GenerateXorImage(sourceImageSize);
+            _transformTable = GenerateTransformTable(sourceImageSize);
 
             _renderer.Present();
         }
