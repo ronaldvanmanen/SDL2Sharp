@@ -13,8 +13,6 @@
     <repository type="git" url="https://github.com/ronaldvanmanen/SDL2Sharp" branch="main" />
   </metadata>
   <files>
-    <file src="libfreetype-6.dll" target="runtimes\win-x64\native\libfreetype-6.dll" />
     <file src="SDL2_ttf.dll" target="runtimes\win-x64\native\SDL2_ttf.dll" />
-    <file src="zlib1.dll" target="runtimes\win-x64\native\zlib1.dll" />
   </files>
 </package>
