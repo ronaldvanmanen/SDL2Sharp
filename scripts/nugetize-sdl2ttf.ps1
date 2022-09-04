@@ -52,12 +52,8 @@ try {
   Copy-Item -Path $PackagesDir\libsdl2ttf.runtime.win-x64 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2ttf.runtime.win-x86 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path "$DownloadPath\include" -Destination "$StagingDir\libsdl2ttf" -Force -Recurse
-  Copy-Item -Path "$DownloadPath\lib\x64\libfreetype-6.dll" -Destination "$StagingDir\libsdl2ttf.runtime.win-x64" -Force
   Copy-Item -Path "$DownloadPath\lib\x64\SDL2_ttf.dll" -Destination "$StagingDir\libsdl2ttf.runtime.win-x64" -Force
-  Copy-Item -Path "$DownloadPath\lib\x64\zlib1.dll" -Destination "$StagingDir\libsdl2ttf.runtime.win-x64" -Force
-  Copy-Item -Path "$DownloadPath\lib\x86\libfreetype-6.dll" -Destination "$StagingDir\libsdl2ttf.runtime.win-x86" -Force
   Copy-Item -Path "$DownloadPath\lib\x86\SDL2_ttf.dll" -Destination "$StagingDir\libsdl2ttf.runtime.win-x86" -Force
-  Copy-Item -Path "$DownloadPath\lib\x86\zlib1.dll" -Destination "$StagingDir\libsdl2ttf.runtime.win-x86" -Force
 
   $RuntimeContent = Get-Content "$StagingDir\libsdl2ttf\runtime.json" -Raw
   $RuntimeContent = $RuntimeContent.replace('$version$', $PackageVersion)

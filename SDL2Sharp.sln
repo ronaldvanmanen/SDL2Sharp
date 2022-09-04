@@ -39,12 +39,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generation", "generation", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BABC58-A31C-4658-BB81-FB21DD86F87B}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\build-sdl2.ps1 = scripts\build-sdl2.ps1
-		scripts\build-sdl2ttf.ps1 = scripts\build-sdl2ttf.ps1
 		scripts\build.ps1 = scripts\build.ps1
-		scripts\cibuild-sdl2.cmd = scripts\cibuild-sdl2.cmd
-		scripts\cibuild-sdl2ttf.cmd = scripts\cibuild-sdl2ttf.cmd
 		scripts\cibuild.cmd = scripts\cibuild.cmd
+		scripts\nugetize-sdl2.ps1 = scripts\nugetize-sdl2.ps1
+		scripts\nugetize-sdl2.cmd = scripts\nugetize-sdl2.cmd
+		scripts\nugetize-sdl2ttf.ps1 = scripts\nugetize-sdl2ttf.ps1
+		scripts\nugetize-sdl2ttf.cmd = scripts\nugetize-sdl2ttf.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724-335F-42C6-A2ED-4DFECD530B7F}"
@@ -73,9 +73,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0793
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{BE1EC505-678D-4E09-836A-9CCBEF4E5232}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci-sdl2.yml = .github\workflows\ci-sdl2.yml
-		.github\workflows\ci-sdl2ttf.yml = .github\workflows\ci-sdl2ttf.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\nugetize-sdl2.yml = .github\workflows\nugetize-sdl2.yml
+		.github\workflows\nugetize-sdl2ttf.yml = .github\workflows\nugetize-sdl2ttf.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{BFB3B017-B286-4AA8-9F24-3303FE7D6755}"
@@ -98,9 +98,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2.runtime.win-x86", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{9D834C64-E1A5-427A-946F-003234CA720E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{6547EEAF-2825-4071-8832-A075045CB5ED}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net6.0", "net6.0", "{6547EEAF-2825-4071-8832-A075045CB5ED}"
 	ProjectSection(SolutionItems) = preProject
-		packages\libsdl2\lib\net5.0\_._ = packages\libsdl2\lib\net5.0\_._
+		packages\libsdl2\lib\net6.0\_._ = packages\libsdl2\lib\net6.0\_._
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WavePlayer", "samples\WavePlayer\WavePlayer.csproj", "{C5401193-099C-4FC6-8BE1-C90329DCA79A}"
@@ -130,9 +130,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf.runtime.win-x64"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{698A3C29-E6D0-4E9B-80AE-74D1D019741C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net5.0", "net5.0", "{F7D49E70-5EBF-48D7-B77A-A9F60BE33B8F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net6.0", "net6.0", "{F7D49E70-5EBF-48D7-B77A-A9F60BE33B8F}"
 	ProjectSection(SolutionItems) = preProject
-		packages\libsdl2ttf\lib\net5.0\_._ = packages\libsdl2ttf\lib\net5.0\_._
+		packages\libsdl2ttf\lib\net6.0\_._ = packages\libsdl2ttf\lib\net6.0\_._
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2ttf.runtime.win-x86", "libsdl2ttf.runtime.win-x86", "{36E84273-F0C7-4F86-B807-80C8087A90CD}"
