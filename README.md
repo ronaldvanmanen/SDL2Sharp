@@ -3,6 +3,8 @@
 SDL2Sharp provides SDL2 bindings written in C#.
 
 [![.NET](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/ci.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/ci.yml)
+[![nuget](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2.yml)
+[![nuget](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2ttf.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2ttf.yml)
 
 ## Table of Contents
 
@@ -23,11 +25,11 @@ See [LICENSE](LICENSE) in the project root for license information.
 
 ### Languages and Frameworks
 
-SDL2Sharp uses C# as its primary development language and .NET 5 as its primary target framework.
+SDL2Sharp uses C# as its primary development language and .NET 6 as its primary target framework.
 
 ### Building
 
-SDL2Sharp requires the [.NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) and can be built simply with `dotnet build -c Release`.
+SDL2Sharp requires the [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) and can be built simply with `dotnet build -c Release`.
 
 You can reproduce what the CI environment does by running `./scripts/cibuild.cmd` on Windows.
 This will download the required .NET SDK locally and use that to build the repo; it will also run through all available actions in the appropriate order.
