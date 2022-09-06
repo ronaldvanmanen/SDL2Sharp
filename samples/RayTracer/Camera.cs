@@ -101,7 +101,7 @@ namespace RayTracer
             _viewMatrix *= Matrix4x4.CreateFromYawPitchRoll(yaw, pitch, roll);
         }
 
-        public void Shoot(World world, Image<Rgba8888> image)
+        public void Shoot(World world, Image<Argb8888> image)
         {
             if (world is null)
             {
@@ -123,7 +123,7 @@ namespace RayTracer
                     var ray = new Ray(Vector3.Zero, Vector3.Normalize(rayDirection));
                     var rayWorld = Ray.Transform(ray, _viewMatrix);
                     var color = Trace(world, rayWorld, 0, 1f);
-                    image[imageY, imageX] = color.ToRgba8888();
+                    image[imageY, imageX] = color.ToArgb8888();
                 }
             }
         }

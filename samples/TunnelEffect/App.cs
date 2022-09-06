@@ -53,9 +53,9 @@ namespace TunnelEffect
 
         private Renderer _renderer = null!;
 
-        private Texture<Rgba8888> _screenTexture = null!;
+        private Texture<Argb8888> _screenTexture = null!;
 
-        private Memory2D<Rgba8888> _sourceImage = null!;
+        private Memory2D<Argb8888> _sourceImage = null!;
 
         private Memory2D<Transform> _transformTable = null!;
 
@@ -154,27 +154,27 @@ namespace TunnelEffect
             _renderer.Present();
         }
 
-        private static Memory2D<Rgba8888> GenerateXorImage(int size)
+        private static Memory2D<Argb8888> GenerateXorImage(int size)
         {
             return GenerateXorImage(size, size);
         }
 
-        private static Memory2D<Rgba8888> GenerateXorImage(int width, int height)
+        private static Memory2D<Argb8888> GenerateXorImage(int width, int height)
         {
-            var image = new Rgba8888[height, width];
+            var image = new Argb8888[height, width];
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
                 {
-                    image[y, x] = new Rgba8888(
+                    image[y, x] = new Argb8888(
+                        a: 0xFF,
                         r: 0x00,
                         g: 0x00,
-                        b: (byte)((x * 256 / width) ^ (y * 256 / height)),
-                        a: 0xFF
+                        b: (byte)((x * 256 / width) ^ (y * 256 / height))
                     );
                 }
             }
-            return new Memory2D<Rgba8888>(image);
+            return new Memory2D<Argb8888>(image);
         }
 
         private static Memory2D<Transform> GenerateTransformTable(int size)
@@ -220,7 +220,7 @@ namespace TunnelEffect
 
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
             var screenSize = _renderer.OutputSize;
-            _screenTexture = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, screenSize);
+            _screenTexture = _renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, screenSize);
             var sourceImageSize = NextPowerOfTwo(Max(screenSize.Width, screenSize.Height));
             _sourceImage = GenerateXorImage(sourceImageSize);
             _transformTable = GenerateTransformTable(sourceImageSize);

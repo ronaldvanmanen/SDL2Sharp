@@ -41,11 +41,11 @@ namespace PlasmaFractal
 
         private Renderer _renderer = null!;
 
-        private Texture<Rgba8888> _screenImage = null!;
+        private Texture<Argb8888> _screenImage = null!;
 
         private Image<byte> _sourceImage = null!;
 
-        private Palette<Rgba8888> _palette = null!;
+        private Palette<Argb8888> _palette = null!;
 
         private Stopwatch _realTime = null!;
 
@@ -71,7 +71,7 @@ namespace PlasmaFractal
             _window.SizeChanged += OnWindowSizeChanged;
             _window.MouseMotion += OnWindowMouseMotion;
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-            _screenImage = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, _renderer.OutputSize);
+            _screenImage = _renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, _renderer.OutputSize);
             _sourceImage = GenerateDiamondSquareImage(_renderer.OutputSize);
             _palette = GeneratePalette();
             _realTime = new Stopwatch();
@@ -165,7 +165,7 @@ namespace PlasmaFractal
             _screenImage?.Dispose();
             _renderer?.Dispose();
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-            _screenImage = _renderer.CreateTexture<Rgba8888>(TextureAccess.Streaming, _renderer.OutputSize);
+            _screenImage = _renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, _renderer.OutputSize);
             _sourceImage = GenerateDiamondSquareImage(_renderer.OutputSize);
         }
 
@@ -181,21 +181,21 @@ namespace PlasmaFractal
 
         private static readonly Random _random = new Random();
 
-        private static Palette<Rgba8888> GeneratePalette()
+        private static Palette<Argb8888> GeneratePalette()
         {
-            var palette = new Palette<Rgba8888>(256);
+            var palette = new Palette<Argb8888>(256);
             for (var i = 0; i < 32; ++i)
             {
                 var lo = (byte)(i * 255 / 31);
                 var hi = (byte)(255 - lo);
-                palette[i] = new Rgba8888(lo, 0, 0, 0xFF);
-                palette[i + 32] = new Rgba8888(hi, 0, 0, 0xFF);
-                palette[i + 64] = new Rgba8888(0, lo, 0, 0xFF);
-                palette[i + 96] = new Rgba8888(0, hi, 0, 0xFF);
-                palette[i + 128] = new Rgba8888(0, 0, lo, 0xFF);
-                palette[i + 160] = new Rgba8888(0, 0, hi, 0xFF);
-                palette[i + 192] = new Rgba8888(lo, 0, lo, 0xFF);
-                palette[i + 224] = new Rgba8888(hi, 0, hi, 0xFF);
+                palette[i] = new Argb8888(0xFF, lo, 0, 0);
+                palette[i + 32] = new Argb8888(0xFF, hi, 0, 0);
+                palette[i + 64] = new Argb8888(0xFF, 0, lo, 0);
+                palette[i + 96] = new Argb8888(0xFF, 0, hi, 0);
+                palette[i + 128] = new Argb8888(0xFF, 0, 0, lo);
+                palette[i + 160] = new Argb8888(0xFF, 0, 0, hi);
+                palette[i + 192] = new Argb8888(0xFF, lo, 0, lo);
+                palette[i + 224] = new Argb8888(0xFF, hi, 0, hi);
             }
             return palette;
         }
