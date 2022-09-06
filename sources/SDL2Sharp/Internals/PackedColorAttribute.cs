@@ -18,31 +18,30 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Runtime.InteropServices;
-using SDL2Sharp.Internals;
+using System;
+using System.Reflection;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Internals
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PackedColor(PixelFormatEnum.UYVY)]
-    public readonly record struct Uyvy
+    [AttributeUsage(AttributeTargets.Struct)]
+    internal sealed class PackedColorAttribute : Attribute
     {
-        private readonly uint _value;
+        public PixelFormatEnum PixelFormat { get; }
 
-        public byte U0 => (byte)(_value >> 24 & 0xFF);
-
-        public byte Y0 => (byte)(_value >> 16 & 0xFF);
-
-        public byte V0 => (byte)(_value >> 8 & 0xFF);
-
-        public byte Y1 => (byte)(_value & 0xFF);
-
-        public Uyvy(byte u0, byte y0, byte v0, byte y1)
+        public PackedColorAttribute(PixelFormatEnum pixelFormat)
         {
-            unchecked
+            PixelFormat = pixelFormat;
+        }
+
+        public static PixelFormatEnum GetPixelFormatOf<TPackedColor>()
+        {
+            var pixelFormatType = typeof(TPackedColor);
+            var pixelFormatAttribute = pixelFormatType.GetCustomAttribute<PackedColorAttribute>();
+            if (pixelFormatAttribute == null)
             {
-                _value = (uint)(u0 << 24 | y0 << 16 | v0 << 8 | y1);
+                return PixelFormatEnum.Unknown;
             }
+            return pixelFormatAttribute.PixelFormat;
         }
     }
 }

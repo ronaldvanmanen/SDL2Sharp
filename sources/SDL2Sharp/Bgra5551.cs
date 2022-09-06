@@ -24,7 +24,7 @@ using SDL2Sharp.Internals;
 namespace SDL2Sharp
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 1)]
-    [PixelFormat(PixelFormatEnum.BGRA5551)]
+    [PackedColor(PixelFormatEnum.BGRA5551)]
     public readonly record struct Bgra5551
     {
         private readonly ushort _value;

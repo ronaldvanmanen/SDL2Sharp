@@ -41,9 +41,9 @@ namespace PlasmaFractal
 
         private Renderer _renderer = null!;
 
-        private Texture<Argb8888> _screenImage = null!;
+        private PackedTexture<Argb8888> _screenImage = null!;
 
-        private Image<byte> _sourceImage = null!;
+        private PackedMemoryImage<byte> _sourceImage = null!;
 
         private Palette<Argb8888> _palette = null!;
 
@@ -114,17 +114,16 @@ namespace PlasmaFractal
 
         private void Render(TimeSpan realTime)
         {
-            var screenImage = _screenImage.Lock();
-
-            for (var y = 0; y < screenImage.Height; ++y)
+            _screenImage.WithLock(screenImage =>
             {
-                for (var x = 0; x < screenImage.Width; ++x)
+                for (var y = 0; y < screenImage.Height; ++y)
                 {
-                    screenImage[y, x] = _palette[_sourceImage[y, x]];
+                    for (var x = 0; x < screenImage.Width; ++x)
+                    {
+                        screenImage[y, x] = _palette[_sourceImage[y, x]];
+                    }
                 }
-            }
-
-            _screenImage.Unlock();
+            });
 
             _renderer.BlendMode = BlendMode.None;
             _renderer.DrawColor = _backgroundColor;
@@ -200,21 +199,21 @@ namespace PlasmaFractal
             return palette;
         }
 
-        private static Image<byte> GenerateDiamondSquareImage(Size size)
+        private static PackedMemoryImage<byte> GenerateDiamondSquareImage(Size size)
         {
             return GenerateDiamondSquareImage(size.Width, size.Height);
         }
 
-        private static Image<byte> GenerateDiamondSquareImage(int width, int height)
+        private static PackedMemoryImage<byte> GenerateDiamondSquareImage(int width, int height)
         {
             var size = NextPowerOfTwo(Max(width, height)) + 1;
             var image = GenerateDiamondSquareImage(size);
             return image.Crop(0, 0, height, width);
         }
 
-        private static Image<byte> GenerateDiamondSquareImage(int size)
+        private static PackedMemoryImage<byte> GenerateDiamondSquareImage(int size)
         {
-            var image = new Image<byte>(size, size);
+            var image = new PackedMemoryImage<byte>(size, size);
 
             var randomness = 256;
 
@@ -250,7 +249,7 @@ namespace PlasmaFractal
             return image;
         }
 
-        private static void Diamond(Image<byte> map, int centerX, int centerY, int distance, int randomness)
+        private static void Diamond(PackedMemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
         {
             var sum = 0;
             var count = 0;
@@ -297,7 +296,7 @@ namespace PlasmaFractal
             map[centerY, centerX] = (byte)value;
         }
 
-        private static void Square(Image<byte> map, int centerX, int centerY, int distance, int randomness)
+        private static void Square(PackedMemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
         {
             var sum = 0;
             var count = 0;

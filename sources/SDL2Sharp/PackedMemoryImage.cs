@@ -23,19 +23,19 @@ using Microsoft.Toolkit.HighPerformance;
 
 namespace SDL2Sharp
 {
-    public sealed class Image<TPixelFormat> where TPixelFormat : struct
+    public sealed class PackedMemoryImage<TPackedColor> where TPackedColor : struct
     {
         private readonly int _height;
 
         private readonly int _width;
 
-        private readonly TPixelFormat[] _pixels;
+        private readonly TPackedColor[] _pixels;
 
         public int Height => _height;
 
         public int Width => _width;
 
-        public TPixelFormat this[int y, int x]
+        public TPackedColor this[int y, int x]
         {
             get
             {
@@ -47,7 +47,7 @@ namespace SDL2Sharp
             }
         }
 
-        public Image(int width, int height)
+        public PackedMemoryImage(int width, int height)
         {
             if (width <= 0)
             {
@@ -67,14 +67,14 @@ namespace SDL2Sharp
 
             _width = width;
             _height = height;
-            _pixels = new TPixelFormat[_height * _width];
+            _pixels = new TPackedColor[_height * _width];
         }
 
-        public Image(Size size)
+        public PackedMemoryImage(Size size)
         : this(size.Width, size.Height)
         { }
 
-        public Image<TPixelFormat> Crop(int top, int left, int bottom, int right)
+        public PackedMemoryImage<TPackedColor> Crop(int top, int left, int bottom, int right)
         {
             if (top < 0)
             {
@@ -124,7 +124,7 @@ namespace SDL2Sharp
                     "The right of the crop rectangle cannot be less than or equal to the left of the crop rectangle.");
             }
 
-            var croppedImage = new Image<TPixelFormat>(right - left, bottom - top);
+            var croppedImage = new PackedMemoryImage<TPackedColor>(right - left, bottom - top);
             for (var y = 0; y < croppedImage.Height; ++y)
             {
                 for (var x = 0; x < croppedImage.Width; ++x)
@@ -135,7 +135,7 @@ namespace SDL2Sharp
             return croppedImage;
         }
 
-        public ref TPixelFormat DangerousGetReference()
+        public ref TPackedColor DangerousGetReference()
         {
             return ref _pixels.DangerousGetReference();
         }

@@ -215,34 +215,49 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public Texture<TPixelFormat> CreateTexture<TPixelFormat>(TextureAccess access, Size size) where TPixelFormat : struct
+        public Texture CreateTexture(PixelFormatEnum pixelFormat, TextureAccess access, Size size)
         {
-            return CreateTexture<TPixelFormat>(access, size.Width, size.Height);
+            return CreateTexture(pixelFormat, access, size.Width, size.Height);
         }
 
-        public Texture<TPixelFormat> CreateTexture<TPixelFormat>(TextureAccess access, int width, int height) where TPixelFormat : struct
+        public Texture CreateTexture(PixelFormatEnum pixelFormat, TextureAccess access, int width, int height)
         {
             ThrowWhenDisposed();
 
-            var pixelFormat = PixelFormatAttribute.GetPixelFormatFor<TPixelFormat>();
             var texture = SDL.CreateTexture(_handle, (uint)pixelFormat, (int)access, width, height);
             Error.ThrowOnFailure(texture);
-            return new Texture<TPixelFormat>(texture);
+            return new Texture(texture);
         }
 
-        public YuvTexture CreateYuvTexture(TextureAccess access, Size size)
+
+        public PackedTexture<TPackedColor> CreateTexture<TPackedColor>(TextureAccess access, Size size) where TPackedColor : struct
+        {
+            return CreateTexture<TPackedColor>(access, size.Width, size.Height);
+        }
+
+        public PackedTexture<TPackedColor> CreateTexture<TPackedColor>(TextureAccess access, int width, int height) where TPackedColor : struct
+        {
+            ThrowWhenDisposed();
+
+            var pixelFormat = PackedColorAttribute.GetPixelFormatOf<TPackedColor>();
+            var texture = SDL.CreateTexture(_handle, (uint)pixelFormat, (int)access, width, height);
+            Error.ThrowOnFailure(texture);
+            return new PackedTexture<TPackedColor>(texture);
+        }
+
+        public PlanarTexture CreateYuvTexture(TextureAccess access, Size size)
         {
             return CreateYuvTexture(access, size.Width, size.Height);
         }
 
-        public YuvTexture CreateYuvTexture(TextureAccess access, int width, int height)
+        public PlanarTexture CreateYuvTexture(TextureAccess access, int width, int height)
         {
             ThrowWhenDisposed();
 
             const uint format = (uint)SDL_PixelFormatEnum.SDL_PIXELFORMAT_IYUV;
             var texture = SDL.CreateTexture(_handle, format, (int)access, width, height);
             Error.ThrowOnFailure(texture);
-            return new YuvTexture(texture);
+            return new PlanarTexture(texture);
         }
 
         public Texture CreateTextureFromSurface(Surface surface)
@@ -255,13 +270,13 @@ namespace SDL2Sharp
         }
 
 
-        public Texture<TPixelFormat> CreateTextureFromSurface<TPixelFormat>(Surface<TPixelFormat> surface) where TPixelFormat : struct
+        public PackedTexture<TPackedColor> CreateTextureFromSurface<TPackedColor>(Surface<TPackedColor> surface) where TPackedColor : struct
         {
             ThrowWhenDisposed();
 
             var texture = SDL.CreateTextureFromSurface(_handle, surface);
             Error.ThrowOnFailure(texture);
-            return new Texture<TPixelFormat>(texture);
+            return new PackedTexture<TPackedColor>(texture);
         }
 
         public void Clear()

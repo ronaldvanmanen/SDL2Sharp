@@ -38,9 +38,9 @@ namespace RayTracer
 
         private Renderer _renderer = null!;
 
-        private Texture<Argb8888> _screenTexture = null!;
+        private PackedTexture<Argb8888> _screenTexture = null!;
 
-        private Image<Argb8888> _screenImage = null!;
+        private PackedMemoryImage<Argb8888> _screenImage = null!;
 
         private Stopwatch _frameTime = null!;
 
@@ -65,7 +65,7 @@ namespace RayTracer
             _window.MouseWheel += OnMouseWheel;
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
             _screenTexture = _renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, _renderer.OutputSize);
-            _screenImage = new Image<Argb8888>(_renderer.OutputSize);
+            _screenImage = new PackedMemoryImage<Argb8888>(_renderer.OutputSize);
             _frameTime = new Stopwatch();
             _world = new World
             {
@@ -291,7 +291,7 @@ namespace RayTracer
             _renderer?.Dispose();
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
             _screenTexture = _renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, _renderer.OutputSize);
-            _screenImage = new Image<Argb8888>(_renderer.OutputSize);
+            _screenImage = new PackedMemoryImage<Argb8888>(_renderer.OutputSize);
         }
 
         private void OnMouseWheel(object? sender, MouseWheelEventArgs e)

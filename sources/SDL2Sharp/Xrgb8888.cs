@@ -24,7 +24,7 @@ using SDL2Sharp.Internals;
 namespace SDL2Sharp
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PixelFormat(PixelFormatEnum.XRGB8888)]
+    [PackedColor(PixelFormatEnum.XRGB8888)]
     public readonly record struct Xrgb8888
     {
         private readonly uint _value;

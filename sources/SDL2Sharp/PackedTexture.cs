@@ -22,62 +22,54 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Interop;
-using SDL2Sharp.Extensions;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Texture<TPixelFormat> : Texture where TPixelFormat : struct
+    public sealed unsafe class PackedTexture<TPackedColor> : Texture where TPackedColor : struct
     {
-        internal Texture(SDL_Texture* texture)
+        internal PackedTexture(SDL_Texture* texture)
         : base(texture)
         { }
 
-        public Span2D<TPixelFormat> Lock()
+        public void WithLock(WithLockPackedImageCallback<TPackedColor> callback)
         {
-            return Lock(0, 0, Width, Height);
+            WithLock(0, 0, Width, Height, callback);
         }
 
-        public Span2D<TPixelFormat> Lock(Rectangle rectangle)
+        public void WithLock(Rectangle rectangle, WithLockPackedImageCallback<TPackedColor> callback)
         {
-            return Lock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
         }
 
-        public Span2D<TPixelFormat> Lock(int x, int y, int width, int height)
+        public void WithLock(int x, int y, int width, int height, WithLockPackedImageCallback<TPackedColor> callback)
         {
             ThrowWhenDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
-            int pitch;
+            int pitchInBytes;
             Error.ThrowOnFailure(
-                SDL.LockTexture(this, &rect, &pixels, &pitch)
+                SDL.LockTexture(this, &rect, &pixels, &pitchInBytes)
             );
 
-            // In SDL pitch is synonymous to stride, and is defined as the
-            // length of a row of pixels in bytes. Span2D, however, defines
-            // pitch as the difference between stride and width.
-            var bytesPerPixel = Format.GetBytesPerPixel();
-            var bytes = new Span2D<TPixelFormat>(pixels, height, width, (int)(pitch - width * bytesPerPixel));
-            return bytes;
+            var bytesPerPixel = Marshal.SizeOf<TPackedColor>();
+            var pitch = pitchInBytes / bytesPerPixel;
+            var image = new PackedImage<TPackedColor>(pixels, height, width, pitch);
+            callback(image);
+            SDL.UnlockTexture(this);
         }
 
-        public new Surface<TPixelFormat> LockToSurface()
+        public void WithLock(WithLockSurfaceCallback<TPackedColor> callback)
         {
-            ThrowWhenDisposed();
-
-            SDL_Surface* surfaceHandle;
-            Error.ThrowOnFailure(
-                SDL.LockTextureToSurface(this, null, &surfaceHandle)
-            );
-            return new Surface<TPixelFormat>(surfaceHandle, false);
+            WithLock(0, 0, Width, Height, callback);
         }
 
-        public new Surface<TPixelFormat> LockToSurface(Rectangle rectangle)
+        public void WithLock(Rectangle rectangle, WithLockSurfaceCallback<TPackedColor> callback)
         {
-            return LockToSurface(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
         }
 
-        public new Surface<TPixelFormat> LockToSurface(int x, int y, int width, int height)
+        public void WithLock(int x, int y, int width, int height, WithLockSurfaceCallback<TPackedColor> callback)
         {
             ThrowWhenDisposed();
 
@@ -86,41 +78,45 @@ namespace SDL2Sharp
             Error.ThrowOnFailure(
                 SDL.LockTextureToSurface(this, &rect, &surfaceHandle)
             );
-            return new Surface<TPixelFormat>(surfaceHandle, false);
-        }
-
-        public void Unlock()
-        {
-            ThrowWhenDisposed();
-
+            var surface = new Surface<TPackedColor>(surfaceHandle, false);
+            callback.Invoke(surface);
             SDL.UnlockTexture(this);
         }
 
-        public void Update(Image<TPixelFormat> image)
+        public void Update(PackedMemoryImage<TPackedColor> image)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref image.DangerousGetReference());
-            var pitch = image.Width * Marshal.SizeOf<TPixelFormat>();
+            var pitch = image.Width * Marshal.SizeOf<TPackedColor>();
             Update(null, pointer, pitch);
         }
 
-        public void Update(Span2D<TPixelFormat> pixels)
+        public void Update(PackedImage<TPackedColor> pixels)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = pixels.Width * Marshal.SizeOf<TPixelFormat>();
+            var pitch = pixels.Width * Marshal.SizeOf<TPackedColor>();
             Update(null, pointer, pitch);
         }
 
-        public void Update(TPixelFormat[,] pixels)
+        public void Update(Span2D<TPackedColor> pixels)
+        {
+            ThrowWhenDisposed();
+
+            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
+            var pitch = pixels.Width * Marshal.SizeOf<TPackedColor>();
+            Update(null, pointer, pitch);
+        }
+
+        public void Update(TPackedColor[,] pixels)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
             var width = pixels.GetLength(1);
-            var pitch = width * Marshal.SizeOf<TPixelFormat>();
+            var pitch = width * Marshal.SizeOf<TPackedColor>();
             Update(null, pointer, pitch);
         }
 

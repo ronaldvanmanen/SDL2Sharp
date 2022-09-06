@@ -23,26 +23,23 @@ using SDL2Sharp.Internals;
 
 namespace SDL2Sharp
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PackedColor(PixelFormatEnum.UYVY)]
-    public readonly record struct Uyvy
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 3)]
+    [PackedColor(PixelFormatEnum.RGB24)]
+    public readonly record struct Rgb24
     {
-        private readonly uint _value;
+        private readonly byte _b, _g, _r;
 
-        public byte U0 => (byte)(_value >> 24 & 0xFF);
+        public byte R => _r;
 
-        public byte Y0 => (byte)(_value >> 16 & 0xFF);
+        public byte G => _g;
 
-        public byte V0 => (byte)(_value >> 8 & 0xFF);
+        public byte B => _b;
 
-        public byte Y1 => (byte)(_value & 0xFF);
-
-        public Uyvy(byte u0, byte y0, byte v0, byte y1)
+        public Rgb24(byte r, byte g, byte b)
         {
-            unchecked
-            {
-                _value = (uint)(u0 << 24 | y0 << 16 | v0 << 8 | y1);
-            }
+            _r = r;
+            _g = g;
+            _b = b;
         }
     }
 }

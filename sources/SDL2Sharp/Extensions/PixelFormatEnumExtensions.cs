@@ -32,6 +32,11 @@ namespace SDL2Sharp.Extensions
             return (((uint)format) >> 28) & 0x0FU;
         }
 
+        public static PixelType GetPixelType(this PixelFormatEnum format)
+        {
+            return (PixelType)((((uint)format) >> 24) & 0x0F);
+        }
+
         public static uint GetBitsPerPixel(this PixelFormatEnum format)
         {
             return (((uint)format) >> 8) & 0xFFU;
@@ -43,6 +48,19 @@ namespace SDL2Sharp.Extensions
                 (((pixelFormat == PixelFormatEnum.YUY2) ||
                   (pixelFormat == PixelFormatEnum.UYVY) ||
                   (pixelFormat == PixelFormatEnum.YVYU)) ? 2u : 1u) : ((uint)pixelFormat) & 0xFF;
+        }
+
+        public static bool IsPacked(this PixelFormatEnum pixelFormat)
+        {
+            if (IsFourCC(pixelFormat))
+            {
+                return false;
+            }
+
+            var pixelType = GetPixelType(pixelFormat);
+            return (pixelType == PixelType.Packed8)
+                || (pixelType == PixelType.Packed16)
+                || (pixelType == PixelType.Packet32);
         }
     }
 }
