@@ -31,5 +31,15 @@ namespace SDL2Sharp.Extensions
             var b = (byte)scaledColor.B;
             return new Rgba8888(r, g, b, 255);
         }
+
+        public static Argb8888 ToArgb8888(this Rgb32f color)
+        {
+            var clampedColor = Rgb32f.Clamp(color);
+            var scaledColor = clampedColor * 255f;
+            var r = (byte)scaledColor.R;
+            var g = (byte)scaledColor.G;
+            var b = (byte)scaledColor.B;
+            return new Argb8888(255, r, g, b);
+        }
     }
 }
