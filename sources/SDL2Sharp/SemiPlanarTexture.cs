@@ -18,30 +18,35 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using System.Reflection;
+using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.HighPerformance;
+using SDL2Sharp.Interop;
 
-namespace SDL2Sharp.Internals
+namespace SDL2Sharp
 {
-    [AttributeUsage(AttributeTargets.Struct)]
-    internal sealed class PixelFormatAttribute : Attribute
+    public sealed unsafe class SemiPlanarTexture : Texture
     {
-        public PixelFormatEnum PixelFormat { get; }
+        internal SemiPlanarTexture(SDL_Texture* texture)
+        : base(texture)
+        { }
 
-        public PixelFormatAttribute(PixelFormatEnum pixelFormat)
+        public void Update(Span2D<byte> yPixels, Span2D<byte> uvPixels)
         {
-            PixelFormat = pixelFormat;
+            ThrowWhenDisposed();
+
+            var yPlane = (byte*)Unsafe.AsPointer(ref yPixels.DangerousGetReference());
+            var yPitch = yPixels.Width * sizeof(byte);
+            var uvPlane = (byte*)Unsafe.AsPointer(ref uvPixels.DangerousGetReference());
+            var uvPitch = uvPixels.Width * sizeof(byte);
+
+            Update(null, yPlane, yPitch, uvPlane, uvPitch);
         }
 
-        public static PixelFormatEnum GetPixelFormatFor<TPixelFormat>()
+        private void Update(SDL_Rect* rect, byte* yPlane, int yPitch, byte* uvPlane, int uvPitch)
         {
-            var pixelFormatType = typeof(TPixelFormat);
-            var pixelFormatAttribute = pixelFormatType.GetCustomAttribute<PixelFormatAttribute>();
-            if (pixelFormatAttribute == null)
-            {
-                return PixelFormatEnum.Unknown;
-            }
-            return pixelFormatAttribute.PixelFormat;
+            Error.ThrowOnFailure(
+                SDL.UpdateNVTexture(this, rect, yPlane, yPitch, uvPlane, uvPitch)
+            );
         }
     }
 }

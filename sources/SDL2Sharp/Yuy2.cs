@@ -24,24 +24,24 @@ using SDL2Sharp.Internals;
 namespace SDL2Sharp
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PixelFormat(PixelFormatEnum.YUY2)]
+    [PackedColor(PixelFormatEnum.YUY2)]
     public readonly record struct Yuy2
     {
         private readonly uint _value;
 
         public byte Y0 => (byte)(_value >> 24 & 0xFF);
 
-        public byte U => (byte)(_value >> 16 & 0xFF);
+        public byte U0 => (byte)(_value >> 16 & 0xFF);
 
         public byte Y1 => (byte)(_value >> 8 & 0xFF);
 
-        public byte V => (byte)(_value & 0xFF);
+        public byte V0 => (byte)(_value & 0xFF);
 
-        public Yuy2(byte y0, byte u, byte y1, byte v)
+        public Yuy2(byte y0, byte u0, byte y1, byte v0)
         {
             unchecked
             {
-                _value = (uint)(y0 << 24 | u << 16 | y1 << 8 | v);
+                _value = (uint)(y0 << 24 | u0 << 16 | y1 << 8 | v0);
             }
         }
     }

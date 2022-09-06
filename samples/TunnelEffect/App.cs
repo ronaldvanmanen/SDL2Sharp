@@ -53,7 +53,7 @@ namespace TunnelEffect
 
         private Renderer _renderer = null!;
 
-        private Texture<Argb8888> _screenTexture = null!;
+        private PackedTexture<Argb8888> _screenTexture = null!;
 
         private Memory2D<Argb8888> _sourceImage = null!;
 
@@ -111,39 +111,39 @@ namespace TunnelEffect
 
         private void Render(TimeSpan realTime)
         {
-            var screenImage = _screenTexture.Lock();
-            var screenWidth = screenImage.Width;
-            var screenHeight = screenImage.Height;
-
-            var sourceImage = _sourceImage.Span;
-            var sourceWidth = _sourceImage.Width;
-            var sourceHeight = _sourceImage.Height;
-            var sourceWidthMask = sourceWidth - 1;
-            var sourceHeightMask = sourceHeight - 1;
-
-            var transformTable = _transformTable.Span;
-
-            var shiftX = (int)(screenWidth * 1.0 * realTime.TotalSeconds);
-            var shiftY = (int)(screenHeight * 0.25 * realTime.TotalSeconds);
-            var lookX = (sourceWidth - screenWidth) / 2;
-            var lookY = (sourceHeight - screenHeight) / 2;
-            var shiftLookX = shiftX + lookX;
-            var shiftLookY = shiftY + lookY;
-
-            for (var screenY = 0; screenY < screenHeight; ++screenY)
+            _screenTexture.WithLock(screenImage =>
             {
-                var transformY = screenY + lookY;
-                for (var screenX = 0; screenX < screenWidth; ++screenX)
-                {
-                    var transformX = screenX + lookX;
-                    var transform = transformTable[transformY, transformX];
-                    var sourceX = (transform.Distance + shiftLookX) & sourceWidthMask;
-                    var sourceY = (transform.Angle + shiftLookY) & sourceHeightMask;
-                    screenImage[screenY, screenX] = sourceImage[sourceY, sourceX];
-                }
-            }
+                var screenWidth = screenImage.Width;
+                var screenHeight = screenImage.Height;
 
-            _screenTexture.Unlock();
+                var sourceImage = _sourceImage.Span;
+                var sourceWidth = _sourceImage.Width;
+                var sourceHeight = _sourceImage.Height;
+                var sourceWidthMask = sourceWidth - 1;
+                var sourceHeightMask = sourceHeight - 1;
+
+                var transformTable = _transformTable.Span;
+
+                var shiftX = (int)(screenWidth * 1.0 * realTime.TotalSeconds);
+                var shiftY = (int)(screenHeight * 0.25 * realTime.TotalSeconds);
+                var lookX = (sourceWidth - screenWidth) / 2;
+                var lookY = (sourceHeight - screenHeight) / 2;
+                var shiftLookX = shiftX + lookX;
+                var shiftLookY = shiftY + lookY;
+
+                for (var screenY = 0; screenY < screenHeight; ++screenY)
+                {
+                    var transformY = screenY + lookY;
+                    for (var screenX = 0; screenX < screenWidth; ++screenX)
+                    {
+                        var transformX = screenX + lookX;
+                        var transform = transformTable[transformY, transformX];
+                        var sourceX = (transform.Distance + shiftLookX) & sourceWidthMask;
+                        var sourceY = (transform.Angle + shiftLookY) & sourceHeightMask;
+                        screenImage[screenY, screenX] = sourceImage[sourceY, sourceX];
+                    }
+                }
+            });
 
             _renderer.BlendMode = BlendMode.None;
             _renderer.DrawColor = _backgroundColor;

@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
@@ -115,23 +116,51 @@ namespace SDL2Sharp
             _handle = null;
         }
 
-        public Surface LockToSurface()
+        public void WithLock<TPackedColor>(WithLockPackedImageCallback<TPackedColor> callback)
+            where TPackedColor : struct
+        {
+            WithLock(0, 0, Width, Height, callback);
+        }
+
+        public void WithLock<TPackedColor>(Rectangle rectangle, WithLockPackedImageCallback<TPackedColor> callback)
+            where TPackedColor : struct
+        {
+            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
+        }
+
+        public void WithLock<TPackedColor>(int x, int y, int width, int height, WithLockPackedImageCallback<TPackedColor> callback)
+            where TPackedColor : struct
         {
             ThrowWhenDisposed();
 
-            SDL_Surface* surfaceHandle;
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            void* pixels;
+            int pitchInBytes;
             Error.ThrowOnFailure(
-                SDL.LockTextureToSurface(_handle, null, &surfaceHandle)
+                SDL.LockTexture(_handle, &rect, &pixels, &pitchInBytes)
             );
-            return new Surface(surfaceHandle, false);
+
+            var bytesPerPixel = Marshal.SizeOf<TPackedColor>();
+            var pitch = pitchInBytes / bytesPerPixel;
+            var image = new PackedImage<TPackedColor>(pixels, height, width, pitch);
+            callback.Invoke(image);
+            SDL.UnlockTexture(this);
         }
 
-        public Surface LockToSurface(Rectangle rectangle)
+        public void WithLock<TPackedColor>(WithLockSurfaceCallback<TPackedColor> callback)
+            where TPackedColor : struct
         {
-            return LockToSurface(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+            WithLock(0, 0, Width, Height, callback);
         }
 
-        public Surface LockToSurface(int x, int y, int width, int height)
+        public void WithLock<TPackedColor>(Rectangle rectangle, WithLockSurfaceCallback<TPackedColor> callback)
+            where TPackedColor : struct
+        {
+            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
+        }
+
+        public void WithLock<TPackedColor>(int x, int y, int width, int height, WithLockSurfaceCallback<TPackedColor> callback)
+            where TPackedColor : struct
         {
             ThrowWhenDisposed();
 
@@ -140,7 +169,9 @@ namespace SDL2Sharp
             Error.ThrowOnFailure(
                 SDL.LockTextureToSurface(_handle, &rect, &surfaceHandle)
             );
-            return new Surface(surfaceHandle, false);
+            var surface = new Surface<TPackedColor>(surfaceHandle, false);
+            callback.Invoke(surface);
+            SDL.UnlockTexture(this);
         }
 
         protected void ThrowWhenDisposed()

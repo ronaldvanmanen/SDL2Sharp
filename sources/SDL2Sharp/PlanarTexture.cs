@@ -24,9 +24,9 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class YuvTexture : Texture
+    public sealed unsafe class PlanarTexture : Texture
     {
-        internal YuvTexture(SDL_Texture* texture)
+        internal PlanarTexture(SDL_Texture* texture)
         : base(texture)
         { }
 

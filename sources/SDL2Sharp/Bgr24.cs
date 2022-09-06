@@ -18,35 +18,28 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Runtime.CompilerServices;
-using Microsoft.Toolkit.HighPerformance;
-using SDL2Sharp.Interop;
+using System.Runtime.InteropServices;
+using SDL2Sharp.Internals;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class NvTexture : Texture
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 3)]
+    [PackedColor(PixelFormatEnum.BGR24)]
+    public readonly record struct Bgr24
     {
-        internal NvTexture(SDL_Texture* texture)
-        : base(texture)
-        { }
+        private readonly byte _r, _g, _b;
 
-        public void Update(Span2D<byte> yPixels, Span2D<byte> uvPixels)
+        public byte B => _b;
+
+        public byte G => _g;
+
+        public byte R => _r;
+
+        public Bgr24(byte b, byte g, byte r)
         {
-            ThrowWhenDisposed();
-
-            var yPlane = (byte*)Unsafe.AsPointer(ref yPixels.DangerousGetReference());
-            var yPitch = yPixels.Width * sizeof(byte);
-            var uvPlane = (byte*)Unsafe.AsPointer(ref uvPixels.DangerousGetReference());
-            var uvPitch = uvPixels.Width * sizeof(byte);
-
-            Update(null, yPlane, yPitch, uvPlane, uvPitch);
-        }
-
-        private void Update(SDL_Rect* rect, byte* yPlane, int yPitch, byte* uvPlane, int uvPitch)
-        {
-            Error.ThrowOnFailure(
-                SDL.UpdateNVTexture(this, rect, yPlane, yPitch, uvPlane, uvPitch)
-            );
+            _b = b;
+            _g = g;
+            _r = r;
         }
     }
 }
