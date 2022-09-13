@@ -358,12 +358,30 @@ namespace SDL2Sharp
             }
         }
 
+        public void DrawLine(float x1, float y1, float x2, float y2)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.RenderDrawLineF(_handle, x1, y1, x2, y2)
+            );
+        }
+
         public void DrawPoint(int x, int y)
         {
             ThrowWhenDisposed();
 
             Error.ThrowOnFailure(
                 SDL.RenderDrawPoint(_handle, x, y)
+            );
+        }
+
+        public void DrawPoint(float x, float y)
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.RenderDrawPointF(_handle, x, y)
             );
         }
 
