@@ -138,7 +138,11 @@ namespace SwirlStars
                     star.Z = _random.Next(100, 1000);
                 }
 
-                _renderer.DrawColor = star.Color;
+                var brightness = 1f - star.Z / 1000f;
+                var r = (byte)(star.Color.R * brightness);
+                var g = (byte)(star.Color.G * brightness);
+                var b = (byte)(star.Color.B * brightness);
+                _renderer.DrawColor = new Color(r, g, b, 255);
                 _renderer.DrawPoint(screenX, screenY);
             }
 
