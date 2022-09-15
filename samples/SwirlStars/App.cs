@@ -77,10 +77,12 @@ namespace SwirlStars
         {
             for (var i = 0; i < count; ++i)
             {
-                var x = _random.Next(-500, 500);
-                var y = _random.Next(-500, 500);
-                var z = _random.Next(100, 1000);
-                yield return new Star(x, y, z, new Color(255, 255, 255, 255));
+                var x = -500f + 1000f * _random.NextSingle();
+                var y = -500f + 1000f * _random.NextSingle();
+                var z = 100f + 900f * _random.NextSingle();
+                var velocity = .5f + 4.5f * _random.NextSingle();
+                var color = new Color(255, 255, 255, 255);
+                yield return new Star(x, y, z, velocity, color);
             }
         }
 
@@ -126,16 +128,18 @@ namespace SwirlStars
             var screenCenterY = screenSize.Height / 2;
             foreach (var star in _stars)
             {
-                star.Z -= 5;
+                star.Z -= star.Velocity;
                 var screenX = star.X / star.Z * 100f + screenCenterX;
                 var screenY = star.Y / star.Z * 100f + screenCenterY;
                 if (screenX < 0 || screenX >= screenSize.Width ||
                     screenY < 0 || screenY >= screenSize.Height ||
-                    star.Z < 1)
+                    star.Z < 1 || star.Z > 1000f)
                 {
-                    star.X = _random.Next(-500, 500);
-                    star.Y = _random.Next(-500, 500);
-                    star.Z = _random.Next(100, 1000);
+                    star.X = -500f + 1000f * _random.NextSingle();
+                    star.Y = -500f + 1000f * _random.NextSingle();
+                    star.Z = 100f + 900f * _random.NextSingle();
+                    star.Velocity = .5f + 4.5f * _random.NextSingle();
+                    star.Color = new Color(255, 255, 255, 255);
                 }
 
                 var brightness = 1f - star.Z / 1000f;

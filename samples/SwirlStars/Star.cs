@@ -30,13 +30,16 @@ namespace SwirlStars
 
         public float Z { get; set; }
 
+        public float Velocity { get; set; }
+
         public Color Color { get; set; }
 
-        public Star(float x, float y, float z, Color color)
+        public Star(float x, float y, float z, float velocity, Color color)
         {
             X = x;
             Y = y;
             Z = z;
+            Velocity = velocity;
             Color = color;
         }
     }
