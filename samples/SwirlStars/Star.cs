@@ -18,29 +18,20 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp;
+using SDL2Sharp.Extensions;
 
 namespace SwirlStars
 {
     internal sealed class Star
     {
-        public float X { get; set; }
+        public float X { get; set; } = 0f;
 
-        public float Y { get; set; }
+        public float Y { get; set; } = 0f;
 
-        public float Z { get; set; }
+        public float Z { get; set; } = 0f;
 
-        public float Velocity { get; set; }
+        public float Velocity { get; set; } = 0f;
 
-        public Color Color { get; set; }
-
-        public Star(float x, float y, float z, float velocity, Color color)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-            Velocity = velocity;
-            Color = color;
-        }
+        public Rgb32f Color { get; set; } = Rgb32f.Black;
     }
 }
