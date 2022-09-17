@@ -131,23 +131,27 @@ namespace SwirlStars
             var screenSize = _renderer.OutputSize;
             var screenCenterX = screenSize.Width / 2f;
             var screenCenterY = screenSize.Height / 2f;
-            foreach (var star in _stars)
+            const int maxSubFrameCount = 20;
+            for (var subFrame = 0; subFrame < maxSubFrameCount; subFrame++)
             {
-                star.Z -= star.Velocity;
-                var screenX = star.X / star.Z * 100f + screenCenterX;
-                var screenY = star.Y / star.Z * 100f + screenCenterY;
-                if (screenX < 0f || screenX >= screenSize.Width ||
-                    screenY < 0f || screenY >= screenSize.Height ||
-                    star.Z < 0f || star.Z > 1000f)
+                foreach (var star in _stars)
                 {
-                    ResetStar(star);
-                }
+                    star.Z -= star.Velocity / maxSubFrameCount;
+                    var screenX = star.X / star.Z * 100f + screenCenterX;
+                    var screenY = star.Y / star.Z * 100f + screenCenterY;
+                    if (screenX < 0f || screenX >= screenSize.Width ||
+                        screenY < 0f || screenY >= screenSize.Height ||
+                        star.Z < 0f || star.Z > 1000f)
+                    {
+                        ResetStar(star);
+                    }
 
-                var starBrightness = 1f - star.Z / 1000f;
-                var starDimmedColor = star.Color * starBrightness;
-                var starDrawColor = starDimmedColor.ToColor();
-                _renderer.DrawColor = starDrawColor;
-                _renderer.DrawPoint(screenX, screenY);
+                    var starBrightness = 1f - star.Z / 1000f;
+                    var starDimmedColor = star.Color * starBrightness;
+                    var starDrawColor = starDimmedColor.ToColor();
+                    _renderer.DrawColor = starDrawColor;
+                    _renderer.DrawPoint(screenX, screenY);
+                }
             }
 
             _renderer.DrawColor = _frameRateColor;
