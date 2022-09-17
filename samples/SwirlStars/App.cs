@@ -34,6 +34,8 @@ namespace SwirlStars
 
         private static readonly Color _backgroundColor = new Color(0, 0, 0, 255);
 
+        private static readonly Random _randomizer = new Random();
+
         private Window _window = null!;
 
         private Renderer _renderer = null!;
@@ -47,8 +49,6 @@ namespace SwirlStars
         private double _frameRate;
 
         private DateTime _cursorLastActive = DateTime.UtcNow;
-
-        private Random _random = null!;
 
         private List<Star> _stars = null!;
 
@@ -69,21 +69,26 @@ namespace SwirlStars
             _frameCount = 0;
             _frameRate = double.NaN;
             _realTime.Start();
-            _random = new Random();
-            _stars = new List<Star>(GenerateStars(64));
+            _stars = new List<Star>(GenerateStars(256));
         }
 
-        private IEnumerable<Star> GenerateStars(int count)
+        private static IEnumerable<Star> GenerateStars(int count)
         {
             for (var i = 0; i < count; ++i)
             {
-                var x = -500f + 1000f * _random.NextSingle();
-                var y = -500f + 1000f * _random.NextSingle();
-                var z = 100f + 900f * _random.NextSingle();
-                var velocity = .5f + 4.5f * _random.NextSingle();
-                var color = new Color(255, 255, 255, 255);
-                yield return new Star(x, y, z, velocity, color);
+                var star = new Star();
+                ResetStar(star);
+                yield return star;
             }
+        }
+
+        private static void ResetStar(Star star)
+        {
+            star.X = -500f + 1000f * _randomizer.NextSingle();
+            star.Y = -500f + 1000f * _randomizer.NextSingle();
+            star.Z = 100f + 900f * _randomizer.NextSingle();
+            star.Velocity = .5f + 4.5f * _randomizer.NextSingle();
+            star.Color = Rgb32f.White;
         }
 
         protected override void OnQuiting()
@@ -124,29 +129,24 @@ namespace SwirlStars
             _renderer.Clear();
 
             var screenSize = _renderer.OutputSize;
-            var screenCenterX = screenSize.Width / 2;
-            var screenCenterY = screenSize.Height / 2;
+            var screenCenterX = screenSize.Width / 2f;
+            var screenCenterY = screenSize.Height / 2f;
             foreach (var star in _stars)
             {
                 star.Z -= star.Velocity;
                 var screenX = star.X / star.Z * 100f + screenCenterX;
                 var screenY = star.Y / star.Z * 100f + screenCenterY;
-                if (screenX < 0 || screenX >= screenSize.Width ||
-                    screenY < 0 || screenY >= screenSize.Height ||
-                    star.Z < 1 || star.Z > 1000f)
+                if (screenX < 0f || screenX >= screenSize.Width ||
+                    screenY < 0f || screenY >= screenSize.Height ||
+                    star.Z < 0f || star.Z > 1000f)
                 {
-                    star.X = -500f + 1000f * _random.NextSingle();
-                    star.Y = -500f + 1000f * _random.NextSingle();
-                    star.Z = 100f + 900f * _random.NextSingle();
-                    star.Velocity = .5f + 4.5f * _random.NextSingle();
-                    star.Color = new Color(255, 255, 255, 255);
+                    ResetStar(star);
                 }
 
-                var brightness = 1f - star.Z / 1000f;
-                var r = (byte)(star.Color.R * brightness);
-                var g = (byte)(star.Color.G * brightness);
-                var b = (byte)(star.Color.B * brightness);
-                _renderer.DrawColor = new Color(r, g, b, 255);
+                var starBrightness = 1f - star.Z / 1000f;
+                var starDimmedColor = star.Color * starBrightness;
+                var starDrawColor = starDimmedColor.ToColor();
+                _renderer.DrawColor = starDrawColor;
                 _renderer.DrawPoint(screenX, screenY);
             }
 
@@ -168,7 +168,12 @@ namespace SwirlStars
 
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
         {
-            _renderer?.Dispose();
+            var renderer = _renderer;
+            if (renderer != null)
+            {
+                renderer.Dispose();
+            }
+
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
         }
 

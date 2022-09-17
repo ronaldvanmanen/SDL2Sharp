@@ -22,6 +22,16 @@ namespace SDL2Sharp.Extensions
 {
     public static class Rgb32fExtensions
     {
+        public static Color ToColor(this Rgb32f color)
+        {
+            var clampedColor = Rgb32f.Clamp(color);
+            var scaledColor = clampedColor * 255f;
+            var r = (byte)scaledColor.R;
+            var g = (byte)scaledColor.G;
+            var b = (byte)scaledColor.B;
+            return new Color(r, g, b, 255);
+        }
+
         public static Rgba8888 ToRgba8888(this Rgb32f color)
         {
             var clampedColor = Rgb32f.Clamp(color);
