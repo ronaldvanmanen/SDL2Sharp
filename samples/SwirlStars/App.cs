@@ -88,7 +88,11 @@ namespace SwirlStars
             star.Y = -500f + 1000f * _randomizer.NextSingle();
             star.Z = 100f + 900f * _randomizer.NextSingle();
             star.Velocity = .5f + 4.5f * _randomizer.NextSingle();
-            star.Color = Rgb32f.White;
+            star.Color = new Rgb32f(
+                _randomizer.NextSingle(),
+                _randomizer.NextSingle(),
+                _randomizer.NextSingle()
+            );
         }
 
         protected override void OnQuiting()
@@ -137,6 +141,7 @@ namespace SwirlStars
                 foreach (var star in _stars)
                 {
                     star.Z -= star.Velocity / maxSubFrameCount;
+
                     var screenX = star.X / star.Z * 100f + screenCenterX;
                     var screenY = star.Y / star.Z * 100f + screenCenterY;
                     if (screenX < 0f || screenX >= screenSize.Width ||
