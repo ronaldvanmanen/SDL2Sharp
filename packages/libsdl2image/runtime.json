@@ -1,0 +1,14 @@
+{
+  "runtimes": {
+    "win-x64": {
+      "libsdl2image": {
+        "libsdl2image.runtime.win-x64": "$version$"
+      }
+    },
+    "win-x86": {
+      "libsdl2image": {
+        "libsdl2image.runtime.win-x86": "$version$"
+      }
+    }
+  }
+}

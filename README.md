@@ -4,6 +4,7 @@ SDL2Sharp provides SDL2 bindings written in C#.
 
 [![.NET](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/ci.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/ci.yml)
 [![nuget](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2.yml)
+[![nuget](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2image.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2image.yml)
 [![nuget](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2ttf.yml/badge.svg)](https://github.com/ronaldvanmanen/SDL2Sharp/actions/workflows/nugetize-sdl2ttf.yml)
 
 ## Table of Contents
