@@ -80,19 +80,19 @@ namespace SDL2Sharp
         }
 
         public Surface(int width, int height, int depth, PixelFormatEnum format)
-        : this(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format))
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format)))
         { }
 
         public Surface(int width, int height, int depth, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(SDL.CreateRGBSurface(0, width, height, depth, redMask, greenMask, blueMask, alphaMask))
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurface(0, width, height, depth, redMask, greenMask, blueMask, alphaMask)))
         { }
 
         public Surface(void* pixels, int width, int height, int depth, int pitch, PixelFormatEnum format)
-        : this(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, (uint)format))
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, (uint)format)))
         { }
 
         public Surface(void* pixels, int width, int height, int depth, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(SDL.CreateRGBSurfaceFrom(pixels, width, height, depth, pitch, redMask, greenMask, blueMask, alphaMask))
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceFrom(pixels, width, height, depth, pitch, redMask, greenMask, blueMask, alphaMask)))
         { }
 
         ~Surface()
