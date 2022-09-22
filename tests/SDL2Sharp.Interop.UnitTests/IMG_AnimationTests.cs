@@ -24,34 +24,34 @@ using Xunit;
 
 namespace SDL2Sharp.Interop.UnitTests
 {
-    /// <summary>Provides validation of the <see cref="SDL_Surface" /> struct.</summary>
-    public static unsafe partial class SDL_SurfaceTests
+    /// <summary>Provides validation of the <see cref="IMG_Animation" /> struct.</summary>
+    public static unsafe partial class IMG_AnimationTests
     {
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct is blittable.</summary>
+        /// <summary>Validates that the <see cref="IMG_Animation" /> struct is blittable.</summary>
         [Fact]
         public static void IsBlittableTest()
         {
-            Assert.Equal(sizeof(SDL_Surface), Marshal.SizeOf<SDL_Surface>());
+            Assert.Equal(sizeof(IMG_Animation), Marshal.SizeOf<IMG_Animation>());
         }
 
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct has the right <see cref="LayoutKind" />.</summary>
+        /// <summary>Validates that the <see cref="IMG_Animation" /> struct has the right <see cref="LayoutKind" />.</summary>
         [Fact]
         public static void IsLayoutSequentialTest()
         {
-            Assert.True(typeof(SDL_Surface).IsLayoutSequential);
+            Assert.True(typeof(IMG_Animation).IsLayoutSequential);
         }
 
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct has the correct size.</summary>
+        /// <summary>Validates that the <see cref="IMG_Animation" /> struct has the correct size.</summary>
         [Fact]
         public static void SizeOfTest()
         {
             if (Environment.Is64BitProcess)
             {
-                Assert.Equal(96, sizeof(SDL_Surface));
+                Assert.Equal(32, sizeof(IMG_Animation));
             }
             else
             {
-                Assert.Equal(60, sizeof(SDL_Surface));
+                Assert.Equal(20, sizeof(IMG_Animation));
             }
         }
     }

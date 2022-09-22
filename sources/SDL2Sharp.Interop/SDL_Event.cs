@@ -45,6 +45,9 @@ namespace SDL2Sharp.Interop
         public SDL_TextEditingEvent edit;
 
         [FieldOffset(0)]
+        public SDL_TextEditingExtEvent editExt;
+
+        [FieldOffset(0)]
         public SDL_TextInputEvent text;
 
         [FieldOffset(0)]
@@ -70,6 +73,9 @@ namespace SDL2Sharp.Interop
 
         [FieldOffset(0)]
         public SDL_JoyDeviceEvent jdevice;
+
+        [FieldOffset(0)]
+        public SDL_JoyBatteryEvent jbattery;
 
         [FieldOffset(0)]
         public SDL_ControllerAxisEvent caxis;

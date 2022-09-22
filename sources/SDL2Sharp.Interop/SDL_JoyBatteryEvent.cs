@@ -20,31 +20,17 @@
 
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_Surface
+    public partial struct SDL_JoyBatteryEvent
     {
         [NativeTypeName("Uint32")]
-        public uint flags;
+        public uint type;
 
-        public SDL_PixelFormat* format;
+        [NativeTypeName("Uint32")]
+        public uint timestamp;
 
-        public int w;
+        [NativeTypeName("SDL_JoystickID")]
+        public int which;
 
-        public int h;
-
-        public int pitch;
-
-        public void* pixels;
-
-        public void* userdata;
-
-        public int locked;
-
-        public void* list_blitmap;
-
-        public SDL_Rect clip_rect;
-
-        public SDL_BlitMap* map;
-
-        public int refcount;
+        public SDL_JoystickPowerLevel level;
     }
 }

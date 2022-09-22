@@ -20,31 +20,13 @@
 
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_Surface
+    public enum IMG_InitFlags
     {
-        [NativeTypeName("Uint32")]
-        public uint flags;
-
-        public SDL_PixelFormat* format;
-
-        public int w;
-
-        public int h;
-
-        public int pitch;
-
-        public void* pixels;
-
-        public void* userdata;
-
-        public int locked;
-
-        public void* list_blitmap;
-
-        public SDL_Rect clip_rect;
-
-        public SDL_BlitMap* map;
-
-        public int refcount;
+        IMG_INIT_JPG = 0x00000001,
+        IMG_INIT_PNG = 0x00000002,
+        IMG_INIT_TIF = 0x00000004,
+        IMG_INIT_WEBP = 0x00000008,
+        IMG_INIT_JXL = 0x00000010,
+        IMG_INIT_AVIF = 0x00000020,
     }
 }

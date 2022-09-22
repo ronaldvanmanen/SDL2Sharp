@@ -20,31 +20,11 @@
 
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_Surface
+    public enum TTF_Direction
     {
-        [NativeTypeName("Uint32")]
-        public uint flags;
-
-        public SDL_PixelFormat* format;
-
-        public int w;
-
-        public int h;
-
-        public int pitch;
-
-        public void* pixels;
-
-        public void* userdata;
-
-        public int locked;
-
-        public void* list_blitmap;
-
-        public SDL_Rect clip_rect;
-
-        public SDL_BlitMap* map;
-
-        public int refcount;
+        TTF_DIRECTION_LTR = 0,
+        TTF_DIRECTION_RTL,
+        TTF_DIRECTION_TTB,
+        TTF_DIRECTION_BTT,
     }
 }

@@ -18,41 +18,33 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using System.Runtime.InteropServices;
 using Xunit;
 
 namespace SDL2Sharp.Interop.UnitTests
 {
-    /// <summary>Provides validation of the <see cref="SDL_Surface" /> struct.</summary>
-    public static unsafe partial class SDL_SurfaceTests
+    /// <summary>Provides validation of the <see cref="SDL_GUID" /> struct.</summary>
+    public static unsafe partial class SDL_GUIDTests
     {
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct is blittable.</summary>
+        /// <summary>Validates that the <see cref="SDL_GUID" /> struct is blittable.</summary>
         [Fact]
         public static void IsBlittableTest()
         {
-            Assert.Equal(sizeof(SDL_Surface), Marshal.SizeOf<SDL_Surface>());
+            Assert.Equal(sizeof(SDL_GUID), Marshal.SizeOf<SDL_GUID>());
         }
 
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct has the right <see cref="LayoutKind" />.</summary>
+        /// <summary>Validates that the <see cref="SDL_GUID" /> struct has the right <see cref="LayoutKind" />.</summary>
         [Fact]
         public static void IsLayoutSequentialTest()
         {
-            Assert.True(typeof(SDL_Surface).IsLayoutSequential);
+            Assert.True(typeof(SDL_GUID).IsLayoutSequential);
         }
 
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct has the correct size.</summary>
+        /// <summary>Validates that the <see cref="SDL_GUID" /> struct has the correct size.</summary>
         [Fact]
         public static void SizeOfTest()
         {
-            if (Environment.Is64BitProcess)
-            {
-                Assert.Equal(96, sizeof(SDL_Surface));
-            }
-            else
-            {
-                Assert.Equal(60, sizeof(SDL_Surface));
-            }
+            Assert.Equal(16, sizeof(SDL_GUID));
         }
     }
 }

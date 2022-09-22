@@ -24,34 +24,34 @@ using Xunit;
 
 namespace SDL2Sharp.Interop.UnitTests
 {
-    /// <summary>Provides validation of the <see cref="SDL_Surface" /> struct.</summary>
-    public static unsafe partial class SDL_SurfaceTests
+    /// <summary>Provides validation of the <see cref="SDL_TextEditingExtEvent" /> struct.</summary>
+    public static unsafe partial class SDL_TextEditingExtEventTests
     {
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct is blittable.</summary>
+        /// <summary>Validates that the <see cref="SDL_TextEditingExtEvent" /> struct is blittable.</summary>
         [Fact]
         public static void IsBlittableTest()
         {
-            Assert.Equal(sizeof(SDL_Surface), Marshal.SizeOf<SDL_Surface>());
+            Assert.Equal(sizeof(SDL_TextEditingExtEvent), Marshal.SizeOf<SDL_TextEditingExtEvent>());
         }
 
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct has the right <see cref="LayoutKind" />.</summary>
+        /// <summary>Validates that the <see cref="SDL_TextEditingExtEvent" /> struct has the right <see cref="LayoutKind" />.</summary>
         [Fact]
         public static void IsLayoutSequentialTest()
         {
-            Assert.True(typeof(SDL_Surface).IsLayoutSequential);
+            Assert.True(typeof(SDL_TextEditingExtEvent).IsLayoutSequential);
         }
 
-        /// <summary>Validates that the <see cref="SDL_Surface" /> struct has the correct size.</summary>
+        /// <summary>Validates that the <see cref="SDL_TextEditingExtEvent" /> struct has the correct size.</summary>
         [Fact]
         public static void SizeOfTest()
         {
             if (Environment.Is64BitProcess)
             {
-                Assert.Equal(96, sizeof(SDL_Surface));
+                Assert.Equal(32, sizeof(SDL_TextEditingExtEvent));
             }
             else
             {
-                Assert.Equal(60, sizeof(SDL_Surface));
+                Assert.Equal(24, sizeof(SDL_TextEditingExtEvent));
             }
         }
     }
