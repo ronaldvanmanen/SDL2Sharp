@@ -20,31 +20,17 @@
 
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_Surface
+    public enum SDL_JoystickType
     {
-        [NativeTypeName("Uint32")]
-        public uint flags;
-
-        public SDL_PixelFormat* format;
-
-        public int w;
-
-        public int h;
-
-        public int pitch;
-
-        public void* pixels;
-
-        public void* userdata;
-
-        public int locked;
-
-        public void* list_blitmap;
-
-        public SDL_Rect clip_rect;
-
-        public SDL_BlitMap* map;
-
-        public int refcount;
+        SDL_JOYSTICK_TYPE_UNKNOWN,
+        SDL_JOYSTICK_TYPE_GAMECONTROLLER,
+        SDL_JOYSTICK_TYPE_WHEEL,
+        SDL_JOYSTICK_TYPE_ARCADE_STICK,
+        SDL_JOYSTICK_TYPE_FLIGHT_STICK,
+        SDL_JOYSTICK_TYPE_DANCE_PAD,
+        SDL_JOYSTICK_TYPE_GUITAR,
+        SDL_JOYSTICK_TYPE_DRUM_KIT,
+        SDL_JOYSTICK_TYPE_ARCADE_PAD,
+        SDL_JOYSTICK_TYPE_THROTTLE,
     }
 }

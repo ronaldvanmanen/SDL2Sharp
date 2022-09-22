@@ -20,31 +20,24 @@
 
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_Surface
+    public unsafe partial struct SDL_TextEditingExtEvent
     {
         [NativeTypeName("Uint32")]
-        public uint flags;
+        public uint type;
 
-        public SDL_PixelFormat* format;
+        [NativeTypeName("Uint32")]
+        public uint timestamp;
 
-        public int w;
+        [NativeTypeName("Uint32")]
+        public uint windowID;
 
-        public int h;
+        [NativeTypeName("char *")]
+        public sbyte* text;
 
-        public int pitch;
+        [NativeTypeName("Sint32")]
+        public int start;
 
-        public void* pixels;
-
-        public void* userdata;
-
-        public int locked;
-
-        public void* list_blitmap;
-
-        public SDL_Rect clip_rect;
-
-        public SDL_BlitMap* map;
-
-        public int refcount;
+        [NativeTypeName("Sint32")]
+        public int length;
     }
 }
