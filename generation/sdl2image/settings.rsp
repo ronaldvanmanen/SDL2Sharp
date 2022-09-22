@@ -1,0 +1,9 @@
+@..\settings.rsp
+--file
+SDL_image.h
+--libraryPath
+SDL2_image.dll
+--methodClassName
+IMG
+--prefixStrip
+IMG_
