@@ -182,6 +182,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net6.0", "net6.0", "{7CFFAD
 		packages\libsdl2image\lib\net6.0\_._ = packages\libsdl2image\lib\net6.0\_._
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2image", "sdl2image", "{B5740D49-FE19-4279-B1B7-E086E535C3CF}"
+	ProjectSection(SolutionItems) = preProject
+		generation\sdl2image\generate.ps1 = generation\sdl2image\generate.ps1
+		generation\sdl2image\settings.rsp = generation\sdl2image\settings.rsp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -276,6 +282,7 @@ Global
 		{FBBDDC9A-4D02-4C83-A3DA-5D5EE3B4951C} = {BFB3B017-B286-4AA8-9F24-3303FE7D6755}
 		{A39D5AA8-8ED9-4D10-9C68-A936C97318C7} = {00AFE944-5636-4BA6-92D0-98D4E802B4B4}
 		{7CFFAD2B-B329-437C-9EAB-E1EA15E46C56} = {A39D5AA8-8ED9-4D10-9C68-A936C97318C7}
+		{B5740D49-FE19-4279-B1B7-E086E535C3CF} = {7399E6FE-0F79-41FA-BFFC-5BBC133B7BEA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FE17053-D59E-4256-80D0-DBA97F8F41B0}
