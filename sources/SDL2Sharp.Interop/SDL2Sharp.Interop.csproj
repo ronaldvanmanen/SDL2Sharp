@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="libsdl2" Version="2.24.0-2986998811" />
+    <PackageReference Include="libsdl2image" Version="2.6.2-3081837178" />
     <PackageReference Include="libsdl2ttf" Version="2.20.1-2986999183" />
   </ItemGroup>
 
