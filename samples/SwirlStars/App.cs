@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Diagnostics;
+using System.Numerics;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
 
@@ -84,14 +85,18 @@ namespace SwirlStars
 
         private static void ResetStar(Star star)
         {
-            star.X = -500f + 1000f * _randomizer.NextSingle();
-            star.Y = -500f + 1000f * _randomizer.NextSingle();
-            star.Z = 100f + 900f * _randomizer.NextSingle();
-            star.Velocity = .5f + 4.5f * _randomizer.NextSingle();
+            star.Position = new Vector3(
+                x: -500f + 1000f * _randomizer.NextSingle(),
+                y: -500f + 1000f * _randomizer.NextSingle(),
+                z: 100f + 900f * _randomizer.NextSingle());
+            star.Velocity = new Vector3(
+                x: 0f,
+                y: 0f,
+                z: -(.5f + 4.5f * _randomizer.NextSingle()));
             star.Color = new Rgb32f(
-                _randomizer.NextSingle(),
-                _randomizer.NextSingle(),
-                _randomizer.NextSingle()
+                r: _randomizer.NextSingle(),
+                g: _randomizer.NextSingle(),
+                b: _randomizer.NextSingle()
             );
         }
 
@@ -140,18 +145,18 @@ namespace SwirlStars
             {
                 foreach (var star in _stars)
                 {
-                    star.Z -= star.Velocity / maxSubFrameCount;
+                    star.Position += star.Velocity / maxSubFrameCount;
 
-                    var screenX = star.X / star.Z * 100f + screenCenterX;
-                    var screenY = star.Y / star.Z * 100f + screenCenterY;
+                    var screenX = star.Position.X / star.Position.Z * 100f + screenCenterX;
+                    var screenY = star.Position.Y / star.Position.Z * 100f + screenCenterY;
                     if (screenX < 0f || screenX >= screenSize.Width ||
                         screenY < 0f || screenY >= screenSize.Height ||
-                        star.Z < 0f || star.Z > 1000f)
+                        star.Position.Z < 0f || star.Position.Z > 1000f)
                     {
                         ResetStar(star);
                     }
 
-                    var starBrightness = 1f - star.Z / 1000f;
+                    var starBrightness = 1f - Vector3.Distance(Vector3.Zero, star.Position) / 1000f;
                     var starDimmedColor = star.Color * starBrightness;
                     var starDrawColor = starDimmedColor.ToColor();
                     _renderer.DrawColor = starDrawColor;
