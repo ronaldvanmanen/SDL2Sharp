@@ -51,7 +51,7 @@ namespace RayTracer
             set
             {
                 _fieldOfView = value;
-                FocalLength = (float)(Resolution.Width / Resolution.Height / Math.Tan(FieldOfView * Math.PI / 180f / 2f));
+                FocalLength = (float)(Resolution.Width / Resolution.Height / MathF.Tan(FieldOfView * MathF.PI / 180f / 2f));
             }
         }
 
@@ -63,7 +63,7 @@ namespace RayTracer
             PixelAspectRatio = 1f;
             Frustum = new Frustum(-4f / 3f, 4f / 3f, -1f, +1f, float.Epsilon, float.PositiveInfinity);
             FieldOfView = 90f;
-            FocalLength = (float)(Resolution.Width / Resolution.Height / Math.Tan(FieldOfView * Math.PI / 180f / 2f));
+            FocalLength = (float)(Resolution.Width / Resolution.Height / MathF.Tan(FieldOfView * MathF.PI / 180f / 2f));
         }
 
         public void LookAt(Vector3 position, Vector3 target, Vector3 up)

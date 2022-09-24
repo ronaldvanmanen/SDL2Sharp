@@ -28,9 +28,9 @@ namespace RayTracer
         public static Vector3 RotateX(this Vector3 vector, float radians)
         {
             return new Vector3(
-                (float)(vector.X),
-                (float)(vector.Y * Math.Cos(radians) - vector.Z * Math.Sin(radians)),
-                (float)(vector.Y * Math.Sin(radians) + vector.Z * Math.Cos(radians))
+                vector.X,
+                vector.Y * MathF.Cos(radians) - vector.Z * MathF.Sin(radians),
+                vector.Y * MathF.Sin(radians) + vector.Z * MathF.Cos(radians)
             );
         }
     }

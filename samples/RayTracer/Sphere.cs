@@ -52,7 +52,7 @@ namespace RayTracer
                 return null;
             }
 
-            var t = -b - (float)Math.Sqrt(discriminant);
+            var t = -b - MathF.Sqrt(discriminant);
             if (t < 0f)
             {
                 t = 0f;
