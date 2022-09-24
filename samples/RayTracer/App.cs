@@ -175,8 +175,8 @@ namespace RayTracer
 
             _camera = new Camera();
             _camera.Rotate(
-                (float)(-6d * Math.PI / 180d),
-                (float)(180d * Math.PI / 180d),
+                -6f * MathF.PI / 180f,
+                180f * MathF.PI / 180f,
                 0f
             );
             _camera.Move(0f, 8.5f, -26f);
@@ -261,25 +261,25 @@ namespace RayTracer
 
                 case KeyCode.Up:
                 {
-                    _camera.RotateX((float)(1d * Math.PI / 180d));
+                    _camera.RotateX(1f * MathF.PI / 180f);
                     break;
                 }
 
                 case KeyCode.Down:
                 {
-                    _camera.RotateX((float)(-1d * Math.PI / 180d));
+                    _camera.RotateX(-1f * MathF.PI / 180f);
                     break;
                 }
 
                 case KeyCode.Left:
                 {
-                    _camera.RotateY((float)(1d * Math.PI / 180d));
+                    _camera.RotateY(1f * MathF.PI / 180f);
                     break;
                 }
 
                 case KeyCode.Right:
                 {
-                    _camera.RotateY((float)(-1d * Math.PI / 180d));
+                    _camera.RotateY(-1f * MathF.PI / 180f);
                     break;
                 }
             }
