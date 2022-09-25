@@ -157,7 +157,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayTracer", "samples\RayTra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Extensions", "sources\SDL2Sharp.Extensions\SDL2Sharp.Extensions.csproj", "{AEA6EAFA-AB09-4B19-A103-DDD7E672D506}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwirlStars", "samples\SwirlStars\SwirlStars.csproj", "{B8107CDD-068A-451A-86A3-0C33BCEB4F99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwirlStars", "samples\SwirlStars\SwirlStars.csproj", "{B8107CDD-068A-451A-86A3-0C33BCEB4F99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libsdl2image", "libsdl2image", "{00AFE944-5636-4BA6-92D0-98D4E802B4B4}"
 	ProjectSection(SolutionItems) = preProject
