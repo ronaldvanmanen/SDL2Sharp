@@ -64,15 +64,15 @@ try {
       $ExpandedFile = $Matches[1]
         
       if ($ExpandedFile -like '*\include\*.h') {
-        Write-Host "include file found: $ExpandedFile"
+        Write-Host "Staging include file '$ExpandedFile'..."
         Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2\lib\native\include" -Force
       }
       elseif ($ExpandedFile -like '*\lib\x64\*.dll') {
-        Write-Host "x64 lib found: $ExpandedFile"
+        Write-Host "Staging x64 lib '$ExpandedFile'..."
         Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2.runtime.win-x64\runtimes\win-x64\native" -Force
       }
       elseif ($ExpandedFile -like '*\lib\x86\*.dll') {
-        Write-Host "x86 lib found: $ExpandedFile"
+        Write-Host "Staging x86 lib '$ExpandedFile'..."
         Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2.runtime.win-x86\runtimes\win-x86\native" -Force
       }
     }
