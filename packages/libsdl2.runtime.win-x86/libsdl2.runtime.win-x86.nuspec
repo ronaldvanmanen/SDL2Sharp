@@ -12,7 +12,4 @@
     <copyright>Copyright © Ronald van Manen</copyright>
     <repository type="git" url="https://github.com/ronaldvanmanen/SDL2Sharp" branch="main" />
   </metadata>
-  <files>
-    <file src="SDL2.dll" target="runtimes\win-x86\native\SDL2.dll" />
-  </files>
 </package>

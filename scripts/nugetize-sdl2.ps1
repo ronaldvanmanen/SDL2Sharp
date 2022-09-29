@@ -1,6 +1,16 @@
-function Create-Directory([string[]] $Path) {
+function Create-Directory([string] $Path) {
   if (!(Test-Path -Path $Path)) {
     New-Item -Path $Path -Force -ItemType "Directory" | Out-Null
+  }
+}
+
+function Copy-File([string] $Path, [string] $Destination, [switch] $Force) {
+  Create-Directory $Destination
+
+  if ($Force) {
+    Copy-Item -Path $Path -Destination $Destination -Force
+  } else {
+    Copy-Item -Path $Path -Destination $Destination
   }
 }
 
@@ -21,15 +31,11 @@ try {
   $DownloadsDir = Join-Path -Path $RepoRoot -ChildPath "downloads"
   Create-Directory -Path $DownloadsDir
 
-  $DownloadUri = "https://www.libsdl.org/release/"
-
-  $Releases = Invoke-WebRequest "$DownloadUri" -UseBasicParsing
-
-  $Hrefs = $Releases.Links.href |? { $_ -like "SDL2-devel-*-VC.zip" }
-  $LatestHref = ($Hrefs | Sort-Object -Descending {[System.Version]($_ | Select-String '((?:\d{1,3}\.){2}\d{1,3})').Matches[0].Groups[1].Value})[0]
-  $LatestVersion = ($LatestHref | Select-String '((?:\d{1,3}\.){2}\d{1,3})').Matches[0].Groups[1].Value
-  $ZipDownloadPath = Join-Path $DownloadsDir $LatestHref
-  $DownloadPath = Join-Path -Path $DownloadsDir -ChildPath "SDL2-$LatestVersion"
+  $LatestRelease = Invoke-RestMethod -Headers @{ 'Accept'='application/vnd.github+json'} -Uri https://api.github.com/repos/libsdl-org/SDL/releases/latest
+  $LatestVersion = $LatestRelease.name
+  $LatestAsset = $LatestRelease.assets |? { $_.name -Like "SDL2-devel-*-VC.zip" }
+  $LatestAssetName = $LatestAsset.name
+  $BrowserDownloadUrl = $LatestAsset.browser_download_url
 
   $PackageVersion = $LatestVersion
 
@@ -39,23 +45,38 @@ try {
     }
   }
 
-  if (!(Test-Path $DownloadPath))
-  {
-    if (!(Test-Path $ZipDownloadPath)) {
-      Write-Host "Downloading SDL2 development libraries version $LatestVersion to $ZipDownloadPath..." -ForegroundColor Yellow
-      (New-Object System.Net.WebClient).DownloadFile("$DownloadUri/SDL2-devel-$LatestVersion-VC.zip", $ZipDownloadPath)
-    }
+  $ZipDownloadPath = Join-Path $DownloadsDir $LatestAssetName
 
-    Write-Host "Extracting SDL2 development libraries version $LatestVersion..." -ForegroundColor Yellow
-    Expand-Archive -Path $ZipDownloadPath -DestinationPath $DownloadsDir -Force
+  if (!(Test-Path $ZipDownloadPath)) {
+    Write-Host "Downloading SDL2 development libraries version '$LatestVersion' from '$BrowserDownloadUrl'..." -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $BrowserDownloadUrl -OutFile $ZipDownloadPath
   }
 
+  Write-Host "Extracting SDL2 development libraries to '$DownloadsDir'..." -ForegroundColor Yellow
+  $ExpandedFiles = Expand-Archive -Path $ZipDownloadPath -DestinationPath $DownloadsDir -Force -Verbose *>&1
+
+  Write-Host "Staging SDL2 development libraries to '$StagingDir'..." -ForegroundColor Yellow
   Copy-Item -Path $PackagesDir\libsdl2 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2.runtime.win-x64 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2.runtime.win-x86 -Destination $StagingDir -Force -Recurse
-  Copy-Item -Path "$DownloadPath\include" -Destination "$StagingDir\libsdl2" -Force -Recurse
-  Copy-Item -Path "$DownloadPath\lib\x64\SDL2.dll" -Destination "$StagingDir\libsdl2.runtime.win-x64" -Force
-  Copy-Item -Path "$DownloadPath\lib\x86\SDL2.dll" -Destination "$StagingDir\libsdl2.runtime.win-x86" -Force
+  $ExpandedFiles | Foreach-Object {
+    if ($_.message -match "Created '(.*)'.*") {
+      $ExpandedFile = $Matches[1]
+        
+      if ($ExpandedFile -like '*\include\*.h') {
+        Write-Host "include file found: $ExpandedFile"
+        Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2\lib\native\include" -Force
+      }
+      elseif ($ExpandedFile -like '*\lib\x64\*.dll') {
+        Write-Host "x64 lib found: $ExpandedFile"
+        Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2.runtime.win-x64\runtimes\win-x64\native" -Force
+      }
+      elseif ($ExpandedFile -like '*\lib\x86\*.dll') {
+        Write-Host "x86 lib found: $ExpandedFile"
+        Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2.runtime.win-x86\runtimes\win-x86\native" -Force
+      }
+    }
+  }
 
   $RuntimeContent = Get-Content "$StagingDir\libsdl2\runtime.json" -Raw
   $RuntimeContent = $RuntimeContent.replace('$version$', $PackageVersion)
