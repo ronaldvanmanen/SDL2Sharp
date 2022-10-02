@@ -76,10 +76,10 @@ try {
       elseif ($ExpandedFile -like '*\include\*.h') {
         Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2ttf\lib\native\include -Force
       }
-      elseif ($ExpandedFile -like '*\lib\x64\*.dll') {
+      elseif (($ExpandedFile -like '*\lib\x64\*.dll') -or ($ExpandedFile -like '*\lib\x64\*.txt')) {
         Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2ttf.runtime.win-x64\runtimes\win-x64\native -Force
       }
-      elseif ($ExpandedFile -like '*\lib\x86\*.dll') {
+      elseif (($ExpandedFile -like '*\lib\x86\*.dll') -or ($ExpandedFile -like '*\lib\x86\*.txt')) {
         Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2ttf.runtime.win-x86\runtimes\win-x86\native -Force
       }
     }
