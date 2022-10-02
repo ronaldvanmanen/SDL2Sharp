@@ -4,6 +4,13 @@ function Create-Directory([string[]] $Path) {
   }
 }
 
+function Copy-File([string[]] $Path, [string] $Destination, [switch] $Force) {
+  if (!(Test-Path -Path $Destination)) {
+    New-Item -Path $Destination -Force:$Force -ItemType "Directory" | Out-Null
+  }
+  Copy-Item -Path $Path -Destination $Destination -Force:$Force
+}
+
 try {
   $RepoRoot = Join-Path -Path $PSScriptRoot -ChildPath ".."
 
@@ -21,13 +28,11 @@ try {
   $DownloadsDir = Join-Path -Path $RepoRoot -ChildPath "downloads"
   Create-Directory -Path $DownloadsDir
 
-  $Releases = Invoke-WebRequest https://www.libsdl.org/projects/SDL_image/release/ -UseBasicParsing
-
-  $Hrefs = $Releases.Links.href |? { $_ -like "SDL2_image-devel-*-VC.zip" }
-  $LatestHref = ($Hrefs | Sort-Object -Descending {[System.Version]($_ | Select-String '((?:\d{1,3}\.){2}\d{1,3})').Matches[0].Groups[1].Value})[0]
-  $LatestVersion = ($LatestHref | Select-String '((?:\d{1,3}\.){2}\d{1,3})').Matches[0].Groups[1].Value
-  $ZipDownloadPath = Join-Path $DownloadsDir $LatestHref
-  $DownloadPath = Join-Path -Path $DownloadsDir -ChildPath "SDL2_image-$LatestVersion"
+  $LatestRelease = Invoke-RestMethod -Headers @{ 'Accept'='application/vnd.github+json'} -Uri https://api.github.com/repos/libsdl-org/SDL_image/releases/latest
+  $LatestVersion = $LatestRelease.name
+  $LatestAsset = $LatestRelease.assets |? { $_.name -Like "SDL2_image-devel-*-VC.zip" }
+  $LatestAssetName = $LatestAsset.name
+  $BrowserDownloadUrl = $LatestAsset.browser_download_url
 
   $PackageVersion = $LatestVersion
 
@@ -37,38 +42,66 @@ try {
     }
   }
 
-  if (!(Test-Path $DownloadPath))
-  {
-    if (!(Test-Path $ZipDownloadPath)) {
-      Write-Host "Downloading SDL2_image development libraries version $LatestVersion to $ZipDownloadPath..." -ForegroundColor Yellow
-      (New-Object System.Net.WebClient).DownloadFile("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-$LatestVersion-VC.zip", $ZipDownloadPath)
-    }
+  $ZipDownloadPath = Join-Path $DownloadsDir $LatestAssetName
 
-    Write-Host "Extracting SDL2_image development libraries version $LatestVersion..." -ForegroundColor Yellow
-    Expand-Archive -Path $ZipDownloadPath -DestinationPath $DownloadsDir -Force
+  if (!(Test-Path $ZipDownloadPath)) {
+    Write-Host "Downloading SDL2_image development libraries version '$LatestVersion' from '$BrowserDownloadUrl'..." -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $BrowserDownloadUrl -OutFile $ZipDownloadPath
   }
+
+  Write-Host "Extracting SDL2_image development libraries to '$DownloadsDir'..." -ForegroundColor Yellow
+  $ExpandedFiles = Expand-Archive -Path $ZipDownloadPath -DestinationPath $DownloadsDir -Force -Verbose *>&1
 
   Copy-Item -Path $PackagesDir\libsdl2image -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2image.runtime.win-x64 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2image.runtime.win-x86 -Destination $StagingDir -Force -Recurse
-  Copy-Item -Path "$DownloadPath\include" -Destination "$StagingDir\libsdl2image" -Force -Recurse
-  Copy-Item -Path "$DownloadPath\lib\x64\SDL2_image.dll" -Destination "$StagingDir\libsdl2image.runtime.win-x64" -Force
-  Copy-Item -Path "$DownloadPath\lib\x86\SDL2_image.dll" -Destination "$StagingDir\libsdl2image.runtime.win-x86" -Force
 
+  $ExpandedFiles | Foreach-Object {
+    if ($_.message -match "Created '(.*)'.*") {
+      $ExpandedFile = $Matches[1]
+        
+      if (($ExpandedFile -like '*\CHANGES.txt') -or
+          ($ExpandedFile -like '*\LICENSE.txt') -or
+          ($ExpandedFile -like '*\README.txt')) {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image.runtime.win-x64 -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image.runtime.win-x86 -Force
+      }
+      elseif ($ExpandedFile -like '*\docs\*.md') {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image\docs -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image.runtime.win-x64\docs -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image.runtime.win-x86\docs -Force
+      }
+      elseif ($ExpandedFile -like '*\include\*.h') {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image\lib\native\include -Force
+      }
+      elseif (($ExpandedFile -like '*\lib\x64\*.dll') -or ($ExpandedFile -like '*\lib\x64\*.txt')) {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image.runtime.win-x64\runtimes\win-x64\native -Force
+      }
+      elseif (($ExpandedFile -like '*\lib\x86\*.dll') -or ($ExpandedFile -like '*\lib\x86\*.txt')) {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2image.runtime.win-x86\runtimes\win-x86\native -Force
+      }
+    }
+  }
+
+  Write-Host "Replace variable `$version`$ in runtime.json with value '$PackageVersion'..." -ForegroundColor Yellow
   $RuntimeContent = Get-Content "$StagingDir\libsdl2image\runtime.json" -Raw
   $RuntimeContent = $RuntimeContent.replace('$version$', $PackageVersion)
   Set-Content "$StagingDir\libsdl2image\runtime.json" $RuntimeContent
 
+  Write-Host "Build 'libsdl2image' package..." -ForegroundColor Yellow
   & nuget pack "$StagingDir\libsdl2image\libsdl2image.nuspec" -Properties version=$PackageVersion -OutputDirectory "$ArtifactsPkgDir"
   if ($LastExitCode -ne 0) {
     throw "'nuget pack' failed for 'libsdl2image.nuspec'"
   }
 
+  Write-Host "Build 'libsdl2image.runtime.win-x64' package..." -ForegroundColor Yellow
   & nuget pack "$StagingDir\libsdl2image.runtime.win-x64\libsdl2image.runtime.win-x64.nuspec" -Properties version=$PackageVersion -OutputDirectory "$ArtifactsPkgDir"
   if ($LastExitCode -ne 0) {
     throw "'nuget pack' failed for 'libsdl2image.runtime.win-x64.nuspec'"
   }
 
+  Write-Host "Build 'libsdl2image.runtime.win-x86' package..." -ForegroundColor Yellow
   & nuget pack "$StagingDir\libsdl2image.runtime.win-x86\libsdl2image.runtime.win-x86.nuspec" -Properties version=$PackageVersion -OutputDirectory "$ArtifactsPkgDir"
   if ($LastExitCode -ne 0) {
     throw "'nuget pack' failed for 'libsdl2image.runtime.win-x86.nuspec'"
