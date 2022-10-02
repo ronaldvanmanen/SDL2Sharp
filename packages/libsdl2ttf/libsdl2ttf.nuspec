@@ -16,9 +16,4 @@
       <group targetFramework="native0.0" />
     </dependencies>
   </metadata>
-  <files>
-    <file src="runtime.json" target="runtime.json" />
-    <file src="lib\net6.0\_._" target="lib\net6.0\_._" />
-    <file src="include\**\*.h" target="lib\native\include" />
-  </files>
 </package>
