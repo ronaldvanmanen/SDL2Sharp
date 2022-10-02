@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{89BA
 		scripts\cibuild.cmd = scripts\cibuild.cmd
 		scripts\nugetize-sdl2.cmd = scripts\nugetize-sdl2.cmd
 		scripts\nugetize-sdl2.ps1 = scripts\nugetize-sdl2.ps1
+		scripts\nugetize-sdl2image.cmd = scripts\nugetize-sdl2image.cmd
+		scripts\nugetize-sdl2image.ps1 = scripts\nugetize-sdl2image.ps1
 		scripts\nugetize-sdl2ttf.cmd = scripts\nugetize-sdl2ttf.cmd
 		scripts\nugetize-sdl2ttf.ps1 = scripts\nugetize-sdl2ttf.ps1
 	EndProjectSection
