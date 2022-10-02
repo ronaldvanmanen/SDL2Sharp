@@ -1,17 +1,14 @@
-function Create-Directory([string] $Path) {
+function Create-Directory([string[]] $Path) {
   if (!(Test-Path -Path $Path)) {
     New-Item -Path $Path -Force -ItemType "Directory" | Out-Null
   }
 }
 
-function Copy-File([string] $Path, [string] $Destination, [switch] $Force) {
-  Create-Directory $Destination
-
-  if ($Force) {
-    Copy-Item -Path $Path -Destination $Destination -Force
-  } else {
-    Copy-Item -Path $Path -Destination $Destination
+function Copy-File([string[]] $Path, [string] $Destination, [switch] $Force) {
+  if (!(Test-Path -Path $Destination)) {
+    New-Item -Path $Destination -Force:$Force -ItemType "Directory" | Out-Null
   }
+  Copy-Item -Path $Path -Destination $Destination -Force:$Force
 }
 
 try {
@@ -26,7 +23,7 @@ try {
   Create-Directory -Path $ArtifactsPkgDir
 
   $StagingDir = Join-Path -Path $RepoRoot -ChildPath "staging"
-  Create-Directory $StagingDir
+  Create-Directory -Path $StagingDir
 
   $DownloadsDir = Join-Path -Path $RepoRoot -ChildPath "downloads"
   Create-Directory -Path $DownloadsDir
@@ -59,47 +56,63 @@ try {
   Copy-Item -Path $PackagesDir\libsdl2 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2.runtime.win-x64 -Destination $StagingDir -Force -Recurse
   Copy-Item -Path $PackagesDir\libsdl2.runtime.win-x86 -Destination $StagingDir -Force -Recurse
+
   $ExpandedFiles | Foreach-Object {
     if ($_.message -match "Created '(.*)'.*") {
       $ExpandedFile = $Matches[1]
         
-      if ($ExpandedFile -like '*\include\*.h') {
-        Write-Host "Staging include file '$ExpandedFile'..."
-        Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2\lib\native\include" -Force
+      if (($ExpandedFile -like '*\BUGS.txt') -or
+          ($ExpandedFile -like '*\COPYING.txt') -or
+          ($ExpandedFile -like '*\README.txt') -or
+          ($ExpandedFile -like '*\README-SDL.txt') -or
+          ($ExpandedFile -like '*\WhatsNew.txt')) {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2 -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2.runtime.win-x64 -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2.runtime.win-x86 -Force
+      }
+      elseif ($ExpandedFile -like '*\docs\*.md') {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2\docs -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2.runtime.win-x64\docs -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2.runtime.win-x86\docs -Force
+      }
+      elseif ($ExpandedFile -like '*\include\*.h') {
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2\lib\native\include -Force
       }
       elseif ($ExpandedFile -like '*\lib\x64\*.dll') {
-        Write-Host "Staging x64 lib '$ExpandedFile'..."
-        Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2.runtime.win-x64\runtimes\win-x64\native" -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2.runtime.win-x64\runtimes\win-x64\native -Force
       }
       elseif ($ExpandedFile -like '*\lib\x86\*.dll') {
-        Write-Host "Staging x86 lib '$ExpandedFile'..."
-        Copy-File -Path $ExpandedFile -Destination "$StagingDir\libsdl2.runtime.win-x86\runtimes\win-x86\native" -Force
+        Copy-File -Path $ExpandedFile -Destination $StagingDir\libsdl2.runtime.win-x86\runtimes\win-x86\native -Force
       }
     }
   }
 
-  $RuntimeContent = Get-Content "$StagingDir\libsdl2\runtime.json" -Raw
+  Write-Host "Replace variable `$version`$ in runtime.json with value '$PackageVersion'..." -ForegroundColor Yellow
+  $RuntimeContent = Get-Content $StagingDir\libsdl2\runtime.json -Raw
   $RuntimeContent = $RuntimeContent.replace('$version$', $PackageVersion)
-  Set-Content "$StagingDir\libsdl2\runtime.json" $RuntimeContent
+  Set-Content $StagingDir\libsdl2\runtime.json $RuntimeContent
 
-  & nuget pack "$StagingDir\libsdl2\libsdl2.nuspec" -Properties version=$PackageVersion -OutputDirectory "$ArtifactsPkgDir"
+  Write-Host "Build 'libsdl2' package..." -ForegroundColor Yellow
+  & nuget pack $StagingDir\libsdl2\libsdl2.nuspec -Properties version=$PackageVersion -OutputDirectory $ArtifactsPkgDir
   if ($LastExitCode -ne 0) {
     throw "'nuget pack' failed for 'libsdl2.nuspec'"
   }
   
-  & nuget pack "$StagingDir\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec" -Properties version=$PackageVersion -OutputDirectory "$ArtifactsPkgDir"
+  Write-Host "Build 'libsdl2.runtime.win-x64' package..." -ForegroundColor Yellow
+  & nuget pack $StagingDir\libsdl2.runtime.win-x64\libsdl2.runtime.win-x64.nuspec -Properties version=$PackageVersion -OutputDirectory $ArtifactsPkgDir
   if ($LastExitCode -ne 0) {
     throw "'nuget pack' failed for 'libsdl2.runtime.win-x64.nuspec'"
   }
   
-  & nuget pack "$StagingDir\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec" -Properties version=$PackageVersion -OutputDirectory "$ArtifactsPkgDir"
+  Write-Host "Build 'libsdl2.runtime.win-x86' package..." -ForegroundColor Yellow
+  & nuget pack $StagingDir\libsdl2.runtime.win-x86\libsdl2.runtime.win-x86.nuspec -Properties version=$PackageVersion -OutputDirectory $ArtifactsPkgDir
   if ($LastExitCode -ne 0) {
     throw "'nuget pack' failed for 'libsdl2.runtime.win-x86.nuspec'"
   }
 }
 catch {
-  Write-Host -Object $_
-  Write-Host -Object $_.Exception
-  Write-Host -Object $_.ScriptStackTrace
+  Write-Host -Object $_ -ForegroundColor Red
+  Write-Host -Object $_.Exception -ForegroundColor Red
+  Write-Host -Object $_.ScriptStackTrace -ForegroundColor Red
   exit 1
 }
