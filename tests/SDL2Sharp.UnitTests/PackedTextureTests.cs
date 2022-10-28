@@ -44,26 +44,5 @@ namespace SDL2Sharp.UnitTests
             renderer.Copy(texture);
             renderer.Present();
         }
-
-        [Fact]
-        public static void CreatePackedTextureOfYuy2()
-        {
-            using var window = new Window("TextureTests", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer(RendererFlags.Accelerated);
-            using var texture = renderer.CreateTexture<Yuy2>(TextureAccess.Streaming, renderer.OutputSize);
-            var white = new Yuy2(255, 255, 255, 255);
-            texture.WithLock(image =>
-            {
-                for (var y = 0; y < image.Height; ++y)
-                {
-                    for (var x = 0; x < image.Width / 2; ++x)
-                    {
-                        image[y, x] = white;
-                    }
-                }
-            });
-            renderer.Copy(texture);
-            renderer.Present();
-        }
     }
 }
