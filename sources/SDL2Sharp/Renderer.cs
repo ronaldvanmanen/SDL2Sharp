@@ -245,21 +245,6 @@ namespace SDL2Sharp
             return new PackedTexture<TPackedColor>(texture);
         }
 
-        public PlanarTexture CreateYuvTexture(TextureAccess access, Size size)
-        {
-            return CreateYuvTexture(access, size.Width, size.Height);
-        }
-
-        public PlanarTexture CreateYuvTexture(TextureAccess access, int width, int height)
-        {
-            ThrowWhenDisposed();
-
-            const uint format = (uint)SDL_PixelFormatEnum.SDL_PIXELFORMAT_IYUV;
-            var texture = SDL.CreateTexture(_handle, format, (int)access, width, height);
-            Error.ThrowOnFailure(texture);
-            return new PlanarTexture(texture);
-        }
-
         public Texture CreateTextureFromSurface(Surface surface)
         {
             ThrowWhenDisposed();
