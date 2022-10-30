@@ -133,7 +133,9 @@ namespace SDL2Sharp
             }
             set
             {
-                SDL.RenderSetScale(_handle, value.X, value.Y);
+                Error.ThrowOnFailure(
+                    SDL.RenderSetScale(_handle, value.X, value.Y)
+                );
             }
         }
 
