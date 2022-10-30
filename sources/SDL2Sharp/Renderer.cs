@@ -127,12 +127,16 @@ namespace SDL2Sharp
             get
             {
 
+                ThrowWhenDisposed();
+
                 float scaleX, scaleY;
                 SDL.RenderGetScale(_handle, &scaleX, &scaleY);
                 return new Scale(scaleX, scaleY);
             }
             set
             {
+                ThrowWhenDisposed();
+
                 Error.ThrowOnFailure(
                     SDL.RenderSetScale(_handle, value.X, value.Y)
                 );
@@ -337,6 +341,8 @@ namespace SDL2Sharp
 
         public void DrawLines(Point[] points)
         {
+            ThrowWhenDisposed();
+
             fixed (Point* point = &points[0])
             {
                 Error.ThrowOnFailure(
@@ -374,6 +380,8 @@ namespace SDL2Sharp
 
         public void DrawPoints(Point[] points)
         {
+            ThrowWhenDisposed();
+
             fixed (Point* point = &points[0])
             {
                 Error.ThrowOnFailure(
@@ -384,6 +392,8 @@ namespace SDL2Sharp
 
         public void FillRect(int x, int y, int width, int height)
         {
+            ThrowWhenDisposed();
+
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             Error.ThrowOnFailure(
                 SDL.RenderFillRect(_handle, &rect)
