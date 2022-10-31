@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp;
+using SDL2Sharp.Colors;
 using SDL2Sharp.Extensions;
 using static System.Math;
 using static SDL2Sharp.Extensions.MathExtensions;

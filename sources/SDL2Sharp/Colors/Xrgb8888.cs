@@ -21,15 +21,13 @@
 using System.Runtime.InteropServices;
 using SDL2Sharp.Internals;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PackedColor(PixelFormatEnum.ARGB8888)]
-    public readonly record struct Argb8888
+    [PackedColor(PixelFormatEnum.XRGB8888)]
+    public readonly record struct Xrgb8888
     {
         private readonly uint _value;
-
-        public byte A => (byte)(_value >> 24 & 0xFF);
 
         public byte R => (byte)(_value >> 16 & 0xFF);
 
@@ -37,12 +35,9 @@ namespace SDL2Sharp
 
         public byte B => (byte)(_value & 0xFF);
 
-        public Argb8888(byte a, byte r, byte g, byte b)
+        public Xrgb8888(byte r, byte g, byte b)
         {
-            unchecked
-            {
-                _value = (uint)(a << 24 | r << 16 | g << 8 | b);
-            }
+            _value = (uint)(r << 16 | g << 8 | b);
         }
     }
 }

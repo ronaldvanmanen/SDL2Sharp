@@ -21,7 +21,7 @@
 using System.Runtime.InteropServices;
 using SDL2Sharp.Internals;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2)]
     [PackedColor(PixelFormatEnum.XRGB4444)]
@@ -37,7 +37,7 @@ namespace SDL2Sharp
 
         public Xrgb4444(byte r, byte g, byte b)
         {
-            _value = (ushort)((r & 0xF) << 8 | (g & 0xF) << 4 | (b & 0xF));
+            _value = (ushort)((r & 0xF) << 8 | (g & 0xF) << 4 | b & 0xF);
         }
     }
 }

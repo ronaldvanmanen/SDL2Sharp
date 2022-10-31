@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using SDL2Sharp.Colors;
 using Xunit;
 
 namespace SDL2Sharp.UnitTests
