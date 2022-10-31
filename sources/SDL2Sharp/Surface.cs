@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
@@ -39,16 +38,13 @@ namespace SDL2Sharp
 
         public int Pitch => _handle->pitch;
 
-        public Span2D<byte> Pixels
+        public PackedImage<TPackedColor> Pixels<TPackedColor>()
         {
-            get
-            {
-                // In SDL pitch is synonymous to stride, and is defined as the
-                // length of a row of pixels in bytes. Span2D, however, defines
-                // pitch as the difference between stride and width in pixels.
-                return new Span2D<byte>(_handle->pixels, _handle->h, _handle->w,
-                    _handle->pitch - _handle->w * _handle->format->BytesPerPixel);
-            }
+            return new PackedImage<TPackedColor>(
+                _handle->pixels,
+                _handle->h,
+                _handle->w,
+                _handle->pitch);
         }
 
         public bool MustLock => ((_handle->flags & SDL.SDL_RLEACCEL) != 0);

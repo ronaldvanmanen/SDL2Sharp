@@ -21,26 +21,25 @@
 using System.Runtime.InteropServices;
 using SDL2Sharp.Internals;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Colors
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PackedColor(PixelFormatEnum.BGRX8888)]
-    public readonly record struct Bgrx8888
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2)]
+    [PackedColor(PixelFormatEnum.BGRA4444)]
+    public readonly record struct Bgra4444
     {
-        private readonly uint _value;
+        private readonly ushort _value;
 
-        public byte B => (byte)(_value >> 24 & 0xFF);
+        public byte B => (byte)(_value >> 12 & 0xF);
 
-        public byte G => (byte)(_value >> 16 & 0xFF);
+        public byte G => (byte)(_value >> 8 & 0xF);
 
-        public byte R => (byte)(_value >> 8 & 0xFF);
+        public byte R => (byte)(_value >> 4 & 0xF);
 
-        public Bgrx8888(byte b, byte g, byte r)
+        public byte A => (byte)(_value & 0xFF);
+
+        public Bgra4444(byte b, byte g, byte r, byte a)
         {
-            unchecked
-            {
-                _value = (uint)(b << 24 | g << 16 | r << 8);
-            }
+            _value = (ushort)((b & 0xF) << 12 | (g & 0xF) << 8 | (r & 0xF) << 4 | a & 0xF);
         }
     }
 }
