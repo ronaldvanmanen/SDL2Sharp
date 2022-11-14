@@ -1,11 +1,20 @@
-$allPackages = (dotnet list ..\..\sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj package)
-$libsdl2Package = $allPackages | Select-String -Pattern '^ +> libsdl2 +'
-$libsdl2VersionFound = $libsdl2Package -match '^ +> libsdl2 +(?<requestedVersion>[^ ]+) +(?<resolvedVersion>[^ ]+)'
-if (-not $libsdl2VersionFound)
-{
-  throw "libsdl2 version not found"
+try {
+  $PackageList = (dotnet list ..\..\sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj package)
+  $SDL2PackageName = "SDL2"
+  $SDL2Package = $PackageList | Select-String -Pattern "^ +> $SDL2PackageName +"
+  $SDL2PackageVersionFound = $SDL2Package -match "^ +> $SDL2PackageName +(?<requestedVersion>[^ ]+) +(?<resolvedVersion>[^ ]+)"
+  if (-not $SDL2PackageVersionFound)
+  {
+    throw "$SDL2PackageName version not found"
+  }
+
+  $SDL2PackageVersion = $Matches.resolvedVersion
+
+  & dotnet tool run ClangSharpPInvokeGenerator "@settings.rsp" --file-directory "$HOME\.nuget\packages\$SDL2PackageName\$SDL2PackageVersion\lib\native\include"
 }
-
-$libsdl2Version = $Matches.resolvedVersion
-
-& dotnet tool run ClangSharpPInvokeGenerator "@settings.rsp" --file-directory "$HOME\.nuget\packages\libsdl2\$libsdl2Version\lib\native\include"
+catch {
+  Write-Host -Object $_
+  Write-Host -Object $_.Exception
+  Write-Host -Object $_.ScriptStackTrace
+  exit 1
+}
