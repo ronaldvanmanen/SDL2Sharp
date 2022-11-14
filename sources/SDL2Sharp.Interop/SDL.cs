@@ -2018,11 +2018,11 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_MINOR_VERSION 24")]
         public const int SDL_MINOR_VERSION = 24;
 
-        [NativeTypeName("#define SDL_PATCHLEVEL 0")]
-        public const int SDL_PATCHLEVEL = 0;
+        [NativeTypeName("#define SDL_PATCHLEVEL 1")]
+        public const int SDL_PATCHLEVEL = 1;
 
         [NativeTypeName("#define SDL_COMPILEDVERSION SDL_VERSIONNUM(SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL)")]
-        public const int SDL_COMPILEDVERSION = ((2) * 1000 + (24) * 100 + (0));
+        public const int SDL_COMPILEDVERSION = ((2) * 1000 + (24) * 100 + (1));
 
         [DllImport("SDL2.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumVideoDrivers", ExactSpelling = true)]
         public static extern int GetNumVideoDrivers();
