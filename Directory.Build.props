@@ -14,7 +14,7 @@
   <PropertyGroup>
     <BaseArtifactsPath>$(MSBuildThisFileDirectory)artifacts/</BaseArtifactsPath>
     <BaseArtifactsPathSuffix>$(SDL2SharpProjectCategory)/$(MSBuildProjectName)</BaseArtifactsPathSuffix>
-    <RepositoryUrl>https://github.com/ronaldvanmanen/SDL2Sharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ronaldvanmanen/SDLSharp</RepositoryUrl>
   </PropertyGroup>
 
   <!-- Default settings that explicitly differ from the Sdk.props defaults  -->
