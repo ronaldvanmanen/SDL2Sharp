@@ -11,7 +11,7 @@ try {
 
   $SDL2PackageVersion = $Matches.resolvedVersion
 
-  $SDL2TTFPackageName = 'libsdl2ttf'
+  $SDL2TTFPackageName = 'SDL2_ttf'
   $SDL2TTFPackage = $PackageList | Select-String -Pattern "^ +> $SDL2TTFPackageName +"
   $SDL2TTFPackageVersionFound = $SDL2TTFPackage -match "^ +> $SDL2TTFPackageName +(?<requestedVersion>[^ ]+) +(?<resolvedVersion>[^ ]+)"
   if (-not $SDL2TTFPackageVersionFound)
