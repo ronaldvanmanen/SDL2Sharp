@@ -46,5 +46,11 @@ namespace SDL2Sharp.Interop
         public float preciseX;
 
         public float preciseY;
+
+        [NativeTypeName("Sint32")]
+        public int mouseX;
+
+        [NativeTypeName("Sint32")]
+        public int mouseY;
     }
 }

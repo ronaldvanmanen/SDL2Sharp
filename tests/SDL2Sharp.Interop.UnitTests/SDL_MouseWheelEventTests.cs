@@ -44,7 +44,7 @@ namespace SDL2Sharp.Interop.UnitTests
         [Fact]
         public static void SizeOfTest()
         {
-            Assert.Equal(36, sizeof(SDL_MouseWheelEvent));
+            Assert.Equal(44, sizeof(SDL_MouseWheelEvent));
         }
     }
 }
