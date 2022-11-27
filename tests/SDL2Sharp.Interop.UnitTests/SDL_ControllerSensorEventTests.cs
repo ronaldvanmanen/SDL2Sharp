@@ -44,7 +44,7 @@ namespace SDL2Sharp.Interop.UnitTests
         [Fact]
         public static void SizeOfTest()
         {
-            Assert.Equal(28, sizeof(SDL_ControllerSensorEvent));
+            Assert.Equal(40, sizeof(SDL_ControllerSensorEvent));
         }
     }
 }

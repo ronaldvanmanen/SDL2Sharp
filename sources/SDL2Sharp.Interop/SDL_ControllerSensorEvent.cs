@@ -36,5 +36,8 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("float [3]")]
         public fixed float data[3];
+
+        [NativeTypeName("Uint64")]
+        public ulong timestamp_us;
     }
 }
