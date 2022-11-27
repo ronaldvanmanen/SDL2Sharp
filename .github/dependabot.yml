@@ -1,0 +1,19 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+registries:
+  nuget-azure-devops:
+    type: nuget-feed
+    url: https://pkgs.dev.azure.com/ronaldvanmanen/_packaging/ronaldvanmanen/nuget/v3/index.json
+    username: rvanmanen@gmail.com
+    password: ${{secrets.AZURE_DEVOPS_PAT}}
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    registries:
+      - nuget-azure-devops
+    schedule:
+      interval: "daily"
