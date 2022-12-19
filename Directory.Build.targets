@@ -16,11 +16,6 @@
     <NoWarn>$(NoWarn);NU5105</NoWarn>
   </PropertyGroup>
 
-  <!-- Settings that are only set for CI builds -->
-  <PropertyGroup Condition="'$(GITHUB_RUN_ID)' != ''">
-    <PackageVersion Condition="'$(EXCLUDE_RUN_ID_FROM_PACKAGE)' == ''">$(Version)-$(GITHUB_RUN_ID)</PackageVersion>
-  </PropertyGroup>
-
   <!-- Settings that allow testing and packing to work by default -->
   <PropertyGroup Condition="'$(RuntimeIdentifier)' == ''">
     <RuntimeIdentifier>$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
@@ -42,6 +37,10 @@
   
   <!-- Package versions for package references across all projects -->
   <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
   </ItemGroup>
 </Project>
