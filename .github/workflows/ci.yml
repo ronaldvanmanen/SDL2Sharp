@@ -73,7 +73,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v2
       with:
-        name: windows_release_x64
+        name: nuget
         path: ./artifacts
     - uses: actions/setup-dotnet@v1
       with:
@@ -89,7 +89,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v2
       with:
-        name: windows_release_x64
+        name: nuget
         path: ./artifacts
     - uses: actions/setup-dotnet@v1
       with:
