@@ -34,10 +34,9 @@ namespace SDL2Sharp.Extensions
                 throw new ArgumentException($"'{nameof(filename)}' cannot be null or whitespace.", nameof(filename));
             }
 
-            using (var surface = Surface.LoadBitmap(filename))
-            {
-                return renderer.CreateTextureFromSurface(surface);
-            }
+            using var surface = Surface.LoadBitmap(filename);
+            var texture = renderer.CreateTextureFromSurface(surface);
+            return texture;
         }
 
         public static void DrawCircle(this Renderer renderer, int centerX, int centerY, int radius)
@@ -309,13 +308,9 @@ namespace SDL2Sharp.Extensions
                 throw new ArgumentNullException(nameof(text));
             }
 
-            using (var textSurface = font.RenderBlended(text, renderer.DrawColor))
-            {
-                using (var textTexture = renderer.CreateTextureFromSurface(textSurface))
-                {
-                    renderer.Copy(textTexture, new Rectangle(x, y, textTexture.Width, textTexture.Height));
-                }
-            }
+            using var textSurface = font.RenderBlended(text, renderer.DrawColor);
+            using var textTexture = renderer.CreateTextureFromSurface(textSurface);
+            renderer.Copy(textTexture, new Rectangle(x, y, textTexture.Width, textTexture.Height));
         }
     }
 }
