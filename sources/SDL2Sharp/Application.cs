@@ -61,6 +61,11 @@ namespace SDL2Sharp
             ExitCode = 0;
         }
 
+        public int Run()
+        {
+            return Run(Environment.GetCommandLineArgs());
+        }
+
         public int Run(string[] commandLineArgs)
         {
             CommandLineArgs = commandLineArgs;
