@@ -31,7 +31,7 @@ namespace SDL2Sharp.Extensions
 
             if (string.IsNullOrWhiteSpace(filename))
             {
-                throw new System.ArgumentException($"'{nameof(filename)}' cannot be null or whitespace.", nameof(filename));
+                throw new ArgumentException($"'{nameof(filename)}' cannot be null or whitespace.", nameof(filename));
             }
 
             using (var surface = Surface.LoadBitmap(filename))
