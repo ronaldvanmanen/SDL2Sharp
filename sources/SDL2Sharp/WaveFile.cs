@@ -32,9 +32,9 @@ namespace SDL2Sharp
 
         private uint _waveLength;
 
-        public AudioDeviceSpec Spec => new AudioDeviceSpec(_waveSpec);
+        public AudioDeviceSpec Spec => new(_waveSpec);
 
-        public ReadOnlySpan<byte> Buffer => new ReadOnlySpan<byte>(_waveBuffer, (int)_waveLength);
+        public ReadOnlySpan<byte> Buffer => new(_waveBuffer, (int)_waveLength);
 
         public uint Length => _waveLength;
 

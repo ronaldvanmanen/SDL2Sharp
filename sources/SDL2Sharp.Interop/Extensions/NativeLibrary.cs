@@ -27,8 +27,7 @@ namespace SDL2Sharp.Interop
 {
     internal static class NativeLibrary
     {
-        private static readonly HashSet<Func<string, Assembly, DllImportSearchPath?, IntPtr>> _resolvers =
-            new HashSet<Func<string, Assembly, DllImportSearchPath?, IntPtr>>();
+        private static readonly HashSet<Func<string, Assembly, DllImportSearchPath?, IntPtr>> _resolvers = new();
 
         static NativeLibrary()
         {

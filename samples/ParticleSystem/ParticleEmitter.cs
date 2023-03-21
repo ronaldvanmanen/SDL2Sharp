@@ -90,7 +90,7 @@ namespace ParticleSystem
             renderer.FillCircle(Position.X, Position.Y, Radius);
         }
 
-        private static readonly Random _randomizer = new Random();
+        private static readonly Random _randomizer = new();
 
         private static Particle GenerateParticle()
         {

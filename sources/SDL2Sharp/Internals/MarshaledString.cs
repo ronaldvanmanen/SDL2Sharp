@@ -49,7 +49,7 @@ namespace SDL2Sharp.Internals
             Value = (sbyte*)value;
         }
 
-        public ReadOnlySpan<byte> AsSpan() => new ReadOnlySpan<byte>(Value, Length);
+        public ReadOnlySpan<byte> AsSpan() => new(Value, Length);
 
         public int Length { get; private set; }
 

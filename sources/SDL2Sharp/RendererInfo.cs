@@ -45,7 +45,7 @@ namespace SDL2Sharp
             });
         }
 
-        public string Name => new string(_handle.name);
+        public string Name => new(_handle.name);
 
         public RendererFlags Flags => (RendererFlags)_handle.flags;
 

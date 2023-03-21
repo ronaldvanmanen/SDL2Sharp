@@ -26,9 +26,9 @@ namespace AverageFrameRate
 {
     internal sealed class App : Application
     {
-        private static readonly Color _drawColor = new Color(255, 255, 255, 0);
+        private static readonly Color _drawColor = new(255, 255, 255, 0);
 
-        private static readonly Color _textColor = new Color(0, 0, 0, 255);
+        private static readonly Color _textColor = new(0, 0, 0, 255);
 
         private Window _window = null!;
 

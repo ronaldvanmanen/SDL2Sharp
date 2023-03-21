@@ -70,7 +70,7 @@ namespace SDL2Sharp
 
         public event EventHandler<MouseWheelEventArgs>? MouseWheel;
 
-        private static readonly List<Window> _all = new List<Window>();
+        private static readonly List<Window> _all = new();
 
         private SDL_Window* _handle;
 

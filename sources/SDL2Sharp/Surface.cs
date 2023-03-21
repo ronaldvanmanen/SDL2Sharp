@@ -30,7 +30,7 @@ namespace SDL2Sharp
 
         private readonly bool _freeHandle;
 
-        public PixelFormat Format => new PixelFormat(_handle->format, false);
+        public PixelFormat Format => new(_handle->format, false);
 
         public int Width => _handle->w;
 

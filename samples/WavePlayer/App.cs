@@ -28,15 +28,15 @@ namespace WavePlayer
 {
     internal sealed class App : Application
     {
-        private static readonly Font _frameRateFont = new Font("lazy.ttf", 28);
+        private static readonly Font _frameRateFont = new("lazy.ttf", 28);
 
-        private static readonly Color _frameRateColor = new Color(255, 255, 255, 255);
+        private static readonly Color _frameRateColor = new(255, 255, 255, 255);
 
-        private static readonly Color _backgroundColor = new Color(0, 0, 0, 255);
+        private static readonly Color _backgroundColor = new(0, 0, 0, 255);
 
-        private static readonly Color _waveColor = new Color(255, 255, 0, 255);
+        private static readonly Color _waveColor = new(255, 255, 0, 255);
 
-        private static readonly Color _channelSeparatorColor = new Color(0, 0, 255, 255);
+        private static readonly Color _channelSeparatorColor = new(0, 0, 255, 255);
 
         private Window _window = null!;
 
