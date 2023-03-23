@@ -182,11 +182,7 @@ namespace SwirlStars
 
         private void OnWindowSizeChanged(object? sender, WindowSizeChangedEventArgs e)
         {
-            var renderer = _renderer;
-            if (renderer != null)
-            {
-                renderer.Dispose();
-            }
+            _renderer?.Dispose();
 
             _renderer = _window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
         }
