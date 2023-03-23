@@ -28,22 +28,22 @@ namespace SDL2Sharp
 {
     public abstract unsafe class Application
     {
-        private static Application _instance = null!;
+        private static Application s_instance = null!;
 
         public static Application Instance
         {
             get
             {
-                return _instance;
+                return s_instance;
             }
             private set
             {
-                if (_instance != null)
+                if (s_instance != null)
                 {
                     throw new InvalidOperationException();
                 }
 
-                _instance = value;
+                s_instance = value;
             }
         }
 
