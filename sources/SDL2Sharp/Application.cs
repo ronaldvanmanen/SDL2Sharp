@@ -150,7 +150,7 @@ namespace SDL2Sharp
         private static void DispatchKeyDownEvent(SDL_KeyboardEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
-            if (window != null)
+            if (window is not null)
             {
                 window.HandleKeyDownEvent(@event);
             }
@@ -159,7 +159,7 @@ namespace SDL2Sharp
         private static void DispatchKeyUpEvent(SDL_KeyboardEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
-            if (window != null)
+            if (window is not null)
             {
                 window.HandleKeyUpEvent(@event);
             }
@@ -168,16 +168,16 @@ namespace SDL2Sharp
         private static void DispatchMouseMotionEvent(SDL_MouseMotionEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
-            if (window != null)
+            if (window is not null)
             {
                 window.HandleMouseMotionEvent(@event);
             }
         }
 
-        private void DispatchMouseWheelEvent(SDL_MouseWheelEvent @event)
+        private static void DispatchMouseWheelEvent(SDL_MouseWheelEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
-            if (window != null)
+            if (window is not null)
             {
                 window.HandleMouseWheelEvent(@event);
             }
@@ -186,7 +186,7 @@ namespace SDL2Sharp
         private static void DispatchWindowEvent(SDL_WindowEvent @event)
         {
             var window = Window.All.FirstOrDefault(w => w.Id == @event.windowID);
-            if (window != null)
+            if (window is not null)
             {
                 window.HandleWindowEvent(@event);
             }
