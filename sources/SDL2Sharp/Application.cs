@@ -47,11 +47,11 @@ namespace SDL2Sharp
             }
         }
 
-        public string[] CommandLineArgs { get; private set; }
+        protected string[] CommandLineArgs { get; private set; }
 
-        public Subsystems Subsystems { get; protected set; }
+        protected Subsystems Subsystems { get; set; }
 
-        public int ExitCode { get; protected set; }
+        protected int ExitCode { get; set; }
 
         protected Application()
         {
