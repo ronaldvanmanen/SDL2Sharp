@@ -75,6 +75,8 @@ function Pack() {
 
 function Restore() {
   $logFile = Join-Path -Path $LogDir -ChildPath "$configuration\restore.binlog"
+  & dotnet restore -v "$verbosity" -r win-x86 /bl:"$logFile" /err "$properties" "$solution"
+  & dotnet restore -v "$verbosity" -r win-x64 /bl:"$logFile" /err "$properties" "$solution"
   & dotnet restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution"
   & dotnet tool restore -v "$verbosity"
   if ($LastExitCode -ne 0) {
