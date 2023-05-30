@@ -181,7 +181,7 @@ SDL_system.h
 SDL_version.h
 SDL_video.h
 --libraryPath
-SDL2.dll
+SDL2
 --methodClassName
 SDL
 --prefixStrip

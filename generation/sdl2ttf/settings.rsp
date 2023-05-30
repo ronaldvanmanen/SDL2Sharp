@@ -2,7 +2,7 @@
 --file
 SDL_ttf.h
 --libraryPath
-SDL2_ttf.dll
+SDL2_ttf
 --methodClassName
 TTF
 --prefixStrip
