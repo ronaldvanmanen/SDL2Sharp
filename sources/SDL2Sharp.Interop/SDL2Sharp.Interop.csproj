@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SDL2" Version="2.26.5" />
-    <PackageReference Include="SDL2_image" Version="2.6.3" />
-    <PackageReference Include="SDL2_ttf" Version="2.20.2" />
+    <PackageReference Include="SDL2" Version="2.26.5-pullrequest0012-0042" />
+    <PackageReference Include="SDL2_image" Version="2.6.3-pullrequest0007-0025" />
+    <PackageReference Include="SDL2_ttf" Version="2.20.2-pullrequest0007-0032" />
   </ItemGroup>
 
 </Project>
