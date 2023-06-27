@@ -1,6 +1,6 @@
 [CmdletBinding(PositionalBinding=$false)]
 Param(
-  [ValidateSet("<auto>", "x64", "x86")][string] $architecture = "",
+  [Parameter(Mandatory)][ValidateSet("x64", "x86")][string] $architecture = "",
   [switch] $build,
   [switch] $ci,
   [ValidateSet("Debug", "Release")][string] $configuration = "Debug",
@@ -75,8 +75,7 @@ function Pack() {
 
 function Restore() {
   $logFile = Join-Path -Path $LogDir -ChildPath "$configuration\restore.binlog"
-  & dotnet restore -v "$verbosity" -r win-x86 /bl:"$logFile" /err "$properties" "$solution"
-  & dotnet restore -v "$verbosity" -r win-x64 /bl:"$logFile" /err "$properties" "$solution"
+  & dotnet restore -v "$verbosity" -r win-$architecture /bl:"$logFile" /err "$properties" "$solution"
   & dotnet restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution"
   & dotnet tool restore -v "$verbosity"
   if ($LastExitCode -ne 0) {
@@ -132,7 +131,7 @@ try {
     $DotNetInstallDirectory = Join-Path -Path $ArtifactsDir -ChildPath "dotnet"
     Create-Directory -Path $DotNetInstallDirectory
 
-    & $DotNetInstallScript -Channel 6.0 -Version latest -InstallDir $DotNetInstallDirectory -Architecture $architecture
+    # . $DotNetInstallScript -Channel 6.0 -Version latest -InstallDir $DotNetInstallDirectory -Architecture $architecture
 
     $env:PATH="$DotNetInstallDirectory;$env:PATH"
   }
