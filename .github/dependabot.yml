@@ -7,7 +7,7 @@ version: 2
 registries:
   nuget-azure-devops:
     type: nuget-feed
-    url: https://pkgs.dev.azure.com/ronaldvanmanen/SDL2Sharp/_packaging/SDL2Sharp/nuget/v3/index.json
+    url: https://pkgs.dev.azure.com/ronaldvanmanen/_packaging/ronaldvanmanen/nuget/v3/index.json
     username: rvanmanen@gmail.com
     password: ${{secrets.AZURE_DEVOPS_PAT}}
 updates:
