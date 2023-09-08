@@ -45,7 +45,7 @@ namespace SDL2Sharp.Interop
 
         public double len_ratio;
 
-        [NativeTypeName("SDL_AudioFilter [10]")]
+        [NativeTypeName("SDL_AudioFilter[10]")]
         public _filters_e__FixedBuffer filters;
 
         public int filter_index;

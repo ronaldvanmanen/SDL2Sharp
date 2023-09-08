@@ -205,16 +205,16 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_IMAGE_MINOR_VERSION 6")]
         public const int SDL_IMAGE_MINOR_VERSION = 6;
 
-        [NativeTypeName("#define SDL_IMAGE_PATCHLEVEL 2")]
-        public const int SDL_IMAGE_PATCHLEVEL = 2;
+        [NativeTypeName("#define SDL_IMAGE_PATCHLEVEL 3")]
+        public const int SDL_IMAGE_PATCHLEVEL = 3;
 
         [NativeTypeName("#define SDL_IMAGE_COMPILEDVERSION SDL_VERSIONNUM(SDL_IMAGE_MAJOR_VERSION, SDL_IMAGE_MINOR_VERSION, SDL_IMAGE_PATCHLEVEL)")]
-        public const int SDL_IMAGE_COMPILEDVERSION = ((2) * 1000 + (6) * 100 + (2));
+        public const int SDL_IMAGE_COMPILEDVERSION = ((2) * 1000 + (6) * 100 + (3));
 
         [NativeTypeName("#define IMG_SetError SDL_SetError")]
-        public static readonly delegate*<sbyte*, int> IMG_SetError = &SDL.SetError;
+        public static int SetError(sbyte* fmt) => SDL.SetError(fmt, __arglist());
 
         [NativeTypeName("#define IMG_GetError SDL_GetError")]
-        public static readonly delegate*<sbyte*> IMG_GetError = &SDL.GetError;
+        public static sbyte* GetError() => SDL.GetError();
     }
 }

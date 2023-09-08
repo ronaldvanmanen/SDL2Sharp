@@ -24,7 +24,7 @@ using System.Diagnostics;
 namespace SDL2Sharp.Interop
 {
     /// <summary>Defines the type of a member as it was used in the native signature.</summary>
-    [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.ReturnValue, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     [Conditional("DEBUG")]
     internal sealed class NativeTypeNameAttribute : Attribute
     {

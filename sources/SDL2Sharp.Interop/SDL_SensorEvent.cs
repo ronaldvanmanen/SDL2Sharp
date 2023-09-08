@@ -31,7 +31,7 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("Sint32")]
         public int which;
 
-        [NativeTypeName("float [6]")]
+        [NativeTypeName("float[6]")]
         public fixed float data[6];
 
         [NativeTypeName("Uint64")]

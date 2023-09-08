@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,12 +20,8 @@
 
 namespace SDL2Sharp.Interop
 {
-    public enum SDL_DisplayEventID
+    public static unsafe partial class SDL
     {
-        SDL_DISPLAYEVENT_NONE,
-        SDL_DISPLAYEVENT_ORIENTATION,
-        SDL_DISPLAYEVENT_CONNECTED,
-        SDL_DISPLAYEVENT_DISCONNECTED,
-        SDL_DISPLAYEVENT_MOVED,
+        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> Blit = &UpperBlit;
     }
 }

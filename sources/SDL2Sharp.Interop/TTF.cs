@@ -303,8 +303,8 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_TTF_MINOR_VERSION 20")]
         public const int SDL_TTF_MINOR_VERSION = 20;
 
-        [NativeTypeName("#define SDL_TTF_PATCHLEVEL 1")]
-        public const int SDL_TTF_PATCHLEVEL = 1;
+        [NativeTypeName("#define SDL_TTF_PATCHLEVEL 2")]
+        public const int SDL_TTF_PATCHLEVEL = 2;
 
         [NativeTypeName("#define TTF_MAJOR_VERSION SDL_TTF_MAJOR_VERSION")]
         public const int TTF_MAJOR_VERSION = 2;
@@ -313,10 +313,10 @@ namespace SDL2Sharp.Interop
         public const int TTF_MINOR_VERSION = 20;
 
         [NativeTypeName("#define TTF_PATCHLEVEL SDL_TTF_PATCHLEVEL")]
-        public const int TTF_PATCHLEVEL = 1;
+        public const int TTF_PATCHLEVEL = 2;
 
         [NativeTypeName("#define SDL_TTF_COMPILEDVERSION SDL_VERSIONNUM(SDL_TTF_MAJOR_VERSION, SDL_TTF_MINOR_VERSION, SDL_TTF_PATCHLEVEL)")]
-        public const int SDL_TTF_COMPILEDVERSION = ((2) * 1000 + (20) * 100 + (1));
+        public const int SDL_TTF_COMPILEDVERSION = ((2) * 1000 + (20) * 100 + (2));
 
         [NativeTypeName("#define UNICODE_BOM_NATIVE 0xFEFF")]
         public const int UNICODE_BOM_NATIVE = 0xFEFF;
@@ -364,9 +364,9 @@ namespace SDL2Sharp.Interop
         public const int TTF_WRAPPED_ALIGN_RIGHT = 2;
 
         [NativeTypeName("#define TTF_SetError SDL_SetError")]
-        public static readonly delegate*<sbyte*, int> SetError = &SDL.SetError;
+        public static int SetError(sbyte* fmt) => SDL.SetError(fmt, __arglist());
 
         [NativeTypeName("#define TTF_GetError SDL_GetError")]
-        public static readonly delegate*<sbyte*> GetError = &SDL.GetError;
+        public static sbyte* GetError() => SDL.GetError();
     }
 }

@@ -42,22 +42,22 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("Uint32")]
         public uint type;
 
-        [NativeTypeName("union (anonymous union at C:/Users/Ronald/.nuget/packages/libsdl2/2.24.0-2986998811/lib/native/include/SDL_rwops.h:94:5)")]
+        [NativeTypeName("__AnonymousRecord_SDL_rwops_L94_C5")]
         public _hidden_e__Union hidden;
 
         [StructLayout(LayoutKind.Explicit)]
         public partial struct _hidden_e__Union
         {
             [FieldOffset(0)]
-            [NativeTypeName("struct (anonymous struct at C:/Users/Ronald/.nuget/packages/libsdl2/2.24.0-2986998811/lib/native/include/SDL_rwops.h:102:9)")]
+            [NativeTypeName("__AnonymousRecord_SDL_rwops_L102_C9")]
             public _windowsio_e__Struct windowsio;
 
             [FieldOffset(0)]
-            [NativeTypeName("struct (anonymous struct at C:/Users/Ronald/.nuget/packages/libsdl2/2.24.0-2986998811/lib/native/include/SDL_rwops.h:122:9)")]
+            [NativeTypeName("__AnonymousRecord_SDL_rwops_L122_C9")]
             public _mem_e__Struct mem;
 
             [FieldOffset(0)]
-            [NativeTypeName("struct (anonymous struct at C:/Users/Ronald/.nuget/packages/libsdl2/2.24.0-2986998811/lib/native/include/SDL_rwops.h:128:9)")]
+            [NativeTypeName("__AnonymousRecord_SDL_rwops_L128_C9")]
             public _unknown_e__Struct unknown;
 
             public unsafe partial struct _windowsio_e__Struct
@@ -66,7 +66,7 @@ namespace SDL2Sharp.Interop
 
                 public void* h;
 
-                [NativeTypeName("struct (anonymous struct at C:/Users/Ronald/.nuget/packages/libsdl2/2.24.0-2986998811/lib/native/include/SDL_rwops.h:106:13)")]
+                [NativeTypeName("__AnonymousRecord_SDL_rwops_L106_C13")]
                 public _buffer_e__Struct buffer;
 
                 public unsafe partial struct _buffer_e__Struct

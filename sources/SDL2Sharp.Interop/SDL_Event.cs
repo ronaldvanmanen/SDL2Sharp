@@ -120,7 +120,7 @@ namespace SDL2Sharp.Interop
         public SDL_DropEvent drop;
 
         [FieldOffset(0)]
-        [NativeTypeName("Uint8 [56]")]
+        [NativeTypeName("Uint8[56]")]
         public fixed byte padding[56];
     }
 }

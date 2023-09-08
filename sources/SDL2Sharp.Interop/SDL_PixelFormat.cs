@@ -33,7 +33,7 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("Uint8")]
         public byte BytesPerPixel;
 
-        [NativeTypeName("Uint8 [2]")]
+        [NativeTypeName("Uint8[2]")]
         public fixed byte padding[2];
 
         [NativeTypeName("Uint32")]

@@ -31,7 +31,7 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("Uint32")]
         public uint num_texture_formats;
 
-        [NativeTypeName("Uint32 [16]")]
+        [NativeTypeName("Uint32[16]")]
         public fixed uint texture_formats[16];
 
         public int max_texture_width;

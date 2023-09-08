@@ -31,7 +31,7 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("Uint32")]
         public uint windowID;
 
-        [NativeTypeName("char [32]")]
+        [NativeTypeName("char[32]")]
         public fixed sbyte text[32];
 
         [NativeTypeName("Sint32")]

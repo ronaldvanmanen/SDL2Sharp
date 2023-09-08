@@ -34,7 +34,7 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("Sint32")]
         public int sensor;
 
-        [NativeTypeName("float [3]")]
+        [NativeTypeName("float[3]")]
         public fixed float data[3];
 
         [NativeTypeName("Uint64")]
