@@ -61,7 +61,7 @@ jobs:
     - run: ./scripts/cibuild.sh --configuration ${{ matrix.configuration }} --architecture ${{ matrix.architecture }}
       shell: bash
       env: 
-        OVERRIDE_RUNTIME_IDENTIFIER: win-${{ matrix.architecture }}
+        OVERRIDE_RUNTIME_IDENTIFIER: linux-${{ matrix.architecture }}
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.os }}_${{ matrix.configuration }}_${{ matrix.architecture }}

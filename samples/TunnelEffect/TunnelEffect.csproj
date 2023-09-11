@@ -3,8 +3,13 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <ApplicationIcon />
-    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- TODO: https://github.com/dotnet/runtime/issues/3828 -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <NoWarn>$(NoWarn);NETSDK1074</NoWarn>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NETSDK1074</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
