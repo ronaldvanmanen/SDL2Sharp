@@ -40,11 +40,13 @@ namespace SDL2Sharp.Interop
         {
             return TryResolveLibrary(libraryName, assembly, searchPath, out var nativeLibrary)
                 ? nativeLibrary
-                : libraryName.Equals("SDL2.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
+                : libraryName.Equals("SDL2") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
+                ? nativeLibrary
+                : libraryName.Equals("SDL2_image") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
+                ? nativeLibrary
+                : libraryName.Equals("SDL2_ttf") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
                 ? nativeLibrary
                 : libraryName.Equals("libfreetype-6.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
-                ? nativeLibrary
-                : libraryName.Equals("SDL2_ttf.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
                 ? nativeLibrary
                 : libraryName.Equals("zlib1.dll") && TryResolveNativeLibrary(libraryName, assembly, searchPath, out nativeLibrary)
                 ? nativeLibrary
