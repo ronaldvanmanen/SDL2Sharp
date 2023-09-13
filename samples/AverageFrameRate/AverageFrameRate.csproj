@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- TODO: https://github.com/dotnet/runtime/issues/3828 -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <NoWarn>$(NoWarn);NETSDK1074</NoWarn>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NETSDK1074</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="lazy.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
+  </ItemGroup>
+
+</Project>

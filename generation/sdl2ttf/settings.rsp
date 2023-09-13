@@ -1,0 +1,9 @@
+@..\settings.rsp
+--file
+SDL_ttf.h
+--libraryPath
+SDL2_ttf
+--methodClassName
+TTF
+--prefixStrip
+TTF_

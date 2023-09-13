@@ -1,0 +1,88 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch AverageFrameRate",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/AverageFrameRate/Debug/net6.0/AverageFrameRate",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/AverageFrameRate/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch BitmapViewer",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/Debug/net6.0/BitmapViewer",
+            "args": ["Sample.bmp"],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch ParticleSystem",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/ParticleSystem/Debug/net6.0/ParticleSystem",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/ParticleSystem/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch PlasmaFractal",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/PlasmaFractal/Debug/net6.0/PlasmaFractal",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/PlasmaFractal/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch RayTracer",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/RayTracer/Debug/net6.0/RayTracer",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/RayTracer/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch SwirlStars",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/SwirlStars/Debug/net6.0/SwirlStars",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/SwirlStars/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch TunnelEffect",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/TunnelEffect/Debug/net6.0/TunnelEffect",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/TunnelEffect/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch WavePlayer",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0/WavePlayer",
+            "args": [],
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+    ]
+}

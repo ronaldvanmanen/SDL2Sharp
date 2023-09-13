@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Platforms>AnyCPU</Platforms>
+    <Description>Provides type safe wrappers for SDL2 bindings written in C#.</Description>
+    <PackageTags>SDL2</PackageTags>
+  </PropertyGroup>
+
+</Project>
