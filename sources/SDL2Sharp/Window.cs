@@ -247,11 +247,9 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
-
-                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+                const uint flag = (uint)SDL_WindowFlags.SDL_WINDOW_BORDERLESS;
                 var flags = SDL.GetWindowFlags(_handle);
-                return (flags & flag) != 0;
+                return (flags & flag) == 0;
             }
             set
             {
@@ -260,6 +258,7 @@ namespace SDL2Sharp
                 SDL.SetWindowBordered(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
         }
+
 
         public bool IsResizable
         {
@@ -357,9 +356,12 @@ namespace SDL2Sharp
                     SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
                 );
 
-                Error.ThrowOnFailure(
-                    SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
-                );
+                if (!IsBordered)
+                {
+                    Error.ThrowOnFailure(
+                        SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
+                    );
+                }
             }
 
             _all.Add(this);

@@ -29,7 +29,7 @@ namespace SDL2Sharp.UnitTests
         public static void CreatePackedTextureOfArgb8888()
         {
             using var window = new Window("TextureTests", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer(RendererFlags.Accelerated);
+            using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
             var white = new Argb8888(255, 255, 255, 255);
             texture.WithLock(image =>
