@@ -6,6 +6,8 @@ on:
       - 'main'
       - 'releases/**'
       - 'develop'
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - 'main'
