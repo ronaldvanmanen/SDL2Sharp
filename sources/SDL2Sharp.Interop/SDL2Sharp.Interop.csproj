@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard6.0</TargetFramework>
     <Platforms>AnyCPU</Platforms>
     <Description>Provides SDL2 bindings written in C#.</Description>
+    <PackageTags>SDL2</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

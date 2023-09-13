@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU</Platforms>
     <Description>Provides type safe wrappers for SDL2 bindings written in C#.</Description>
     <PackageTags>SDL2</PackageTags>
