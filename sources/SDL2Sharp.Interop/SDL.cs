@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -330,19 +330,19 @@ namespace SDL2Sharp.Interop
         public static extern int PushEvent(SDL_Event* @event);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetEventFilter", ExactSpelling = true)]
-        public static extern void SetEventFilter([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
+        public static extern void SetEventFilter([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetEventFilter", ExactSpelling = true)]
-        public static extern SDL_bool GetEventFilter([NativeTypeName("SDL_EventFilter *")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int>* filter, void** userdata);
+        public static extern SDL_bool GetEventFilter([NativeTypeName("SDL_EventFilter *")] IntPtr* filter, void** userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddEventWatch", ExactSpelling = true)]
-        public static extern void AddEventWatch([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
+        public static extern void AddEventWatch([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelEventWatch", ExactSpelling = true)]
-        public static extern void DelEventWatch([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
+        public static extern void DelEventWatch([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FilterEvents", ExactSpelling = true)]
-        public static extern void FilterEvents([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
+        public static extern void FilterEvents([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_EventState", ExactSpelling = true)]
         [return: NativeTypeName("Uint8")]
@@ -402,10 +402,10 @@ namespace SDL2Sharp.Interop
         public static extern SDL_bool GetHintBoolean([NativeTypeName("const char *")] sbyte* name, SDL_bool default_value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddHintCallback", ExactSpelling = true)]
-        public static extern void AddHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] delegate* unmanaged[Cdecl]<void*, sbyte*, sbyte*, sbyte*, void> callback, void* userdata);
+        public static extern void AddHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] IntPtr callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelHintCallback", ExactSpelling = true)]
-        public static extern void DelHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] delegate* unmanaged[Cdecl]<void*, sbyte*, sbyte*, sbyte*, void> callback, void* userdata);
+        public static extern void DelHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] IntPtr callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ClearHints", ExactSpelling = true)]
         public static extern void ClearHints();
@@ -1644,20 +1644,20 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWread", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint RWread(SDL_RWops* context, void* ptr, [NativeTypeName("size_t")] nuint size, [NativeTypeName("size_t")] nuint maxnum);
+        public static extern UIntPtr RWread(SDL_RWops* context, void* ptr, [NativeTypeName("size_t")] UIntPtr size, [NativeTypeName("size_t")] UIntPtr maxnum);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWwrite", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint RWwrite(SDL_RWops* context, [NativeTypeName("const void *")] void* ptr, [NativeTypeName("size_t")] nuint size, [NativeTypeName("size_t")] nuint num);
+        public static extern UIntPtr RWwrite(SDL_RWops* context, [NativeTypeName("const void *")] void* ptr, [NativeTypeName("size_t")] UIntPtr size, [NativeTypeName("size_t")] UIntPtr num);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWclose", ExactSpelling = true)]
         public static extern int RWclose(SDL_RWops* context);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadFile_RW", ExactSpelling = true)]
-        public static extern void* LoadFile_RW(SDL_RWops* src, [NativeTypeName("size_t *")] nuint* datasize, int freesrc);
+        public static extern void* LoadFile_RW(SDL_RWops* src, [NativeTypeName("size_t *")] UIntPtr* datasize, int freesrc);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadFile", ExactSpelling = true)]
-        public static extern void* LoadFile([NativeTypeName("const char *")] sbyte* file, [NativeTypeName("size_t *")] nuint* datasize);
+        public static extern void* LoadFile([NativeTypeName("const char *")] sbyte* file, [NativeTypeName("size_t *")] UIntPtr* datasize);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ReadU8", ExactSpelling = true)]
         [return: NativeTypeName("Uint8")]
@@ -1689,31 +1689,31 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteU8", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteU8(SDL_RWops* dst, [NativeTypeName("Uint8")] byte value);
+        public static extern UIntPtr WriteU8(SDL_RWops* dst, [NativeTypeName("Uint8")] byte value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteLE16", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteLE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
+        public static extern UIntPtr WriteLE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteBE16", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteBE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
+        public static extern UIntPtr WriteBE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteLE32", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteLE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
+        public static extern UIntPtr WriteLE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteBE32", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteBE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
+        public static extern UIntPtr WriteBE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteLE64", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteLE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
+        public static extern UIntPtr WriteLE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteBE64", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint WriteBE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
+        public static extern UIntPtr WriteBE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
 
         [NativeTypeName("#define SDL_RWOPS_UNKNOWN 0U")]
         public const uint SDL_RWOPS_UNKNOWN = 0U;
@@ -1743,25 +1743,25 @@ namespace SDL2Sharp.Interop
         public const int RW_SEEK_END = 2;
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_malloc", ExactSpelling = true)]
-        public static extern void* malloc([NativeTypeName("size_t")] nuint size);
+        public static extern void* malloc([NativeTypeName("size_t")] UIntPtr size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_calloc", ExactSpelling = true)]
-        public static extern void* calloc([NativeTypeName("size_t")] nuint nmemb, [NativeTypeName("size_t")] nuint size);
+        public static extern void* calloc([NativeTypeName("size_t")] UIntPtr nmemb, [NativeTypeName("size_t")] UIntPtr size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_realloc", ExactSpelling = true)]
-        public static extern void* realloc(void* mem, [NativeTypeName("size_t")] nuint size);
+        public static extern void* realloc(void* mem, [NativeTypeName("size_t")] UIntPtr size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_free", ExactSpelling = true)]
         public static extern void free(void* mem);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetOriginalMemoryFunctions", ExactSpelling = true)]
-        public static extern void GetOriginalMemoryFunctions([NativeTypeName("SDL_malloc_func *")] delegate* unmanaged[Cdecl]<nuint, void*>* malloc_func, [NativeTypeName("SDL_calloc_func *")] delegate* unmanaged[Cdecl]<nuint, nuint, void*>* calloc_func, [NativeTypeName("SDL_realloc_func *")] delegate* unmanaged[Cdecl]<void*, nuint, void*>* realloc_func, [NativeTypeName("SDL_free_func *")] delegate* unmanaged[Cdecl]<void*, void>* free_func);
+        public static extern void GetOriginalMemoryFunctions([NativeTypeName("SDL_malloc_func *")] IntPtr* malloc_func, [NativeTypeName("SDL_calloc_func *")] IntPtr* calloc_func, [NativeTypeName("SDL_realloc_func *")] IntPtr* realloc_func, [NativeTypeName("SDL_free_func *")] IntPtr* free_func);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetMemoryFunctions", ExactSpelling = true)]
-        public static extern void GetMemoryFunctions([NativeTypeName("SDL_malloc_func *")] delegate* unmanaged[Cdecl]<nuint, void*>* malloc_func, [NativeTypeName("SDL_calloc_func *")] delegate* unmanaged[Cdecl]<nuint, nuint, void*>* calloc_func, [NativeTypeName("SDL_realloc_func *")] delegate* unmanaged[Cdecl]<void*, nuint, void*>* realloc_func, [NativeTypeName("SDL_free_func *")] delegate* unmanaged[Cdecl]<void*, void>* free_func);
+        public static extern void GetMemoryFunctions([NativeTypeName("SDL_malloc_func *")] IntPtr* malloc_func, [NativeTypeName("SDL_calloc_func *")] IntPtr* calloc_func, [NativeTypeName("SDL_realloc_func *")] IntPtr* realloc_func, [NativeTypeName("SDL_free_func *")] IntPtr* free_func);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetMemoryFunctions", ExactSpelling = true)]
-        public static extern int SetMemoryFunctions([NativeTypeName("SDL_malloc_func")] delegate* unmanaged[Cdecl]<nuint, void*> malloc_func, [NativeTypeName("SDL_calloc_func")] delegate* unmanaged[Cdecl]<nuint, nuint, void*> calloc_func, [NativeTypeName("SDL_realloc_func")] delegate* unmanaged[Cdecl]<void*, nuint, void*> realloc_func, [NativeTypeName("SDL_free_func")] delegate* unmanaged[Cdecl]<void*, void> free_func);
+        public static extern int SetMemoryFunctions([NativeTypeName("SDL_malloc_func")] IntPtr malloc_func, [NativeTypeName("SDL_calloc_func")] IntPtr calloc_func, [NativeTypeName("SDL_realloc_func")] IntPtr realloc_func, [NativeTypeName("SDL_free_func")] IntPtr free_func);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumAllocations", ExactSpelling = true)]
         public static extern int GetNumAllocations();
@@ -1779,11 +1779,11 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_iconv", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern nuint iconv([NativeTypeName("SDL_iconv_t")] _SDL_iconv_t* cd, [NativeTypeName("const char **")] sbyte** inbuf, [NativeTypeName("size_t *")] nuint* inbytesleft, [NativeTypeName("char **")] sbyte** outbuf, [NativeTypeName("size_t *")] nuint* outbytesleft);
+        public static extern UIntPtr iconv([NativeTypeName("SDL_iconv_t")] _SDL_iconv_t* cd, [NativeTypeName("const char **")] sbyte** inbuf, [NativeTypeName("size_t *")] UIntPtr* inbytesleft, [NativeTypeName("char **")] sbyte** outbuf, [NativeTypeName("size_t *")] UIntPtr* outbytesleft);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_iconv_string", ExactSpelling = true)]
         [return: NativeTypeName("char *")]
-        public static extern sbyte* iconv_string([NativeTypeName("const char *")] sbyte* tocode, [NativeTypeName("const char *")] sbyte* fromcode, [NativeTypeName("const char *")] sbyte* inbuf, [NativeTypeName("size_t")] nuint inbytesleft);
+        public static extern sbyte* iconv_string([NativeTypeName("const char *")] sbyte* tocode, [NativeTypeName("const char *")] sbyte* fromcode, [NativeTypeName("const char *")] sbyte* inbuf, [NativeTypeName("size_t")] UIntPtr inbytesleft);
 
         [NativeTypeName("#define SDL_SIZE_MAX SIZE_MAX")]
         public const ulong SDL_SIZE_MAX = 0xffffffffffffffffUL;
@@ -1867,16 +1867,16 @@ namespace SDL2Sharp.Interop
         public const double M_PI = 3.14159265358979323846264338327950288;
 
         [NativeTypeName("#define SDL_ICONV_ERROR (size_t)-1")]
-        public static readonly nuint SDL_ICONV_ERROR = unchecked((nuint)(-1));
+        public static readonly UIntPtr SDL_ICONV_ERROR = (UIntPtr)(-1);
 
         [NativeTypeName("#define SDL_ICONV_E2BIG (size_t)-2")]
-        public static readonly nuint SDL_ICONV_E2BIG = unchecked((nuint)(-2));
+        public static readonly UIntPtr SDL_ICONV_E2BIG = (UIntPtr)(-2);
 
         [NativeTypeName("#define SDL_ICONV_EILSEQ (size_t)-3")]
-        public static readonly nuint SDL_ICONV_EILSEQ = unchecked((nuint)(-3));
+        public static readonly UIntPtr SDL_ICONV_EILSEQ = (UIntPtr)(-3);
 
         [NativeTypeName("#define SDL_ICONV_EINVAL (size_t)-4")]
-        public static readonly nuint SDL_ICONV_EINVAL = unchecked((nuint)(-4));
+        public static readonly UIntPtr SDL_ICONV_EINVAL = (UIntPtr)(-4);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateRGBSurface", ExactSpelling = true)]
         public static extern SDL_Surface* CreateRGBSurface([NativeTypeName("Uint32")] uint flags, int width, int height, int depth, [NativeTypeName("Uint32")] uint Rmask, [NativeTypeName("Uint32")] uint Gmask, [NativeTypeName("Uint32")] uint Bmask, [NativeTypeName("Uint32")] uint Amask);
@@ -2010,14 +2010,8 @@ namespace SDL2Sharp.Interop
         [NativeTypeName("#define SDL_SIMD_ALIGNED 0x00000008")]
         public const int SDL_SIMD_ALIGNED = 0x00000008;
 
-        [NativeTypeName("#define SDL_BlitSurface SDL_UpperBlit")]
-        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> SDL_BlitSurface = &UpperBlit;
-
-        [NativeTypeName("#define SDL_BlitScaled SDL_UpperBlitScaled")]
-        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> SDL_BlitScaled = &UpperBlitScaled;
-
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowsMessageHook", ExactSpelling = true)]
-        public static extern void SetWindowsMessageHook([NativeTypeName("SDL_WindowsMessageHook")] delegate* unmanaged[Cdecl]<void*, void*, uint, ulong, long, void> callback, void* userdata);
+        public static extern void SetWindowsMessageHook([NativeTypeName("SDL_WindowsMessageHook")] IntPtr callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Direct3D9GetAdapterIndex", ExactSpelling = true)]
         public static extern int Direct3D9GetAdapterIndex(int displayIndex);
@@ -2144,7 +2138,7 @@ namespace SDL2Sharp.Interop
         public static extern int GetWindowDisplayMode(SDL_Window* window, SDL_DisplayMode* mode);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowICCProfile", ExactSpelling = true)]
-        public static extern void* GetWindowICCProfile(SDL_Window* window, [NativeTypeName("size_t *")] nuint* size);
+        public static extern void* GetWindowICCProfile(SDL_Window* window, [NativeTypeName("size_t *")] UIntPtr* size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowPixelFormat", ExactSpelling = true)]
         [return: NativeTypeName("Uint32")]
@@ -2311,7 +2305,7 @@ namespace SDL2Sharp.Interop
         public static extern int GetWindowGammaRamp(SDL_Window* window, [NativeTypeName("Uint16 *")] ushort* red, [NativeTypeName("Uint16 *")] ushort* green, [NativeTypeName("Uint16 *")] ushort* blue);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowHitTest", ExactSpelling = true)]
-        public static extern int SetWindowHitTest(SDL_Window* window, [NativeTypeName("SDL_HitTest")] delegate* unmanaged[Cdecl]<SDL_Window*, SDL_Point*, void*, SDL_HitTestResult> callback, void* callback_data);
+        public static extern int SetWindowHitTest(SDL_Window* window, [NativeTypeName("SDL_HitTest")] IntPtr callback, void* callback_data);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FlashWindow", ExactSpelling = true)]
         public static extern int FlashWindow(SDL_Window* window, SDL_FlashOperation operation);

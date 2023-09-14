@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,10 +18,11 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Runtime.InteropServices;
-
 namespace SDL2Sharp.Interop
 {
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate int SDL_EventFilter(void* userdata, SDL_Event* @event);
+    public static unsafe partial class SDL
+    {
+        [NativeTypeName("#define SDL_BlitScaled SDL_UpperBlitScaled")]
+        public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> BlitScaled = &UpperBlitScaled;
+    }
 }

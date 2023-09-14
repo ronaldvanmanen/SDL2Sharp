@@ -23,5 +23,5 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Interop
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate int SDL_EventFilter(void* userdata, SDL_Event* @event);
+    public unsafe delegate void SDL_WindowsMessageHook(void* userdata, void* hWnd, [NativeTypeName("unsigned int")] uint message, [NativeTypeName("Uint64")] ulong wParam, [NativeTypeName("Sint64")] long lParam);
 }

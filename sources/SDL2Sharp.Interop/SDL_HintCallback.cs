@@ -23,5 +23,5 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Interop
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate int SDL_EventFilter(void* userdata, SDL_Event* @event);
+    public unsafe delegate void SDL_HintCallback(void* userdata, [NativeTypeName("const char *")] sbyte* name, [NativeTypeName("const char *")] sbyte* oldValue, [NativeTypeName("const char *")] sbyte* newValue);
 }
