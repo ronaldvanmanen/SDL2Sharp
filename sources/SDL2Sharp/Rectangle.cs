@@ -20,5 +20,22 @@
 
 namespace SDL2Sharp
 {
-    public readonly record struct Rectangle(int X, int Y, int Width, int Height);
+    public readonly record struct Rectangle
+    {
+        public Rectangle(int x, int y, int width, int height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+
+        public readonly int X { get; }
+
+        public readonly int Y { get; }
+
+        public readonly int Width { get; }
+
+        public readonly int Height { get; }
+    }
 }

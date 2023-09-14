@@ -20,7 +20,6 @@
 
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 
@@ -75,7 +74,8 @@ namespace SDL2Sharp
                 OnInitializing();
                 Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
                 Error.ThrowOnFailure(TTF.Init());
-                SDL.SetEventFilter(&EventFilter, null);
+                var eventFilterCallback = Marshal.GetFunctionPointerForDelegate(EventFilterCallback);
+                SDL.SetEventFilter(eventFilterCallback, null);
                 OnInitialized();
 
                 while (true)
@@ -118,7 +118,7 @@ namespace SDL2Sharp
             finally
             {
                 OnQuiting();
-                SDL.SetEventFilter(null, null);
+                SDL.SetEventFilter(IntPtr.Zero, null);
                 TTF.Quit();
                 SDL.Quit();
                 OnQuited();
@@ -192,8 +192,10 @@ namespace SDL2Sharp
             }
         }
 
-        [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
-        private static int EventFilter(void* userdata, SDL_Event* @event)
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int EventFilterCallbackDelegate(void* userdata, SDL_Event* @event);
+
+        private static int EventFilterCallback(void* userdata, SDL_Event* @event)
         {
             var eventType = (SDL_EventType)@event->type;
             switch (eventType)

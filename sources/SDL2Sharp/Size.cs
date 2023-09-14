@@ -20,5 +20,16 @@
 
 namespace SDL2Sharp
 {
-    public readonly record struct Size(int Width, int Height);
+    public readonly record struct Size
+    {
+        public Size(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
+
+        public readonly int Width { get; }
+
+        public readonly int Height { get; }
+    }
 }
