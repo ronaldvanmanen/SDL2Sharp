@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Diagnostics.CodeAnalysis;
+using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -84,7 +84,7 @@ namespace SDL2Sharp.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override readonly bool Equals([NotNullWhen(true)] object? obj)
+        public override readonly bool Equals(object? obj)
         {
             if (obj is Rgb32f other)
             {

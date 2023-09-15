@@ -358,8 +358,10 @@ namespace SDL2Sharp
 
                 if (!IsBordered)
                 {
+                    var hitTestCallback = Marshal.GetFunctionPointerForDelegate(HitTestCallback);
+
                     Error.ThrowOnFailure(
-                        SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
+                        SDL.SetWindowHitTest(_handle, hitTestCallback, null)
                     );
                 }
             }
@@ -447,17 +449,17 @@ namespace SDL2Sharp
             return renderer;
         }
 
-        public bool TryCreateRenderer([NotNullWhen(true)] out Renderer renderer)
+        public bool TryCreateRenderer(out Renderer renderer)
         {
             return TryCreateRenderer(RendererFlags.None, out renderer);
         }
 
-        public bool TryCreateRenderer(RendererFlags flags, [NotNullWhen(true)] out Renderer renderer)
+        public bool TryCreateRenderer(RendererFlags flags, out Renderer renderer)
         {
             return TryCreateRenderer(flags, out renderer, out _);
         }
 
-        public bool TryCreateRenderer(RendererFlags flags, [NotNullWhen(true)] out Renderer renderer, [NotNullWhen(false)] out Error error)
+        public bool TryCreateRenderer(RendererFlags flags, out Renderer renderer, out Error error)
         {
             ThrowWhenDisposed();
 
@@ -698,7 +700,9 @@ namespace SDL2Sharp
             MouseWheel?.Invoke(this, eventArgs);
         }
 
-        [UnmanagedCallersOnly(CallConvs = new Type[] { typeof(CallConvCdecl) })]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int HitTestCallbackDelegate(SDL_Window* win, SDL_Point* area, void* data);
+
         private static unsafe SDL_HitTestResult HitTestCallback(SDL_Window* win, SDL_Point* area, void* data)
         {
             int x = area->x;

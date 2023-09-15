@@ -20,5 +20,16 @@
 
 namespace SDL2Sharp
 {
-    public readonly record struct Point(int X, int Y);
+    public readonly record struct Point
+    {
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public readonly int X { get; }
+
+        public readonly int Y { get; }
+    }
 }

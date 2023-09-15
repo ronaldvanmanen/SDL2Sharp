@@ -18,6 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
+
 namespace SDL2Sharp.Interop
 {
     public unsafe partial struct SDL_VirtualJoystickDesc
@@ -58,21 +60,21 @@ namespace SDL2Sharp.Interop
         public void* userdata;
 
         [NativeTypeName("void (*)(void *) __attribute__((cdecl))")]
-        public delegate* unmanaged[Cdecl]<void*, void> Update;
+        public IntPtr Update;
 
         [NativeTypeName("void (*)(void *, int) __attribute__((cdecl))")]
-        public delegate* unmanaged[Cdecl]<void*, int, void> SetPlayerIndex;
+        public IntPtr SetPlayerIndex;
 
         [NativeTypeName("int (*)(void *, Uint16, Uint16) __attribute__((cdecl))")]
-        public delegate* unmanaged[Cdecl]<void*, ushort, ushort, int> Rumble;
+        public IntPtr Rumble;
 
         [NativeTypeName("int (*)(void *, Uint16, Uint16) __attribute__((cdecl))")]
-        public delegate* unmanaged[Cdecl]<void*, ushort, ushort, int> RumbleTriggers;
+        public IntPtr RumbleTriggers;
 
         [NativeTypeName("int (*)(void *, Uint8, Uint8, Uint8) __attribute__((cdecl))")]
-        public delegate* unmanaged[Cdecl]<void*, byte, byte, byte, int> SetLED;
+        public IntPtr SetLED;
 
         [NativeTypeName("int (*)(void *, const void *, int) __attribute__((cdecl))")]
-        public delegate* unmanaged[Cdecl]<void*, void*, int, int> SendEffect;
+        public IntPtr SendEffect;
     }
 }
