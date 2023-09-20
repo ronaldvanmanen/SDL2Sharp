@@ -85,7 +85,7 @@ function Restore() {
 
 function Test() {
   $logFile = Join-Path -Path $LogDir -ChildPath "$configuration\test.binlog"
-  & dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution"
+  & dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution" -- RunConfiguration.DisableAppDomain=true
   if ($LastExitCode -ne 0) {
     throw "'Test' failed for '$solution'"
   }

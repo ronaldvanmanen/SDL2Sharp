@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\sources\SDL2Sharp\SDL2Sharp.csproj" />
   </ItemGroup>
 
