@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 
@@ -31,11 +30,13 @@ namespace SDL2Sharp
 
         private AudioDeviceCallback _callback = null!;
 
+        private UnmanagedAudioDeviceCallback _unmanagedCallback = null!;
+
         private SDL_AudioSpec _obtainedSpec;
 
         private object _userdata = null!;
 
-        private GCHandle _handle = default;
+        private GCHandle _unmanagedUserdata = default;
 
         private bool _disposed = false;
 
@@ -168,11 +169,11 @@ namespace SDL2Sharp
             {
                 _callback = callback;
                 _userdata = userdata;
-                _handle = GCHandle.Alloc(this, GCHandleType.Normal);
+                _unmanagedUserdata = GCHandle.Alloc(this, GCHandleType.Normal);
+                _unmanagedCallback = new UnmanagedAudioDeviceCallback(HandleUnmanagedAudioDeviceCallback);
 
-                var audioDeviceCallback = Marshal.GetFunctionPointerForDelegate(UnmanagedAudioDeviceCallback);
-                desiredSpec.callback = audioDeviceCallback;
-                desiredSpec.userdata = (void*)(IntPtr)_handle;
+                desiredSpec.callback = Marshal.GetFunctionPointerForDelegate(_unmanagedCallback);
+                desiredSpec.userdata = (void*)(IntPtr)_unmanagedUserdata;
             }
 
             fixed (SDL_AudioSpec* obtainedSpec = &_obtainedSpec)
@@ -199,12 +200,15 @@ namespace SDL2Sharp
             if (_deviceID != 0)
             {
                 SDL.CloseAudioDevice(_deviceID);
+
                 _deviceID = 0;
                 _callback = null!;
                 _userdata = null!;
-                if (_handle.IsAllocated)
+                _unmanagedCallback = null!;
+
+                if (_unmanagedUserdata.IsAllocated)
                 {
-                    _handle.Free();
+                    _unmanagedUserdata.Free();
                 }
             }
         }
@@ -274,9 +278,9 @@ namespace SDL2Sharp
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void UnmanagedAudioDeviceCallbackDelegate(void* userdata, byte* stream, int len);
+        private delegate void UnmanagedAudioDeviceCallback(void* userdata, byte* stream, int len);
 
-        private static void UnmanagedAudioDeviceCallback(void* userdata, byte* stream, int len)
+        private static void HandleUnmanagedAudioDeviceCallback(void* userdata, byte* stream, int len)
         {
             var audioDeviceHandle = GCHandle.FromIntPtr((IntPtr)userdata);
             if (audioDeviceHandle.Target is AudioDevice audioDevice)
