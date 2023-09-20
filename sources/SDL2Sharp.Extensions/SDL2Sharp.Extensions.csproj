@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-      <Platforms>AnyCPU</Platforms>
-      <Description>Provides extensions for type safe wrappers for SDL2 bindings written in C#.</Description>
-      <PackageTags>SDL2</PackageTags>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <Platforms>AnyCPU</Platforms>
+    <Description>Provides extensions for type safe wrappers for SDL2 bindings written in C#.</Description>
+    <PackageTags>SDL2</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
