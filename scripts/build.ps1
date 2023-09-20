@@ -1,6 +1,6 @@
 [CmdletBinding(PositionalBinding=$false)]
 Param(
-  [Parameter(Mandatory)][ValidateSet("x64", "x86")][string] $architecture = "",
+  [ValidateSet("x64", "x86")][string] $architecture = "",
   [switch] $build,
   [switch] $ci,
   [ValidateSet("Debug", "Release")][string] $configuration = "Debug",
@@ -75,7 +75,9 @@ function Pack() {
 
 function Restore() {
   $logFile = Join-Path -Path $LogDir -ChildPath "$configuration\restore.binlog"
-  & dotnet restore -v "$verbosity" -r win-$architecture /bl:"$logFile" /err "$properties" "$solution"
+  if ($architecture -ne "") {
+    & dotnet restore -v "$verbosity" -r win-$architecture /bl:"$logFile" /err "$properties" "$solution"
+  }
   & dotnet restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution"
   & dotnet tool restore -v "$verbosity"
   if ($LastExitCode -ne 0) {
