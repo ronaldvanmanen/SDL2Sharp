@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Platforms>AnyCPU</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Description>Provides extensions for type safe wrappers for SDL2 bindings written in C#.</Description>
     <PackageTags>SDL2</PackageTags>
   </PropertyGroup>
