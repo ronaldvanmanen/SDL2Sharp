@@ -80,7 +80,7 @@ namespace SDL2Sharp
 
                 while (true)
                 {
-                    SDL_Event @event;
+                    var @event = new SDL_Event();
 
                     while (0 != SDL.PollEvent(&@event))
                     {
