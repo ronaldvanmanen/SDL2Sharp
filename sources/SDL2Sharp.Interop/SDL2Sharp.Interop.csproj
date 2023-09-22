@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Platforms>AnyCPU</Platforms>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Description>Provides SDL2 bindings written in C#.</Description>
     <PackageTags>SDL2</PackageTags>
   </PropertyGroup>

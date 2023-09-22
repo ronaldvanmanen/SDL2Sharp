@@ -1,6 +1,6 @@
 [CmdletBinding(PositionalBinding=$false)]
 Param(
-  [Parameter(Mandatory)][ValidateSet("x64", "x86")][string] $architecture = "",
+  [ValidateSet("x64", "x86", "<auto>")][string] $architecture = "<auto>",
   [switch] $build,
   [switch] $ci,
   [ValidateSet("Debug", "Release")][string] $configuration = "Debug",
@@ -75,7 +75,6 @@ function Pack() {
 
 function Restore() {
   $logFile = Join-Path -Path $LogDir -ChildPath "$configuration\restore.binlog"
-  & dotnet restore -v "$verbosity" -r win-$architecture /bl:"$logFile" /err "$properties" "$solution"
   & dotnet restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution"
   & dotnet tool restore -v "$verbosity"
   if ($LastExitCode -ne 0) {
@@ -85,7 +84,7 @@ function Restore() {
 
 function Test() {
   $logFile = Join-Path -Path $LogDir -ChildPath "$configuration\test.binlog"
-  & dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution"
+  & dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "$properties" "$solution" -- RunConfiguration.DisableAppDomain=true
   if ($LastExitCode -ne 0) {
     throw "'Test' failed for '$solution'"
   }

@@ -156,9 +156,9 @@ function Test {
   logFile="$LogDir/$configuration/test.binlog"
 
   if [[ -z "$properties" ]]; then
-    dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "$solution"
+    dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "$solution" -- RunConfiguration.DisableAppDomain=true
   else
-    dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "${properties[@]}" "$solution"
+    dotnet test -c "$configuration" --no-build --no-restore -v "$verbosity" /bl:"$logFile" /err "${properties[@]}" "$solution" -- RunConfiguration.DisableAppDomain=true
   fi
 
   LASTEXITCODE=$?
