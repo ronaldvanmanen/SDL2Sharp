@@ -69,12 +69,14 @@ namespace SDL2Sharp
         {
             CommandLineArgs = commandLineArgs;
 
+            var eventFilterCallbackDelegate = new EventFilterCallbackDelegate(OnEventFilterCallback);
+
             try
             {
                 OnInitializing();
                 Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
                 Error.ThrowOnFailure(TTF.Init());
-                var eventFilterCallback = Marshal.GetFunctionPointerForDelegate(EventFilterCallback);
+                var eventFilterCallback = Marshal.GetFunctionPointerForDelegate(OnEventFilterCallback);
                 SDL.SetEventFilter(eventFilterCallback, null);
                 OnInitialized();
 
@@ -119,6 +121,7 @@ namespace SDL2Sharp
             {
                 OnQuiting();
                 SDL.SetEventFilter(IntPtr.Zero, null);
+                GC.KeepAlive(eventFilterCallbackDelegate);
                 TTF.Quit();
                 SDL.Quit();
                 OnQuited();
@@ -195,7 +198,7 @@ namespace SDL2Sharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int EventFilterCallbackDelegate(void* userdata, SDL_Event* @event);
 
-        private static int EventFilterCallback(void* userdata, SDL_Event* @event)
+        private static int OnEventFilterCallback(void* userdata, SDL_Event* @event)
         {
             var eventType = (SDL_EventType)@event->type;
             switch (eventType)

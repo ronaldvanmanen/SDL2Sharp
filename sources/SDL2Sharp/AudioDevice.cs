@@ -30,7 +30,7 @@ namespace SDL2Sharp
 
         private AudioDeviceCallback _callback = null!;
 
-        private UnmanagedAudioDeviceCallback _unmanagedCallback = null!;
+        private AudioDeviceCallbackDelegate _unmanagedCallback = null!;
 
         private SDL_AudioSpec _obtainedSpec;
 
@@ -170,7 +170,7 @@ namespace SDL2Sharp
                 _callback = callback;
                 _userdata = userdata;
                 _unmanagedUserdata = GCHandle.Alloc(this, GCHandleType.Normal);
-                _unmanagedCallback = new UnmanagedAudioDeviceCallback(HandleUnmanagedAudioDeviceCallback);
+                _unmanagedCallback = new AudioDeviceCallbackDelegate(OnAudioDeviceCallback);
 
                 desiredSpec.callback = Marshal.GetFunctionPointerForDelegate(_unmanagedCallback);
                 desiredSpec.userdata = (void*)(IntPtr)_unmanagedUserdata;
@@ -278,9 +278,9 @@ namespace SDL2Sharp
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void UnmanagedAudioDeviceCallback(void* userdata, byte* stream, int len);
+        private delegate void AudioDeviceCallbackDelegate(void* userdata, byte* stream, int len);
 
-        private static void HandleUnmanagedAudioDeviceCallback(void* userdata, byte* stream, int len)
+        private static void OnAudioDeviceCallback(void* userdata, byte* stream, int len)
         {
             var audioDeviceHandle = GCHandle.FromIntPtr((IntPtr)userdata);
             if (audioDeviceHandle.Target is AudioDevice audioDevice)
