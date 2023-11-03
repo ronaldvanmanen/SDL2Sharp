@@ -19,11 +19,9 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 
 namespace SDL2Sharp
@@ -73,6 +71,8 @@ namespace SDL2Sharp
         private static readonly List<Window> _all = new();
 
         private SDL_Window* _handle;
+
+        private readonly HitTestCallbackDelegate _hitTestCallback;
 
         public static IReadOnlyList<Window> All => _all;
 
@@ -358,11 +358,15 @@ namespace SDL2Sharp
 
                 if (!IsBordered)
                 {
-                    var hitTestCallback = Marshal.GetFunctionPointerForDelegate(HitTestCallback);
-
+                    _hitTestCallback = new HitTestCallbackDelegate(HitTestCallback);
+                    var hitTestCallback = Marshal.GetFunctionPointerForDelegate(_hitTestCallback);
                     Error.ThrowOnFailure(
                         SDL.SetWindowHitTest(_handle, hitTestCallback, null)
                     );
+                }
+                else
+                {
+                    _hitTestCallback = null!;
                 }
             }
 
@@ -701,7 +705,7 @@ namespace SDL2Sharp
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int HitTestCallbackDelegate(SDL_Window* win, SDL_Point* area, void* data);
+        private delegate SDL_HitTestResult HitTestCallbackDelegate(SDL_Window* win, SDL_Point* area, void* data);
 
         private static unsafe SDL_HitTestResult HitTestCallback(SDL_Window* win, SDL_Point* area, void* data)
         {
