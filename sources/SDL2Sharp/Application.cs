@@ -68,20 +68,20 @@ namespace SDL2Sharp
         public int Run(string[] commandLineArgs)
         {
             CommandLineArgs = commandLineArgs;
+            var @event = new SDL_Event();
+            var eventFilterCallback = new EventFilterCallbackDelegate(OnEventFilterCallback);
 
             try
             {
                 OnInitializing();
                 Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
                 Error.ThrowOnFailure(TTF.Init());
-                var eventFilterCallback = Marshal.GetFunctionPointerForDelegate(EventFilterCallback);
-                SDL.SetEventFilter(eventFilterCallback, null);
+                var eventFilterCallbackPointer = Marshal.GetFunctionPointerForDelegate(eventFilterCallback);
+                SDL.SetEventFilter(eventFilterCallbackPointer, null);
                 OnInitialized();
 
                 while (true)
                 {
-                    var @event = new SDL_Event();
-
                     while (0 != SDL.PollEvent(&@event))
                     {
                         var eventType = (SDL_EventType)@event.type;
@@ -117,8 +117,11 @@ namespace SDL2Sharp
             }
             finally
             {
-                OnQuiting();
                 SDL.SetEventFilter(IntPtr.Zero, null);
+                GC.KeepAlive(eventFilterCallback);
+                GC.KeepAlive(@event);
+
+                OnQuiting();
                 TTF.Quit();
                 SDL.Quit();
                 OnQuited();
@@ -195,7 +198,7 @@ namespace SDL2Sharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int EventFilterCallbackDelegate(void* userdata, SDL_Event* @event);
 
-        private static int EventFilterCallback(void* userdata, SDL_Event* @event)
+        private static int OnEventFilterCallback(void* userdata, SDL_Event* @event)
         {
             var eventType = (SDL_EventType)@event->type;
             switch (eventType)
