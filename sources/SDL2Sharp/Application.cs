@@ -76,7 +76,7 @@ namespace SDL2Sharp
                 OnInitializing();
                 Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
                 Error.ThrowOnFailure(TTF.Init());
-                var eventFilterCallbackPointer = Marshal.GetFunctionPointerForDelegate(OnEventFilterCallback);
+                var eventFilterCallbackPointer = Marshal.GetFunctionPointerForDelegate(eventFilterCallback);
                 SDL.SetEventFilter(eventFilterCallbackPointer, null);
                 OnInitialized();
 
