@@ -120,12 +120,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sdl2image", "sdl2image", "{
 		generation\sdl2image\settings.rsp = generation\sdl2image\settings.rsp
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{6B61E97E-DF1B-4AE2-A52D-47034759F00E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B61E97E-DF1B-4AE2-A52D-47034759F00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B61E97E-DF1B-4AE2-A52D-47034759F00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{648556E3-AFD4-4432-8424-89EED2126F82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{648556E3-AFD4-4432-8424-89EED2126F82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{648556E3-AFD4-4432-8424-89EED2126F82}.Release|Any CPU.ActiveCfg = Release|Any CPU
