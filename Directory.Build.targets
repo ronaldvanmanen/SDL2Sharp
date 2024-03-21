@@ -24,13 +24,13 @@
 
   <!-- Settings that are only set for executables -->
   <PropertyGroup Condition="'$(OutputType)' != 'Library'">
-    <PublishTrimmed>true</PublishTrimmed>
+    <PublishTrimmed Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">true</PublishTrimmed>
   </PropertyGroup>
 
   <!-- Settings that are only set for libraries -->
   <PropertyGroup Condition="'$(OutputType)' == 'Library'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">true</EnableTrimAnalyzer>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">true</IsTrimmable>
   </PropertyGroup>
   
   <!-- Package versions for package references across all projects -->

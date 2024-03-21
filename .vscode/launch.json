@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Nuke Build",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/sources/Build/bin/Debug/Build.exe",
+            "args": [ "--target", "${input:NukeBuildTargets}" ],
+            "cwd": "${workspaceFolder}/sources/Build/bin/Debug",
+            "stopAtEntry": false,
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Launch AverageFrameRate",
             "type": "coreclr",
             "request": "launch",
@@ -83,6 +93,23 @@
             "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0",
             "stopAtEntry": false,
             "console": "internalConsole"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "NukeBuildTargets",
+            "description": "Choose which target to build",
+            "default": "",
+            "type": "pickString",
+            "options": [
+                "Clean",
+                "Setup",
+                "Restore",
+                "Generate",
+                "Compile",
+                "Test",
+                "Pack",
+            ]
         }
     ]
 }
