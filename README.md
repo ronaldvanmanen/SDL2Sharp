@@ -27,13 +27,9 @@ SDL2Sharp uses C# as its primary development language and .NET 6 as its primary 
 
 ### Building
 
-SDL2Sharp requires the [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) and can be built simply with `dotnet build -c Release`.
+SDL2Sharp requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) and can be built simply with `dotnet build -c Release`.
 
-You can reproduce what the CI environment does by running `./scripts/cibuild.cmd` on Windows.
+You can reproduce what the CI environment does by running `./build.cmd` on Windows or `./build.sh` on Linux.
 This will download the required .NET SDK locally and use that to build the repo; it will also run through all available actions in the appropriate order.
 
-There are also several build scripts in the repository root. On Windows these scripts end with `.cmd` and expect arguments with a `-` prefix.
-By default, each script performs only the action specified in its name (i.e. `restore` only restores, `build` only builds, `test` only tests, and `pack` only packs). You can specify additional actions to be run by passing that name as an argument to the script (e.g. `build.cmd -restore` will perform a package restore and build; `test.cmd -pack` will run tests and package artifacts).
-Certain actions are dependent on a previous action having been run at least once. `build` depends on `restore`, `test` depends on `build`, and `pack` depends on `build`. This means the recommended first time action is `build -restore`.
-
-You can see any additional options that are available by passing `-help` on Windows.
+You can see any additional options that are available by passing `--help`.

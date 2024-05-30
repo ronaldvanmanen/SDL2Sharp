@@ -18,7 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Interop
@@ -363,11 +362,5 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("#define TTF_WRAPPED_ALIGN_RIGHT 2")]
         public const int TTF_WRAPPED_ALIGN_RIGHT = 2;
-
-        [NativeTypeName("#define TTF_SetError SDL_SetError")]
-        public static int SetError(sbyte* fmt) => SDL.SetError(fmt, __arglist());
-
-        [NativeTypeName("#define TTF_GetError SDL_GetError")]
-        public static sbyte* GetError() => SDL.GetError();
     }
 }

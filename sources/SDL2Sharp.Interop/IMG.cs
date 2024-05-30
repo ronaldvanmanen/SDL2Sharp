@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,7 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Interop
@@ -211,11 +210,5 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("#define SDL_IMAGE_COMPILEDVERSION SDL_VERSIONNUM(SDL_IMAGE_MAJOR_VERSION, SDL_IMAGE_MINOR_VERSION, SDL_IMAGE_PATCHLEVEL)")]
         public const int SDL_IMAGE_COMPILEDVERSION = ((2) * 1000 + (6) * 100 + (3));
-
-        [NativeTypeName("#define IMG_SetError SDL_SetError")]
-        public static int SetError(sbyte* fmt) => SDL.SetError(fmt, __arglist());
-
-        [NativeTypeName("#define IMG_GetError SDL_GetError")]
-        public static sbyte* GetError() => SDL.GetError();
     }
 }

@@ -1,3 +1,7 @@
+:; set -eo pipefail
+:; SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+:; ${SCRIPT_DIR}/build.sh "$@"
+:; exit $?
+
 @ECHO OFF
-pwsh.exe -NoLogo -NoProfile -ExecutionPolicy ByPass -Command "& """%~dp0scripts\build.ps1""" -build %*"
-EXIT /B %ERRORLEVEL%
+powershell -ExecutionPolicy ByPass -NoProfile -File "%~dp0build.ps1" %*
