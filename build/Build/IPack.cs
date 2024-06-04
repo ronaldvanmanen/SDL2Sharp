@@ -19,15 +19,25 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using Nuke.Common;
-using Nuke.Common.IO;
+using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.PowerShell;
+using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-interface IClean : IBuild
+interface IPack : IBuild
 {
-    public Target Clean => _ => _
+    public Target Pack => _ => _
+        .DependsOn<ITest>(target => target.Test)
+        .Produces(ArtifactsDirectory / "pkg" / "*.*", ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            Serilog.Log.Information($"Cleaning artifacts directory \"{ArtifactsDirectory}\"...");
-
-            ArtifactsDirectory.CreateOrCleanDirectory();
+            DotNetPack(settings => settings
+                .SetProject(Solution)
+                .SetConfiguration(Configuration)
+                .SetVersion(GitVersion.NuGetVersionV2)
+                .SetNoBuild(true)
+                .SetNoRestore(true)
+                .SetVerbosity(Verbosity.ToDotNetVerbosity())
+            );
         });
 }

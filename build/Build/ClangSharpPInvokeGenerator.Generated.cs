@@ -1,12 +1,19 @@
 // Generated from https://github.com/ronaldvanmanen/nuke/blob/master/source/Nuke.Common/Tools/ClangSharpPInvokeGenerator/ClangSharpPInvokeGenerator.json
 
 using JetBrains.Annotations;
+using Newtonsoft.Json;
+using Nuke.Common;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools;
+using Nuke.Common.Utilities.Collections;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Nuke.Common.Tools.ClangSharpPInvokeGenerator;
 
@@ -28,7 +35,7 @@ public partial class ClangSharpPInvokeGeneratorTasks
         ToolPathResolver.TryGetEnvironmentExecutable("CLANGSHARPPINVOKEGENERATOR_EXE") ??
         NuGetToolPathResolver.GetPackageExecutable("ClangSharpPInvokeGenerator", "ClangSharpPInvokeGenerator.dll");
     public static Action<OutputType, string> ClangSharpPInvokeGeneratorLogger { get; set; } = ProcessTasks.DefaultLogger;
-    public static Action<ToolSettings, IProcess> ClangSharpPInvokeGeneratorExitHandler { get; set; } = ProcessTasks.DefaultExitHandler;
+    public static Action<ToolSettings, IProcess> ClangSharpPInvokeGeneratorExitHandler { get; set; } = CustomExitHandler;
     /// <summary>
     ///   <p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p>
     ///   <p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p>
@@ -252,7 +259,7 @@ public partial class ClangSharpPInvokeGeneratorSettings : ToolSettings
     /// </summary>
     public virtual string Language { get; internal set; }
     /// <summary>
-    ///   The string to use in the DllImport attribute used when generating bindings.
+    ///   The string to use in the <c>DllImport</c> attribute used when generating bindings.
     /// </summary>
     public virtual string LibraryPath { get; internal set; }
     /// <summary>
@@ -339,17 +346,17 @@ public partial class ClangSharpPInvokeGeneratorSettings : ToolSettings
     public virtual IReadOnlyList<string> WithNamespace => WithNamespaceInternal.AsReadOnly();
     internal List<string> WithNamespaceInternal { get; set; } = new List<string>();
     /// <summary>
-    ///   Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.
+    ///   Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.
     /// </summary>
     public virtual IReadOnlyList<string> WithPacking => WithPackingInternal.AsReadOnly();
     internal List<string> WithPackingInternal { get; set; } = new List<string>();
     /// <summary>
-    ///   Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.
+    ///   Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.
     /// </summary>
     public virtual IReadOnlyList<string> WithSetLastError => WithSetLastErrorInternal.AsReadOnly();
     internal List<string> WithSetLastErrorInternal { get; set; } = new List<string>();
     /// <summary>
-    ///   Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.
+    ///   Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.
     /// </summary>
     public virtual IReadOnlyList<string> WithSuppressGCTransition => WithSuppressGCTransitionInternal.AsReadOnly();
     internal List<string> WithSuppressGCTransitionInternal { get; set; } = new List<string>();
@@ -1174,7 +1181,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     #region LibraryPath
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></em></p>
-    ///   <p>The string to use in the DllImport attribute used when generating bindings.</p>
+    ///   <p>The string to use in the <c>DllImport</c> attribute used when generating bindings.</p>
     /// </summary>
     [Pure]
     public static T SetLibraryPath<T>(this T toolSettings, string libraryPath) where T : ClangSharpPInvokeGeneratorSettings
@@ -1185,7 +1192,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></em></p>
-    ///   <p>The string to use in the DllImport attribute used when generating bindings.</p>
+    ///   <p>The string to use in the <c>DllImport</c> attribute used when generating bindings.</p>
     /// </summary>
     [Pure]
     public static T ResetLibraryPath<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
@@ -2257,7 +2264,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     #region WithPacking
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/> to a new list</em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T SetWithPacking<T>(this T toolSettings, params string[] withPacking) where T : ClangSharpPInvokeGeneratorSettings
@@ -2268,7 +2275,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/> to a new list</em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T SetWithPacking<T>(this T toolSettings, IEnumerable<string> withPacking) where T : ClangSharpPInvokeGeneratorSettings
@@ -2279,7 +2286,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T AddWithPacking<T>(this T toolSettings, params string[] withPacking) where T : ClangSharpPInvokeGeneratorSettings
@@ -2290,7 +2297,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T AddWithPacking<T>(this T toolSettings, IEnumerable<string> withPacking) where T : ClangSharpPInvokeGeneratorSettings
@@ -2301,7 +2308,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T ClearWithPacking<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
@@ -2312,7 +2319,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T RemoveWithPacking<T>(this T toolSettings, params string[] withPacking) where T : ClangSharpPInvokeGeneratorSettings
@@ -2324,7 +2331,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the StructLayoutAttribute.Pack property for the given type. Supports wildcards.</p>
+    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T RemoveWithPacking<T>(this T toolSettings, IEnumerable<string> withPacking) where T : ClangSharpPInvokeGeneratorSettings
@@ -2338,7 +2345,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     #region WithSetLastError
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/> to a new list</em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T SetWithSetLastError<T>(this T toolSettings, params string[] withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
@@ -2349,7 +2356,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/> to a new list</em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T SetWithSetLastError<T>(this T toolSettings, IEnumerable<string> withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
@@ -2360,7 +2367,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T AddWithSetLastError<T>(this T toolSettings, params string[] withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
@@ -2371,7 +2378,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T AddWithSetLastError<T>(this T toolSettings, IEnumerable<string> withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
@@ -2382,7 +2389,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T ClearWithSetLastError<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
@@ -2393,7 +2400,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T RemoveWithSetLastError<T>(this T toolSettings, params string[] withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
@@ -2405,7 +2412,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the SetLastError=true modifier to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T RemoveWithSetLastError<T>(this T toolSettings, IEnumerable<string> withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
@@ -2419,7 +2426,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     #region WithSuppressGCTransition
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/> to a new list</em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T SetWithSuppressGCTransition<T>(this T toolSettings, params string[] withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
@@ -2430,7 +2437,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/> to a new list</em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T SetWithSuppressGCTransition<T>(this T toolSettings, IEnumerable<string> withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
@@ -2441,7 +2448,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T AddWithSuppressGCTransition<T>(this T toolSettings, params string[] withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
@@ -2452,7 +2459,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T AddWithSuppressGCTransition<T>(this T toolSettings, IEnumerable<string> withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
@@ -2463,7 +2470,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T ClearWithSuppressGCTransition<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
@@ -2474,7 +2481,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T RemoveWithSuppressGCTransition<T>(this T toolSettings, params string[] withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
@@ -2486,7 +2493,7 @@ public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the SuppressGCTransition calling convention to a given DllImport or UnmanagedFunctionPointer. Supports wildcards.</p>
+    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
     /// </summary>
     [Pure]
     public static T RemoveWithSuppressGCTransition<T>(this T toolSettings, IEnumerable<string> withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings

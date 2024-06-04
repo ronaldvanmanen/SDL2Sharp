@@ -21,14 +21,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using Nuke.Common;
-using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.PowerShell;
-using Nuke.Common.Utilities.Collections;
 using Nuke.Common.Tools.ClangSharpPInvokeGenerator;
 using static System.Runtime.InteropServices.RuntimeInformation;
 using static Nuke.Common.IO.HttpTasks;
@@ -53,13 +51,18 @@ partial interface ISetup : IBuild
 
     private Tool Bash => ToolResolver.GetPathTool("bash");
 
+    private Tool Chmod => ToolResolver.GetPathTool("chmod");
+
+    private Tool Echo => ToolResolver.GetPathTool("echo");
+
+    private Tool Sudo => ToolResolver.GetPathTool("sudo");
+
     public Target Setup => _ => _
         .After<IClean>(target => target.Clean)
+        .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
             InstallDotNet();
-            InstallDotNetFrameworks();
-            InstallMono();
             InstallAzureArtifactsCredentialProvider();
         });
 
@@ -70,6 +73,19 @@ partial interface ISetup : IBuild
         {
             InstallDotNet(version);
         }
+
+        if (IsOSPlatform(OSPlatform.Windows))
+        {
+            foreach (var version in targetFrameworkVersions.Where(version => version.Major < 5))
+            {
+                InstallDotNetFramework(version);
+            }
+        }
+
+        if (IsOSPlatform(OSPlatform.Linux))
+        {
+            InstallMono();
+        }
     }
 
     private void InstallDotNet(Version version)
@@ -77,7 +93,7 @@ partial interface ISetup : IBuild
         if (IsOSPlatform(OSPlatform.Windows))
         {
             var script = ArtifactsDirectory / "dotnet-install.ps1";
-            HttpDownloadFile("https://dot.net/v1/dotnet-install.ps1", script);
+            HttpDownloadFile("https://dot.net/v1/dotnet-install.ps1", script, clientConfigurator: ConfigureHttpClient);
             var installDirectory = ArtifactsDirectory / "dotnet" / Architecture;
 
             Serilog.Log.Information($"Install latest release of .NET {version}.");
@@ -97,8 +113,8 @@ partial interface ISetup : IBuild
         else
         {
             var script = ArtifactsDirectory / "dotnet-install.sh";
-            HttpDownloadFile("https://dot.net/v1/dotnet-install.sh", script);
-            Bash($"-c \"chmod +x {script}\"");
+            HttpDownloadFile("https://dot.net/v1/dotnet-install.sh", script, clientConfigurator: ConfigureHttpClient);
+            Chmod($"+x {script}");
             var installDirectory = ArtifactsDirectory / "dotnet" / Architecture;
 
             var installCommand = $"{script} --architecture {Architecture} --channel {version} --install-dir {installDirectory} --no-path --version latest";
@@ -108,21 +124,12 @@ partial interface ISetup : IBuild
                     { "DOTNET_MULTILEVEL_LOOKUP", "1" },
                     { "DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "1" }
                 };
-            Serilog.Log.Information($"Install latest version of .NET \"{version}\"...");
+            Serilog.Log.Information($"Install latest version of .NET \"{version}\".");
             Bash(installCommand, environmentVariables: enviromentVariables);
 
             Environment.SetEnvironmentVariable("PATH", $"{installDirectory}:{Environment.GetEnvironmentVariable("PATH")}");
             Environment.SetEnvironmentVariable("DOTNET_ROOT", installDirectory);
             Environment.SetEnvironmentVariable("DOTNET_EXE", installDirectory / "dotnet");
-        }
-    }
-
-    private void InstallDotNetFrameworks()
-    {
-        var versions = GetTargetFrameworkVersions();
-        foreach (var version in versions.Where(version => version.Major < 5))
-        {
-            InstallDotNetFramework(version);
         }
     }
 
@@ -140,14 +147,16 @@ partial interface ISetup : IBuild
                 throw new PlatformNotSupportedException($"Microsoft .NET Framework {version} Developer Pack configuration is missing.");
             }
             var downloadPath = TemporaryDirectory / $"NDP{version}-DevPack-ENU.exe";
-            HttpDownloadFile(downloadUri, downloadPath, clientConfigurator: client =>
-            {
-                client.Timeout = TimeSpan.FromMinutes(1);
-                return client;
-            });
+            HttpDownloadFile(downloadUri, downloadPath, clientConfigurator: ConfigureHttpClient);
             Serilog.Log.Information($"Install Microsoft .NET Framework {version} Developer Pack.");
             StartProcess(downloadPath, "/quiet /norestart").WaitForExit();
         }
+    }
+
+    private HttpClient ConfigureHttpClient(HttpClient client)
+    {
+        client.Timeout = TimeSpan.FromMinutes(1);
+        return client;
     }
 
 #pragma warning disable CA1416 // Validate platform compatibility
@@ -183,26 +192,26 @@ partial interface ISetup : IBuild
         {
             if (Linux.IsUbuntu2004)
             {
-                Bash("sudo apt install ca-certificates gnupg");
-                Bash("sudo gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF");
-                Bash("echo 'deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main' | sudo tee /etc/apt/sources.list.d/mono-official-stable.list");
+                Sudo("apt-get install ca-certificates gnupg");
+                Sudo("gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF");
+                Echo("'deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main' | sudo tee /etc/apt/sources.list.d/mono-official-stable.list");
             }
             else if (Linux.IsUbuntu1804)
             {
-                Bash("sudo apt install ca-certificates gnupg");
-                Bash("sudo gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF");
-                Bash("echo 'deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-bionic main' | sudo tee /etc/apt/sources.list.d/mono-official-stable.list");
+                Sudo("apt-get install ca-certificates gnupg");
+                Sudo("gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF");
+                Echo("'deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-bionic main' | sudo tee /etc/apt/sources.list.d/mono-official-stable.list");
             }
             else if (Linux.IsUbuntu1604)
             {
-                Bash("sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF");
-                Bash("sudo apt install apt-transport-https ca-certificates");
-                Bash("echo 'deb https://download.mono-project.com/repo/ubuntu stable-xenial main' | sudo tee /etc/apt/sources.list.d/mono-official-stable.list");
+                Sudo("apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF");
+                Sudo("apt-get install apt-transport-https ca-certificates");
+                Echo("'deb https://download.mono-project.com/repo/ubuntu stable-xenial main' | sudo tee /etc/apt/sources.list.d/mono-official-stable.list");
             }
 
-            Bash("sudo apt update");
+            Sudo("apt-get update");
 
-            Bash("sudo apt install mono-devel");
+            Sudo("apt-get install mono-devel");
         }
     }
 
@@ -220,37 +229,4 @@ partial interface ISetup : IBuild
             StartShell("sh -c \"$(curl -fsSL https://aka.ms/install-artifacts-credprovider.sh)\"");
         };
     }
-
-    private Version[] GetTargetFrameworkVersions()
-    {
-        var targetFrameworkRegex = GetTargetFrameworkRegex();
-        return Solution.AllProjects
-            .SelectMany((project) => project
-                .GetTargetFrameworks()
-                .Select((framework) => targetFrameworkRegex.Match(framework))
-                .Where((match) => match.Success)
-                .Select((match) =>
-                {
-                    if (match.Groups["MajorMinorVersion"].Success)
-                    {
-                        return new Version(match.Groups["MajorMinorVersion"].Value);
-                    }
-                    else
-                    {
-                        var versionString = match.Groups["MajorVersion"].Value + '.' + match.Groups["MinorVersion"].Value;
-                        if (match.Groups["PatchVersion"].Success)
-                        {
-                            versionString += '.' + match.Groups["PatchVersion"].Value;
-                        }
-                        return new Version(versionString);
-                    }
-                })
-            )
-            .Distinct()
-            .Order()
-            .ToArray();
-    }
-
-    [GeneratedRegex("^net(?<MajorMinorVersion>\\d+\\.\\d+)|((?<MajorVersion>\\d)(?<MinorVersion>\\d)(?<PatchVersion>\\d)?)$")]
-    private static partial Regex GetTargetFrameworkRegex();
 }

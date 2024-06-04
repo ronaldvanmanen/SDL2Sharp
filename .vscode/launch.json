@@ -8,9 +8,9 @@
             "name": "Launch Nuke Build",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/sources/Build/bin/Debug/Build.exe",
+            "program": "${workspaceFolder:SDL2Sharp}/build/Build/bin/Debug/Build.exe",
             "args": [ "--target", "${input:NukeBuildTargets}" ],
-            "cwd": "${workspaceFolder}/sources/Build/bin/Debug",
+            "cwd": "${workspaceFolder:SDL2Sharp}/build/Build/bin/Debug",
             "stopAtEntry": false,
             "console": "integratedTerminal"
         },

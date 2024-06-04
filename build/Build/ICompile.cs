@@ -19,8 +19,26 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using Nuke.Common;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.PowerShell;
+using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-partial class Build : NukeBuild, IClean, ISetup, IRestore, IGenerate, ICompile, ITest, IPack
+interface ICompile : IBuild
 {
-    public static int Main() => Execute<Build>(target => ((IPack)target).Pack);
+    public Target Compile => _ => _
+        .DependsOn<IRestore>(target => target.Restore)
+        .Produces(ArtifactsDirectory / "bin" / "*.*", ArtifactsDirectory / "obj" / "*.*", ArtifactsDirectory / "log" / "*.*")
+        .Executes(() =>
+        {
+            DotNetBuild(settings => settings
+                .SetProjectFile(Solution)
+                .SetConfiguration(Configuration)
+                .SetVersion(GitVersion.NuGetVersionV2)
+                .SetNoRestore(true)
+                .SetVerbosity(Verbosity.ToDotNetVerbosity())
+                .SetProcessEnvironmentVariable("OVERRIDE_RUNTIME_IDENTIFIER", OverrideRuntimeIdentifier)
+            );
+        });
 }
