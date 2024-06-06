@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2023 Ronald van Manen
+// Copyright (C) 2021-2024 Ronald van Manen
 //
 // This file is part of FFmpegSharp.
 //
