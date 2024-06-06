@@ -33,6 +33,7 @@ interface IGenerate : IBuild
         .DependsOn<IRestore>(target => target.Restore)
         .Before<ICompile>(target => target.Compile)
         .OnlyWhenStatic(() => IsOSPlatform(OSPlatform.Windows))
+        .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
             GenerateBindingsForSDL2();

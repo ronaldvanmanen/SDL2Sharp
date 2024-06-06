@@ -80,6 +80,7 @@
               "Compile",
               "Generate",
               "Pack",
+              "Release",
               "Restore",
               "Setup",
               "Test"
@@ -100,6 +101,7 @@
               "Compile",
               "Generate",
               "Pack",
+              "Release",
               "Restore",
               "Setup",
               "Test"

@@ -22,22 +22,22 @@ using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
-using Nuke.Common.Tools.PowerShell;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-interface ICompile : IBuild
+interface IRestore : IBuild
 {
-    public Target Compile => _ => _
-        .DependsOn<IRestore>(target => target.Restore)
+    public Target Restore => _ => _
+        .DependsOn<ISetup>(target => target.Setup)
+        .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            DotNetBuild(settings => settings
+            DotNetRestore(settings => settings
                 .SetProjectFile(Solution)
-                .SetConfiguration(Configuration)
-                .SetVersion(GitVersion.NuGetVersionV2)
-                .SetNoRestore(true)
                 .SetVerbosity(Verbosity.ToDotNetVerbosity())
-                .SetProcessEnvironmentVariable("OVERRIDE_RUNTIME_IDENTIFIER", RuntimeIdentifier)
+                .SetProcessArgumentConfigurator(arguments => arguments
+                    .Add("--interactive", IsLocalBuild)
+                    .Add("/property:NuGetInteractive=false", IsLocalBuild)
+                )
             );
         });
 }

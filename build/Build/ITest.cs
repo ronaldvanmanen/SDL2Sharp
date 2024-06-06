@@ -19,24 +19,29 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using Nuke.Common;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
-using Nuke.Common.Tools.PowerShell;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-interface IPack : IBuild
+interface ITest : IBuild
 {
-    public Target Pack => _ => _
-        .DependsOn<ITest>(target => target.Test)
+    public Target Test => _ => _
+        .DependsOn<ICompile>(target => target.Compile)
+        .Produces(ArtifactsDirectory / "tst" / "*.*", ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            DotNetPack(settings => settings
-                .SetProject(Solution)
-                .SetConfiguration(Configuration)
-                .SetVersion(GitVersion.NuGetVersionV2)
-                .SetNoBuild(true)
-                .SetNoRestore(true)
-                .SetVerbosity(Verbosity.ToDotNetVerbosity())
-            );
+            foreach (var targetFramework in GetTargetFrameworks(project => project.Name.EndsWith(".UnitTests")))
+            {
+                DotNetTest(settings => settings
+                    .SetProjectFile(Solution)
+                    .SetConfiguration(Configuration)
+                    .SetNoRestore(true)
+                    .SetNoBuild(true)
+                    .SetVerbosity(Verbosity.ToDotNetVerbosity())
+                    .SetFramework(targetFramework)
+                    .SetProcessArgumentConfigurator(_ => _.Add("-- RunConfiguration.DisableAppDomain=true"))
+                );
+            }
         });
 }

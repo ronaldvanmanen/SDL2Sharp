@@ -19,24 +19,16 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using Nuke.Common;
-using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.GitVersion;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using Nuke.Common.IO;
 
-interface ITest : IBuild
+interface IClean : IBuild
 {
-    public Target Test => _ => _
-        .DependsOn<ICompile>(target => target.Compile)
+    public Target Clean => _ => _
+        .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            DotNetTest(settings => settings
-                .SetProjectFile(Solution)
-                .SetConfiguration(Configuration)
-                .SetNoRestore(true)
-                .SetNoBuild(true)
-                .SetVerbosity(Verbosity.ToDotNetVerbosity())
-                .SetProcessArgumentConfigurator(_ => _.Add("-- RunConfiguration.DisableAppDomain=true"))
-            );
+            Serilog.Log.Information($"Cleaning artifacts directory \"{ArtifactsDirectory}\"...");
+
+            ArtifactsDirectory.CreateOrCleanDirectory();
         });
 }
