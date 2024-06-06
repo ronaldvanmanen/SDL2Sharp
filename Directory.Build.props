@@ -47,7 +47,7 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)SDL2Sharp.snk</AssemblyOriginatorKeyFile>
     <AssemblyOriginatorPublicKey>0024000004800000940000000602000000240000525341310004000001000100f9f0155b9d55a0b4c7e24c474894961bb736d4d317454eee1f4c4eb71335c48b5a4325ae9dd69cd4033d7bf54820e73258aa7d6a39bde4441d579a50eabdf1ee1e5e57faf0a7793b556591702bd1c5ff043cb5715cc765be20b0b19971879b0fca75a5a570250d0f727f9cc3e1b92b7fb30366edbd0b9b9d8d0cbf702cd38edc</AssemblyOriginatorPublicKey>
-    <Copyright>Copyright (C) 2021 Ronald van Manen &lt;rvanmanen@gmail.com&gt;</Copyright>
+    <Copyright>Copyright (C) 2021-2024 Ronald van Manen &lt;rvanmanen@gmail.com&gt;</Copyright>
     <Description>Interop bindings for SDL2.</Description>
     <Features>strict</Features>
     <HighEntropyVA>true</HighEntropyVA>

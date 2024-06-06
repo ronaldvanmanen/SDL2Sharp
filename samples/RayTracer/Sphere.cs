@@ -1,6 +1,6 @@
 ﻿// SDL2Sharp
 //
-// Copyright (C) 2022 Ronald van Manen <rvanmanen@gmail.com>
+// Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
