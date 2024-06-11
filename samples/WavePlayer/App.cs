@@ -52,11 +52,6 @@ namespace WavePlayer
 
         private int _wavePosition = 0;
 
-        protected override void OnInitializing()
-        {
-            Subsystems = Subsystems.Audio | Subsystems.Video;
-        }
-
         protected override void OnInitialized()
         {
             Environment.SetEnvironmentVariable("SDL_AUDIODRIVER", "directsound");

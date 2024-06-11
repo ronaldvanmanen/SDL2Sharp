@@ -46,14 +46,11 @@ namespace SDL2Sharp
             }
         }
 
-        protected Subsystems Subsystems { get; set; }
-
         protected int ExitCode { get; set; }
 
         protected Application()
         {
             Instance = this;
-            Subsystems = Subsystems.All;
             ExitCode = 0;
         }
 
@@ -65,7 +62,7 @@ namespace SDL2Sharp
             try
             {
                 OnInitializing();
-                Error.ThrowOnFailure(SDL.Init((uint)Subsystems));
+                Error.ThrowOnFailure(SDL.Init((uint)Subsystems.All));
                 Error.ThrowOnFailure(TTF.Init());
                 var eventFilterCallbackPointer = Marshal.GetFunctionPointerForDelegate(eventFilterCallback);
                 SDL.SetEventFilter(eventFilterCallbackPointer, null);

@@ -45,11 +45,6 @@ namespace ParticleSystem
 
         private volatile int _mouseY;
 
-        protected override void OnInitializing()
-        {
-            Subsystems = Subsystems.Video;
-        }
-
         protected override void OnInitialized()
         {
             _window = new Window("Particle System", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);

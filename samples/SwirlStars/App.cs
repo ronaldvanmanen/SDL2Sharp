@@ -55,11 +55,6 @@ namespace SwirlStars
 
         private List<Star> _stars = null!;
 
-        protected override void OnInitializing()
-        {
-            Subsystems = Subsystems.Video;
-        }
-
         protected override void OnInitialized()
         {
             _window = new Window("Swirl Stars", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);

@@ -68,11 +68,6 @@ namespace TunnelEffect
 
         private double _frameRate;
 
-        protected override void OnInitializing()
-        {
-            Subsystems = Subsystems.Video;
-        }
-
         protected override void OnInitialized()
         {
             _window = new Window("Tunnel Effect", 640, 480, WindowFlags.Resizable);

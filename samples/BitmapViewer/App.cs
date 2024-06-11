@@ -32,11 +32,6 @@ namespace BitmapViewer
 
         private Texture _bitmapTexture = null!;
 
-        protected override void OnInitializing()
-        {
-            Subsystems = Subsystems.Video;
-        }
-
         protected override void OnInitialized()
         {
             try

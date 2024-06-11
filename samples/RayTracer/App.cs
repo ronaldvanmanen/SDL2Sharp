@@ -53,11 +53,6 @@ namespace RayTracer
 
         private Camera _camera = null!;
 
-        protected override void OnInitializing()
-        {
-            Subsystems = Subsystems.Video;
-        }
-
         protected override void OnInitialized()
         {
             _window = new Window("Ray Tracer", 640, 480, WindowFlags.Resizable);
