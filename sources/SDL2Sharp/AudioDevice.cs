@@ -32,8 +32,6 @@ namespace SDL2Sharp
 
         private AudioDeviceCallbackDelegate _unmanagedCallback = null!;
 
-        private SDL_AudioSpec _obtainedSpec;
-
         private object _userdata = null!;
 
         private GCHandle _unmanagedUserdata = default;
@@ -44,36 +42,37 @@ namespace SDL2Sharp
 
         public bool IsOpen => _deviceID != 0;
 
-        public AudioDeviceSpec ObtainedSpec
-        {
-            get
-            {
-                ThrowIfDisposed();
-                ThrowIfClosed();
-                return new AudioDeviceSpec(_obtainedSpec);
-            }
-        }
+        public int Frequency { get; private set; }
+
+        public AudioFormat Format { get; private set; }
+
+        public AudioChannelLayout Channels { get; private set; }
+
+        public byte Silence { get; private set; }
+
+        public ushort Samples { get; private set; }
+
+        public uint Size { get; private set; }
 
         public AudioDevice()
-        : this(null!)
         { }
 
-        public AudioDevice(AudioDeviceSpec spec)
-        : this(spec, null!)
+        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples)
+        : this(frequency, format, channels, samples, null!)
         { }
 
-        public AudioDevice(AudioDeviceSpec spec, AudioDeviceCallback callback)
-        : this(spec, callback, null!)
+        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
+        : this(frequency, format, channels, samples, callback, null!)
         { }
 
-        public AudioDevice(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata)
+        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata)
+        : this(frequency, format, channels, samples, callback, null!, AudioDeviceAllowedChanges.None)
         {
-            Open(spec, callback, userdata);
         }
 
-        public AudioDevice(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
+        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
         {
-            Open(spec, callback, userdata, allowedChanges);
+            Open(frequency, format, channels, samples, callback, userdata, allowedChanges);
         }
 
         ~AudioDevice()
@@ -102,67 +101,58 @@ namespace SDL2Sharp
             }
         }
 
-        public void Open(AudioDeviceSpec spec)
+        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples)
         {
-            if (!TryOpen(spec, null!, null!, out var error))
+            Open(frequency, format, channels, samples, null!);
+        }
+
+        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
+        {
+            Open(frequency, format, channels, samples, callback, null!);
+        }
+
+        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata)
+        {
+            Open(frequency, format, channels, samples, callback, userdata, AudioDeviceAllowedChanges.None);
+        }
+
+        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
+        {
+            if (!TryOpen(frequency, format, channels, samples, callback, userdata, allowedChanges, out var error))
             {
                 throw error;
             }
         }
 
-        public void Open(AudioDeviceSpec spec, AudioDeviceCallback callback)
+        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, out Error error)
         {
-            if (!TryOpen(spec, callback, null!, out var error))
-            {
-                throw error;
-            }
+            return TryOpen(frequency, format, channels, samples, null!, out error);
         }
 
-        public void Open(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata)
+        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, out Error error)
         {
-            if (!TryOpen(spec, callback, userdata, out var error))
-            {
-                throw error;
-            }
+            return TryOpen(frequency, format, channels, samples, callback, null!, out error);
         }
 
-        public void Open(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
+        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, out Error error)
         {
-            if (!TryOpen(spec, callback, userdata, allowedChanges, out var error))
-            {
-                throw error;
-            }
+            return TryOpen(frequency, format, channels, samples, callback, userdata, AudioDeviceAllowedChanges.None, out error);
         }
 
-        public bool TryOpen(AudioDeviceSpec spec, out Error error)
-        {
-            return TryOpen(spec, null!, null!, out error);
-        }
-
-        public bool TryOpen(AudioDeviceSpec spec, AudioDeviceCallback callback, out Error error)
-        {
-            return TryOpen(spec, callback, null!, out error);
-        }
-
-        public bool TryOpen(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, out Error error)
-        {
-            return TryOpen(spec, callback, userdata, AudioDeviceAllowedChanges.None, out error);
-        }
-
-        public bool TryOpen(AudioDeviceSpec spec, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges, out Error error)
+        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges, out Error error)
         {
             ThrowIfDisposed();
             ThrowIfOpen();
 
             var desiredSpec = new SDL_AudioSpec
             {
-                freq = spec.Frequency,
-                format = (ushort)spec.Format,
-                channels = (byte)spec.Channels,
+                freq = frequency,
+                format = (ushort)format,
+                channels = (byte)channels,
                 silence = 0,
                 samples = 0,
                 padding = 0,
-                size = spec.Size
+                size = 0
             };
 
             if (callback != null)
@@ -176,20 +166,23 @@ namespace SDL2Sharp
                 desiredSpec.userdata = (void*)(IntPtr)_unmanagedUserdata;
             }
 
-            fixed (SDL_AudioSpec* obtainedSpec = &_obtainedSpec)
+            var obtainedSpec = new SDL_AudioSpec();
+            _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, &obtainedSpec, (int)allowedChanges);
+            if (_deviceID == 0)
             {
-                _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, obtainedSpec, (int)allowedChanges);
-
-                if (_deviceID == 0)
-                {
-                    error = new Error(new string(SDL.GetError()));
-                    return false;
-                }
-                else
-                {
-                    error = null!;
-                    return true;
-                }
+                error = new Error(new string(SDL.GetError()));
+                return false;
+            }
+            else
+            {
+                Frequency = obtainedSpec.freq;
+                Format = (AudioFormat)obtainedSpec.format;
+                Channels = (AudioChannelLayout)obtainedSpec.channels;
+                Silence = obtainedSpec.silence;
+                Samples = obtainedSpec.samples;
+                Size = obtainedSpec.size;
+                error = null!;
+                return true;
             }
         }
 

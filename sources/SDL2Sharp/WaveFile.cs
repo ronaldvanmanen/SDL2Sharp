@@ -32,7 +32,17 @@ namespace SDL2Sharp
 
         private uint _waveLength;
 
-        public AudioDeviceSpec Spec => new(_waveSpec);
+        public int Frequency => _waveSpec.freq;
+
+        public AudioFormat Format => (AudioFormat)_waveSpec.format;
+
+        public AudioChannelLayout Channels => (AudioChannelLayout)_waveSpec.channels;
+
+        public byte Silence => _waveSpec.silence;
+
+        public ushort Samples => _waveSpec.samples;
+
+        public uint Size => _waveSpec.size;
 
         public ReadOnlySpan<byte> Buffer => new(_waveBuffer, (int)_waveLength);
 

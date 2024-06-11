@@ -64,7 +64,14 @@ namespace WavePlayer
                 _rendererInvalidated = true;
                 _rendering = true;
                 _waveFile = new WaveFile(Environment.GetCommandLineArgs()[1]);
-                _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback, null!, AudioDeviceAllowedChanges.None);
+                _audioDevice = new AudioDevice(
+                    _waveFile.Frequency,
+                    _waveFile.Format,
+                    _waveFile.Channels,
+                    _waveFile.Samples,
+                    OnAudioDeviceCallback,
+                    null!,
+                    AudioDeviceAllowedChanges.None);
                 _renderingThread.Start();
                 _audioDevice.Unpause();
             }
@@ -88,14 +95,14 @@ namespace WavePlayer
 
         private void OnAudioDeviceCallback(object userdata, Span<byte> stream)
         {
-            stream.Fill(_waveFile.Spec.Silence);
+            stream.Fill(_waveFile.Silence);
             var sliceLength = (int)Math.Min(_waveFile.Length - _wavePosition, stream.Length);
             if (sliceLength <= 0)
             {
                 return;
             }
             var slice = _waveFile.Buffer.Slice(_wavePosition, sliceLength);
-            stream.MixAudioFormat(slice, _waveFile.Spec.Format, SDL.SDL_MIX_MAXVOLUME);
+            stream.MixAudioFormat(slice, _waveFile.Format, SDL.SDL_MIX_MAXVOLUME);
             _wavePosition += sliceLength;
         }
 
@@ -112,9 +119,9 @@ namespace WavePlayer
             var frameRate = 0d;
             var frameRateText = $"FPS: {frameRate:0.00}";
             var frameCounter = 0;
-            var channelCount = (int)_waveFile.Spec.Channels;
+            var channelCount = (int)_waveFile.Channels;
             var waves = new Point[channelCount][];
-            var sampleFormat = _waveFile.Spec.Format;
+            var sampleFormat = _waveFile.Format;
             var sampleSize = sampleFormat.BitSize() / 8;
 
             try
