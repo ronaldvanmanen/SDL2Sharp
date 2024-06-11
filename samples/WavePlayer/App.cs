@@ -68,7 +68,7 @@ namespace WavePlayer
                 _renderingThread = new Thread(Render);
                 _rendererInvalidated = true;
                 _rendering = true;
-                _waveFile = new WaveFile(CommandLineArgs[0]);
+                _waveFile = new WaveFile(Environment.GetCommandLineArgs()[1]);
                 _audioDevice = new AudioDevice(_waveFile.Spec, OnAudioDeviceCallback, null!, AudioDeviceAllowedChanges.None);
                 _renderingThread.Start();
                 _audioDevice.Unpause();
@@ -200,10 +200,10 @@ namespace WavePlayer
             }
         }
 
-        private static int Main(string[] args)
+        private static int Main()
         {
             var app = new App();
-            var exitCode = app.Run(args);
+            var exitCode = app.Run();
             return exitCode;
         }
     }

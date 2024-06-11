@@ -46,8 +46,6 @@ namespace SDL2Sharp
             }
         }
 
-        protected string[] CommandLineArgs { get; private set; }
-
         protected Subsystems Subsystems { get; set; }
 
         protected int ExitCode { get; set; }
@@ -55,19 +53,12 @@ namespace SDL2Sharp
         protected Application()
         {
             Instance = this;
-            CommandLineArgs = Array.Empty<string>();
             Subsystems = Subsystems.All;
             ExitCode = 0;
         }
 
         public int Run()
         {
-            return Run(Environment.GetCommandLineArgs());
-        }
-
-        public int Run(string[] commandLineArgs)
-        {
-            CommandLineArgs = commandLineArgs;
             var @event = new SDL_Event();
             var eventFilterCallback = new EventFilterCallbackDelegate(OnEventFilterCallback);
 

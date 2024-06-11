@@ -43,7 +43,7 @@ namespace BitmapViewer
             {
                 _window = new Window("Bitmap Viewer", 640, 480, WindowFlags.Resizable);
                 _renderer = _window.CreateRenderer(RendererFlags.Accelerated);
-                _bitmapTexture = _renderer.CreateTextureFromBitmap(CommandLineArgs[0]);
+                _bitmapTexture = _renderer.CreateTextureFromBitmap(Environment.GetCommandLineArgs()[1]);
                 _window.SizeChanged += OnSizeChanged;
             }
             catch (Exception e)
@@ -78,10 +78,10 @@ namespace BitmapViewer
             _renderer.Present();
         }
 
-        private static int Main(string[] args)
+        private static int Main()
         {
             var app = new App();
-            var exitCode = app.Run(args);
+            var exitCode = app.Run();
             return exitCode;
         }
     }

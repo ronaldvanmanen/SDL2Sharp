@@ -336,10 +336,10 @@ namespace PlasmaFractal
             map[centerY, centerX] = (byte)value;
         }
 
-        private static int Main(string[] args)
+        private static int Main()
         {
             var app = new App();
-            var exitCode = app.Run(args);
+            var exitCode = app.Run();
             return exitCode;
         }
     }

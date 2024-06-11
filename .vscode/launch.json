@@ -89,7 +89,7 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0/WavePlayer",
-            "args": [],
+            "args": ["Roland-GR-1-Trumpet-C5.wav"],
             "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0",
             "stopAtEntry": false,
             "console": "internalConsole"
