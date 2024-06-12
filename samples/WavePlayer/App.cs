@@ -20,9 +20,11 @@
 
 using System;
 using System.Threading;
+using System.Runtime.InteropServices;
 using SDL2Sharp;
 using SDL2Sharp.Extensions;
 using SDL2Sharp.Interop;
+using static System.Runtime.InteropServices.RuntimeInformation;
 
 namespace WavePlayer
 {
@@ -52,10 +54,16 @@ namespace WavePlayer
 
         private int _wavePosition = 0;
 
+        protected override void OnInitializing()
+        {
+            if (IsOSPlatform(OSPlatform.Windows))
+            {
+                Environment.SetEnvironmentVariable("SDL_AUDIODRIVER", "directsound");
+            }
+        }
+
         protected override void OnInitialized()
         {
-            Environment.SetEnvironmentVariable("SDL_AUDIODRIVER", "directsound");
-
             try
             {
                 _window = new Window("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
