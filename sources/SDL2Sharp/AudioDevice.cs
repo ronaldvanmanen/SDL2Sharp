@@ -32,8 +32,6 @@ namespace SDL2Sharp
 
         private AudioDeviceCallbackDelegate _unmanagedCallback = null!;
 
-        private object _userdata = null!;
-
         private GCHandle _unmanagedUserdata = default;
 
         private bool _disposed = false;
@@ -62,17 +60,12 @@ namespace SDL2Sharp
         { }
 
         public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
-        : this(frequency, format, channels, samples, callback, null!)
+        : this(frequency, format, channels, samples, callback, AudioDeviceAllowedChanges.None)
         { }
 
-        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata)
-        : this(frequency, format, channels, samples, callback, null!, AudioDeviceAllowedChanges.None)
+        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges)
         {
-        }
-
-        public AudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
-        {
-            Open(frequency, format, channels, samples, callback, userdata, allowedChanges);
+            Open(frequency, format, channels, samples, callback, allowedChanges);
         }
 
         ~AudioDevice()
@@ -108,17 +101,12 @@ namespace SDL2Sharp
 
         public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
         {
-            Open(frequency, format, channels, samples, callback, null!);
+            Open(frequency, format, channels, samples, callback, AudioDeviceAllowedChanges.None);
         }
 
-        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata)
+        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges)
         {
-            Open(frequency, format, channels, samples, callback, userdata, AudioDeviceAllowedChanges.None);
-        }
-
-        public void Open(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges)
-        {
-            if (!TryOpen(frequency, format, channels, samples, callback, userdata, allowedChanges, out var error))
+            if (!TryOpen(frequency, format, channels, samples, callback, allowedChanges, out var error))
             {
                 throw error;
             }
@@ -131,15 +119,10 @@ namespace SDL2Sharp
 
         public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, out Error error)
         {
-            return TryOpen(frequency, format, channels, samples, callback, null!, out error);
+            return TryOpen(frequency, format, channels, samples, callback, AudioDeviceAllowedChanges.None, out error);
         }
 
-        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, out Error error)
-        {
-            return TryOpen(frequency, format, channels, samples, callback, userdata, AudioDeviceAllowedChanges.None, out error);
-        }
-
-        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, object userdata, AudioDeviceAllowedChanges allowedChanges, out Error error)
+        public bool TryOpen(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges, out Error error)
         {
             ThrowIfDisposed();
             ThrowIfOpen();
@@ -158,7 +141,6 @@ namespace SDL2Sharp
             if (callback != null)
             {
                 _callback = callback;
-                _userdata = userdata;
                 _unmanagedUserdata = GCHandle.Alloc(this, GCHandleType.Normal);
                 _unmanagedCallback = new AudioDeviceCallbackDelegate(OnAudioDeviceCallback);
 
@@ -196,7 +178,6 @@ namespace SDL2Sharp
 
                 _deviceID = 0;
                 _callback = null!;
-                _userdata = null!;
                 _unmanagedCallback = null!;
 
                 if (_unmanagedUserdata.IsAllocated)
@@ -278,7 +259,7 @@ namespace SDL2Sharp
             var audioDeviceHandle = GCHandle.FromIntPtr((IntPtr)userdata);
             if (audioDeviceHandle.Target is AudioDevice audioDevice)
             {
-                audioDevice._callback(audioDevice._userdata, new Span<byte>(stream, len));
+                audioDevice._callback(new Span<byte>(stream, len));
             }
         }
     }

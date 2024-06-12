@@ -22,5 +22,5 @@ using System;
 
 namespace SDL2Sharp
 {
-    public delegate void AudioDeviceCallback(object userdata, Span<byte> stream);
+    public delegate void AudioDeviceCallback(Span<byte> stream);
 }

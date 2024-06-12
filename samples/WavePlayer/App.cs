@@ -78,7 +78,6 @@ namespace WavePlayer
                     _waveFile.Channels,
                     _waveFile.Samples,
                     OnAudioDeviceCallback,
-                    null!,
                     AudioDeviceAllowedChanges.None);
                 _renderingThread.Start();
                 _audioDevice.Unpause();
@@ -101,7 +100,7 @@ namespace WavePlayer
             _window?.Dispose();
         }
 
-        private void OnAudioDeviceCallback(object userdata, Span<byte> stream)
+        private void OnAudioDeviceCallback(Span<byte> stream)
         {
             stream.Fill(_waveFile.Silence);
             var sliceLength = (int)Math.Min(_waveFile.Length - _wavePosition, stream.Length);
