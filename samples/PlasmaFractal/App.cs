@@ -95,21 +95,13 @@ namespace PlasmaFractal
                 }
             }
 
-            _frameTime.Start();
             Render(_realTime.Elapsed);
-            _frameTime.Stop();
-            _frameCount++;
-
-            if (_frameTime.ElapsedMilliseconds >= 1000d)
-            {
-                _frameRate = _frameCount * 1000d / _frameTime.ElapsedMilliseconds;
-                _frameCount = 0;
-                _frameTime.Reset();
-            }
         }
 
         private void Render(TimeSpan realTime)
         {
+            _frameTime.Start();
+
             _screenImage.WithLock(screenImage =>
             {
                 for (var y = 0; y < screenImage.Height; ++y)
@@ -136,6 +128,19 @@ namespace PlasmaFractal
             else
             {
                 _palette.RotateLeft();
+            }
+
+            _frameTime.Stop();
+
+            if (_frameTime.ElapsedMilliseconds >= 1000d)
+            {
+                _frameRate = _frameCount * 1000d / _frameTime.ElapsedMilliseconds;
+                _frameCount = 0;
+                _frameTime.Reset();
+            }
+            else
+            {
+                ++_frameCount;
             }
         }
 
