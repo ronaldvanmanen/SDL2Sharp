@@ -98,10 +98,8 @@ namespace SDL2Sharp
             {
                 ThrowWhenDisposed();
 
-                using (var marshaledValue = new MarshaledString(value))
-                {
-                    SDL.SetWindowTitle(_handle, marshaledValue);
-                }
+                using var marshaledValue = new MarshaledString(value);
+                SDL.SetWindowTitle(_handle, marshaledValue);
             }
         }
 
@@ -350,24 +348,22 @@ namespace SDL2Sharp
 
         private Window(string title, int x, int y, int width, int height, uint flags)
         {
-            using (var marshaledTitle = new MarshaledString(title))
-            {
-                _handle = Error.ReturnOrThrowOnFailure(
-                    SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
-                );
+            using var marshaledTitle = new MarshaledString(title);
+            _handle = Error.ReturnOrThrowOnFailure(
+                SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
+            );
 
-                if (!IsBordered)
-                {
-                    _hitTestCallback = new HitTestCallbackDelegate(HitTestCallback);
-                    var hitTestCallback = Marshal.GetFunctionPointerForDelegate(_hitTestCallback);
-                    Error.ThrowOnFailure(
-                        SDL.SetWindowHitTest(_handle, hitTestCallback, null)
-                    );
-                }
-                else
-                {
-                    _hitTestCallback = null!;
-                }
+            if (!IsBordered)
+            {
+                _hitTestCallback = new HitTestCallbackDelegate(HitTestCallback);
+                var hitTestCallback = Marshal.GetFunctionPointerForDelegate(_hitTestCallback);
+                Error.ThrowOnFailure(
+                    SDL.SetWindowHitTest(_handle, hitTestCallback, null)
+                );
+            }
+            else
+            {
+                _hitTestCallback = null!;
             }
 
             _all.Add(this);
@@ -482,7 +478,7 @@ namespace SDL2Sharp
             }
         }
 
-        public void Update()
+        public void UpdateSurface()
         {
             ThrowWhenDisposed();
 

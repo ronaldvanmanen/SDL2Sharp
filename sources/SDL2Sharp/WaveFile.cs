@@ -50,21 +50,19 @@ namespace SDL2Sharp
 
         public WaveFile(string filename)
         {
-            using (var unmanagedFilename = new MarshaledString(filename))
-            using (var unmanagedMode = new MarshaledString("rb"))
-            {
-                var fileStream = Error.ReturnOrThrowOnFailure(
-                    SDL.RWFromFile(unmanagedFilename, unmanagedMode)
-                );
+            using var unmanagedFilename = new MarshaledString(filename);
+            using var unmanagedMode = new MarshaledString("rb");
+            var fileStream = Error.ReturnOrThrowOnFailure(
+                SDL.RWFromFile(unmanagedFilename, unmanagedMode)
+            );
 
-                fixed (SDL_AudioSpec* waveSpec = &_waveSpec)
-                fixed (byte** waveBuffer = &_waveBuffer)
-                fixed (uint* waveLength = &_waveLength)
-                {
-                    Error.ThrowOnFailure(
-                        SDL.LoadWAV_RW(fileStream, 1, waveSpec, waveBuffer, waveLength)
-                    );
-                }
+            fixed (SDL_AudioSpec* waveSpec = &_waveSpec)
+            fixed (byte** waveBuffer = &_waveBuffer)
+            fixed (uint* waveLength = &_waveLength)
+            {
+                Error.ThrowOnFailure(
+                    SDL.LoadWAV_RW(fileStream, 1, waveSpec, waveBuffer, waveLength)
+                );
             }
         }
 

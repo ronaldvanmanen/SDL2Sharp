@@ -31,12 +31,10 @@ namespace SDL2Sharp
 
         public Font(string path, int pointSize)
         {
-            using (var marshaledPath = new MarshaledString(path))
-            {
-                var handle = TTF.OpenFont(marshaledPath, pointSize);
-                FontError.ThrowOnFailure(handle);
-                _handle = handle;
-            }
+            using var marshaledPath = new MarshaledString(path);
+            var handle = TTF.OpenFont(marshaledPath, pointSize);
+            FontError.ThrowOnFailure(handle);
+            _handle = handle;
         }
 
         ~Font()
@@ -60,21 +58,15 @@ namespace SDL2Sharp
         public Surface RenderSolid(string text, Color color)
         {
             ThrowWhenDisposed();
-
-            using (var marshaledText = new MarshaledString(text))
-            {
-                return new Surface(TTF.RenderText_Solid(_handle, marshaledText, color));
-            }
+            using var marshaledText = new MarshaledString(text);
+            return new Surface(TTF.RenderText_Solid(_handle, marshaledText, color));
         }
 
         public Surface<Argb8888> RenderBlended(string text, Color color)
         {
             ThrowWhenDisposed();
-
-            using (var marshaledText = new MarshaledString(text))
-            {
-                return new Surface<Argb8888>(TTF.RenderText_Blended(_handle, marshaledText, color));
-            }
+            using var marshaledText = new MarshaledString(text);
+            return new Surface<Argb8888>(TTF.RenderText_Blended(_handle, marshaledText, color));
         }
 
         public static implicit operator _TTF_Font*(Font font)
