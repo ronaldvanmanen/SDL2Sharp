@@ -23,7 +23,7 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Collections.Generic;
 using SDL2Sharp;
-using SDL2Sharp.Extensions;
+using SDL2Sharp.Colors;
 
 namespace SwirlStars
 {

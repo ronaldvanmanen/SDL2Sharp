@@ -22,8 +22,8 @@ using System;
 using System.Threading;
 using System.Runtime.InteropServices;
 using SDL2Sharp;
-using SDL2Sharp.Extensions;
 using SDL2Sharp.Interop;
+using static System.Math;
 using static System.Runtime.InteropServices.RuntimeInformation;
 
 namespace WavePlayer
@@ -103,7 +103,7 @@ namespace WavePlayer
         private void OnAudioDeviceCallback(Span<byte> stream)
         {
             stream.Fill(_waveFile.Silence);
-            var sliceLength = (int)Math.Min(_waveFile.Length - _wavePosition, stream.Length);
+            var sliceLength = (int)Min(_waveFile.Length - _wavePosition, stream.Length);
             if (sliceLength <= 0)
             {
                 return;

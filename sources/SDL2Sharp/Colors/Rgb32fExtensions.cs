@@ -20,7 +20,7 @@
 
 using SDL2Sharp.Colors;
 
-namespace SDL2Sharp.Extensions
+namespace SDL2Sharp
 {
     public static class Rgb32fExtensions
     {

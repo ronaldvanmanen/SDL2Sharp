@@ -21,7 +21,7 @@
 using System;
 using SDL2Sharp.Interop;
 
-namespace SDL2Sharp.Extensions
+namespace SDL2Sharp
 {
     public static class SpanExtensions
     {

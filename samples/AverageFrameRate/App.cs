@@ -21,6 +21,7 @@
 using System;
 using System.Threading;
 using SDL2Sharp;
+using static System.Math;
 
 namespace AverageFrameRate
 {
@@ -88,8 +89,8 @@ namespace AverageFrameRate
                         using (var textTexture = renderer.CreateTextureFromSurface(textSurface))
                         {
                             var outputSize = renderer.OutputSize;
-                            var x = Math.Abs(outputSize.Width - textTexture.Width) / 2;
-                            var y = Math.Abs(outputSize.Height - textTexture.Height) / 2;
+                            var x = Abs(outputSize.Width - textTexture.Width) / 2;
+                            var y = Abs(outputSize.Height - textTexture.Height) / 2;
                             var dest = new Rectangle(x, y, textTexture.Width, textTexture.Height);
                             renderer.Copy(textTexture, dest);
                         }

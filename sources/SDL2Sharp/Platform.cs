@@ -25,9 +25,21 @@ namespace SDL2Sharp
 {
     public sealed class Platform : IDisposable
     {
+        private VideoSubsystem _videoSubsystem = null!;
+
+        private AudioSystem _audioSubsystem = null!;
+
+        private EventSubsystem _eventsSubsystem = null!;
+
         public static Platform Instance { get; private set; } = null!;
 
-        public Platform()
+        public VideoSubsystem Video => _videoSubsystem ??= new VideoSubsystem();
+
+        public AudioSystem Audio => _audioSubsystem ??= new AudioSystem();
+
+        public EventSubsystem Events => _eventsSubsystem ??= new EventSubsystem();
+
+        internal Platform()
         {
             if (Instance != null)
             {
@@ -39,7 +51,7 @@ namespace SDL2Sharp
             SDL.Init(0);
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             if (Instance != null)
             {
@@ -48,10 +60,46 @@ namespace SDL2Sharp
 
             Instance = null!;
         }
+    }
 
-        public EventSubsystem Events
+    public sealed class VideoSubsystem : IDisposable
+    {
+        internal VideoSubsystem()
         {
+            SDL.InitSubSystem(SDL.SDL_INIT_VIDEO);
+        }
 
+        void IDisposable.Dispose()
+        {
+            SDL.QuitSubSystem(SDL.SDL_INIT_VIDEO);
+        }
+    }
+
+    public sealed class AudioSystem : IDisposable
+    {
+        internal AudioSystem()
+        {
+            SDL.InitSubSystem(SDL.SDL_INIT_AUDIO);
+        }
+
+        void IDisposable.Dispose()
+        {
+            SDL.QuitSubSystem(SDL.SDL_INIT_AUDIO);
+        }
+
+        public AudioDevice CreateAudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples)
+        {
+            return new AudioDevice(frequency, format, channels, samples);
+        }
+
+        public AudioDevice CreateAudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
+        {
+            return new AudioDevice(frequency, format, channels, samples, callback);
+        }
+
+        public AudioDevice CreateAudioDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges)
+        {
+            return new AudioDevice(frequency, format, channels, samples, callback, allowedChanges);
         }
     }
 
@@ -62,9 +110,19 @@ namespace SDL2Sharp
             SDL.InitSubSystem(SDL.SDL_INIT_EVENTS);
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             SDL.QuitSubSystem(SDL.SDL_INIT_EVENTS);
+        }
+
+        public bool HasEvent(uint eventType)
+        {
+            return SDL.HasEvent(eventType) == SDL_bool.SDL_TRUE;
+        }
+
+        public void PumpEvents()
+        {
+            SDL.PumpEvents();
         }
     }
 }

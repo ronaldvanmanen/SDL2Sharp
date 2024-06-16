@@ -20,7 +20,7 @@
 
 using System;
 
-namespace SDL2Sharp.Extensions
+namespace SDL2Sharp
 {
     public static class ReadOnlySpanExtensions
     {

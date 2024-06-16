@@ -18,24 +18,30 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using System.Threading;
-
-namespace SDL2Sharp.Extensions
+namespace SDL2Sharp
 {
-    public static class ThreadExtensions
+    public static class Math
     {
-        public static void SafeJoin(this Thread thread)
+        public static int Mod(int a, int b)
         {
-            if (thread is null)
+            var result = a % b;
+            if (result < 0)
             {
-                throw new ArgumentNullException(nameof(thread));
+                result += b;
             }
+            return result;
+        }
 
-            if (thread.ThreadState != ThreadState.Unstarted)
-            {
-                thread.Join();
-            }
+        public static int NextPowerOfTwo(int value)
+        {
+            --value;
+            value |= value >> 1;
+            value |= value >> 2;
+            value |= value >> 4;
+            value |= value >> 8;
+            value |= value >> 16;
+            ++value;
+            return value;
         }
     }
 }

@@ -18,30 +18,24 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Extensions
-{
-    public static class MathExtensions
-    {
-        public static int Mod(int a, int b)
-        {
-            var result = a % b;
-            if (result < 0)
-            {
-                result += b;
-            }
-            return result;
-        }
+using System;
+using System.Threading;
 
-        public static int NextPowerOfTwo(int value)
+namespace SDL2Sharp
+{
+    public static class ThreadExtensions
+    {
+        public static void SafeJoin(this Thread thread)
         {
-            --value;
-            value |= value >> 1;
-            value |= value >> 2;
-            value |= value >> 4;
-            value |= value >> 8;
-            value |= value >> 16;
-            ++value;
-            return value;
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            if (thread.ThreadState != ThreadState.Unstarted)
+            {
+                thread.Join();
+            }
         }
     }
 }

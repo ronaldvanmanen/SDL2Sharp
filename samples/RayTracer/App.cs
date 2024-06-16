@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.Numerics;
 using SDL2Sharp;
 using SDL2Sharp.Colors;
-using SDL2Sharp.Extensions;
 
 namespace RayTracer
 {

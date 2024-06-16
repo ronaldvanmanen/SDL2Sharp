@@ -20,7 +20,7 @@
 
 using System;
 using SDL2Sharp;
-using SDL2Sharp.Extensions;
+using static System.Math;
 
 namespace ParticleSystem
 {
@@ -59,10 +59,10 @@ namespace ParticleSystem
         public void Update(DateTime realTime, TimeSpan elapsedTime)
         {
             var lifetime = Lifespan - Age;
-            var ratio = Math.Clamp(1.0 - elapsedTime / lifetime, 0.0, 1.0);
+            var ratio = Clamp(1.0 - elapsedTime / lifetime, 0.0, 1.0);
             Age += elapsedTime;
             Radius = ratio * Radius;
-            Color = new Color(Color.R, Color.G, Color.B, (byte)Math.Ceiling(ratio * Color.A));
+            Color = new Color(Color.R, Color.G, Color.B, (byte)System.Math.Ceiling(ratio * Color.A));
         }
 
         public void Render(Renderer renderer)
@@ -74,7 +74,7 @@ namespace ParticleSystem
 
             renderer.DrawColor = Color;
             renderer.BlendMode = BlendMode.Blend;
-            renderer.FillCircle(Position.X, Position.Y, (int)Math.Ceiling(Radius));
+            renderer.FillCircle(Position.X, Position.Y, (int)System.Math.Ceiling(Radius));
         }
     }
 }

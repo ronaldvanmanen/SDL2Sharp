@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Collections.Generic;
-using SDL2Sharp.Extensions;
+using SDL2Sharp.Colors;
 
 namespace RayTracer
 {

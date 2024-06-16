@@ -23,7 +23,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace SDL2Sharp.Extensions
+namespace SDL2Sharp.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 12)]
     public readonly struct Rgb32f : IEquatable<Rgb32f>

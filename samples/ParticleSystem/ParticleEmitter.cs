@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 using SDL2Sharp;
-using SDL2Sharp.Extensions;
+using static System.Math;
 
 namespace ParticleSystem
 {
@@ -54,9 +54,9 @@ namespace ParticleSystem
             {
                 if (particle.IsDead)
                 {
-                    var angle = _randomizer.NextDouble() * Math.PI * 2;
-                    var x = Position.X + Math.Cos(angle) * Radius * 2;
-                    var y = Position.Y + Math.Sin(angle) * Radius * 2;
+                    var angle = _randomizer.NextDouble() * System.Math.PI * 2;
+                    var x = Position.X + Cos(angle) * Radius * 2;
+                    var y = Position.Y + Sin(angle) * Radius * 2;
                     var position = new Point((int)x, (int)y);
 
                     var r = (byte)(_randomizer.NextDouble() * byte.MaxValue);

@@ -20,7 +20,6 @@
 
 using System;
 using SDL2Sharp;
-using SDL2Sharp.Extensions;
 
 namespace BitmapViewer
 {

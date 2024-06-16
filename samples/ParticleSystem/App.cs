@@ -21,7 +21,6 @@
 using System;
 using System.Threading;
 using SDL2Sharp;
-using SDL2Sharp.Extensions;
 
 namespace ParticleSystem
 {
