@@ -70,7 +70,7 @@ namespace SDL2Sharp
 
                 while (true)
                 {
-                    while (0 != SDL.PollEvent(&@event))
+                    if (0 != SDL.PollEvent(&@event))
                     {
                         var eventType = (SDL_EventType)@event.type;
                         switch (eventType)
@@ -99,8 +99,10 @@ namespace SDL2Sharp
                                 break;
                         }
                     }
-
-                    OnIdle();
+                    else
+                    {
+                        OnIdle();
+                    }
                 }
             }
             finally
