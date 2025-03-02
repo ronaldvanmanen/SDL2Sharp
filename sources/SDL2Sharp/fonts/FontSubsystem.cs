@@ -18,27 +18,33 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    internal sealed class FontSubsystem : IFontSubsystem, IDisposable
+    internal sealed class FontSubsystem : FinalizableObject, IFontSubsystem
     {
+        private bool _fullyInitialized;
+
         public FontSubsystem()
         {
             Error.ThrowLastErrorIfNegative(
                 TTF.Init()
             );
+            _fullyInitialized = true;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            if (!_fullyInitialized) return;
             TTF.Quit();
+            _fullyInitialized = false;
         }
 
         public Font OpenFont(string path, int pointSize)
         {
+            ThrowIfDisposed();
+
             return new Font(path, pointSize);
         }
     }

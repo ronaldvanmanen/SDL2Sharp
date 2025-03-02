@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,26 +18,17 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
+
 namespace SDL2Sharp
 {
-    public sealed partial class SDL
+    internal static class Utilities
     {
-        public bool ShowCursor
+        public static void SafeDispose<TDisposable>(ref TDisposable? disposable) where TDisposable : IDisposable
         {
-            get
-            {
-                ThrowIfDisposed();
-
-                return Interop.SDL.SDL_ENABLE == Interop.SDL.ShowCursor(Interop.SDL.SDL_QUERY);
-            }
-            set
-            {
-                ThrowIfDisposed();
-
-                Error.ThrowLastErrorIfNegative(
-                    Interop.SDL.ShowCursor(Interop.SDL.SDL_ENABLE)
-                );
-            }
+            var temp = disposable;
+            disposable = default;
+            temp?.Dispose();
         }
     }
 }

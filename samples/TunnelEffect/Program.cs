@@ -36,7 +36,6 @@ internal static class Program
         using var screenTexture = renderer.CreatePackedTexture<ARGB8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = SDL.Fonts.OpenFont("lazy.ttf", 28);
 
-        var screenSize = renderer.OutputSize;
         var screenImage = new PackedMemoryImage<ARGB8888>(renderer.OutputSize);
         var sourceImageSize = NextPowerOfTwo(Max(renderer.OutputWidth, renderer.OutputHeight));
         var sourceImage = GenerateXorImage(sourceImageSize);

@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,24 +20,8 @@
 
 namespace SDL2Sharp
 {
-    public sealed partial class SDL
+    public abstract class FinalizableObject : DisposableObject
     {
-        public bool ShowCursor
-        {
-            get
-            {
-                ThrowIfDisposed();
-
-                return Interop.SDL.SDL_ENABLE == Interop.SDL.ShowCursor(Interop.SDL.SDL_QUERY);
-            }
-            set
-            {
-                ThrowIfDisposed();
-
-                Error.ThrowLastErrorIfNegative(
-                    Interop.SDL.ShowCursor(Interop.SDL.SDL_ENABLE)
-                );
-            }
-        }
+        ~FinalizableObject() => Dispose(false);
     }
 }
