@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -22,23 +22,6 @@ using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    [Collection("Video")]
-    public sealed class SurfaceTests
-    {
-        [Fact]
-        public void CreateSurface()
-        {
-            var color = new ARGB8888(255, 255, 255, 255);
-            using var surface = new Surface(512, 512, PixelFormat.ARGB8888);
-            surface.WithLock<ARGB8888>(pixels => pixels.Fill(color));
-        }
-
-        [Fact]
-        public void CreateSurfaceOfArgb8888()
-        {
-            var color = new ARGB8888(255, 255, 255, 255);
-            using var surface = new Surface<ARGB8888>(512, 512);
-            surface.WithLock(pixels => pixels.Fill(color));
-        }
-    }
+    [CollectionDefinition("Audio", DisableParallelization = true)]
+    public sealed class AudioCollectionDefinition { }
 }

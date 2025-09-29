@@ -22,6 +22,7 @@ using Xunit;
 
 namespace SDL2Sharp.Tests
 {
+    [Collection("Audio")]
     public static class AudioFormatExtensionTests
     {
         [Fact]

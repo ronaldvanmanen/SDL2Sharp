@@ -23,6 +23,7 @@ using Xunit;
 
 namespace SDL2Sharp.Tests
 {
+    [Collection("Video")]
     public sealed class PackedTextureTests(SDL sdl) : IAssemblyFixture<SDL>
     {
         private readonly SDL _sdl = sdl ?? throw new ArgumentNullException(nameof(sdl));
