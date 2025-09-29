@@ -23,8 +23,12 @@ using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public sealed class TextureTests
+    public sealed class TextureTests(SDL sdl) : IAssemblyFixture<SDL>
     {
+        private readonly SDL _sdl = sdl ?? throw new ArgumentNullException(nameof(sdl));
+
+        private SDL SDL => _sdl;
+
         [Fact]
         public void CreateTextureOfArgb8888()
         {
@@ -119,12 +123,8 @@ namespace SDL2Sharp.Tests
             });
         }
 
-        private static void WithRenderer(Action<Renderer> test)
+        private void WithRenderer(Action<Renderer> test)
         {
-#pragma warning disable IDE1006 // Naming Styles
-            using var SDL = new SDL();
-#pragma warning restore IDE1006 // Naming Styles
-
             using var window = SDL.Video.CreateWindow("TextureTests", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             test(renderer);

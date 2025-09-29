@@ -18,25 +18,26 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
 using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public static class PlanarTextureTests
+    public sealed class PlanarTextureTests(SDL sdl) : IAssemblyFixture<SDL>
     {
-        [Fact]
-        public static void WriteAndReadYV12() => WriteAndRead<YV12>();
+        private readonly SDL _sdl = sdl ?? throw new ArgumentNullException(nameof(sdl));
+
+        private SDL SDL => _sdl;
 
         [Fact]
-        public static void WriteAndReadIYUV() => WriteAndRead<IYUV>();
+        public void WriteAndReadYV12() => WriteAndRead<YV12>();
 
-        private static void WriteAndRead<TYUVFormat>()
+        [Fact]
+        public void WriteAndReadIYUV() => WriteAndRead<IYUV>();
+
+        private void WriteAndRead<TYUVFormat>()
             where TYUVFormat : struct, IYUVFormat
         {
-#pragma warning disable IDE1006 // Naming Styles
-            using var SDL = new SDL();
-#pragma warning restore IDE1006 // Naming Styles
-
             using var window = SDL.Video.CreateWindow("PlanarTextureTests", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateYUVTexture<TYUVFormat>(TextureAccess.Streaming, renderer.OutputSize);

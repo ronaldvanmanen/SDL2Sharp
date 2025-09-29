@@ -23,12 +23,16 @@ using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public static class PackedTextureTests
+    public sealed class PackedTextureTests(SDL sdl) : IAssemblyFixture<SDL>
     {
-        private static readonly Random _random = new();
+        private readonly SDL _sdl = sdl ?? throw new ArgumentNullException(nameof(sdl));
+
+        private readonly Random _random = new();
+
+        private SDL SDL => _sdl;
 
         [Fact]
-        public static void WriteAndReadAbgr1555() => WriteAndRead
+        public void WriteAndReadAbgr1555() => WriteAndRead
         (
             () => ABGR1555.FromRGBA(
                 r: (byte)_random.Next(0, 256),
@@ -39,7 +43,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadAbgr4444() => WriteAndRead
+        public void WriteAndReadAbgr4444() => WriteAndRead
         (
             () => ABGR4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
@@ -50,7 +54,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadAbgr8888() => WriteAndRead
+        public void WriteAndReadAbgr8888() => WriteAndRead
         (
             () => ABGR8888.FromRGBA(
                 r: (byte)_random.Next(0, 256),
@@ -61,7 +65,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadArgb1555() => WriteAndRead
+        public void WriteAndReadArgb1555() => WriteAndRead
         (
             () => ARGB1555.FromRGBA(
                 r: (byte)_random.Next(0, 256),
@@ -72,7 +76,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadArgb2101010() => WriteAndRead
+        public void WriteAndReadArgb2101010() => WriteAndRead
         (
             () => ARGB2101010.FromRGBA(
                 r: (byte)_random.Next(0, 256),
@@ -83,7 +87,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadArgb4444() => WriteAndRead
+        public void WriteAndReadArgb4444() => WriteAndRead
         (
             () => ARGB4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
@@ -94,7 +98,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadArgb8888() => WriteAndRead(
+        public void WriteAndReadArgb8888() => WriteAndRead(
             () => ARGB8888.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -104,7 +108,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadRgba8888() => WriteAndRead(
+        public void WriteAndReadRgba8888() => WriteAndRead(
             () => new RGBA8888(
                 a: (byte)_random.Next(0, 256),
                 r: (byte)_random.Next(0, 256),
@@ -114,7 +118,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadBgr565() => WriteAndRead(
+        public void WriteAndReadBgr565() => WriteAndRead(
             () => BGR565.FromRGB(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -123,7 +127,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadBgra4444() => WriteAndRead(
+        public void WriteAndReadBgra4444() => WriteAndRead(
             () => BGRA4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -133,7 +137,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadBgra5551() => WriteAndRead(
+        public void WriteAndReadBgra5551() => WriteAndRead(
             () => BGRA4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -143,7 +147,7 @@ namespace SDL2Sharp.Tests
         );
 
         [Fact]
-        public static void WriteAndReadBgra8888() => WriteAndRead(
+        public void WriteAndReadBgra8888() => WriteAndRead(
             () => new BGRA8888(
                 b: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -153,7 +157,7 @@ namespace SDL2Sharp.Tests
         );
 
         //[Fact]
-        //public static void WriteAndReadRgb332() => WriteAndRead(
+        //public void WriteAndReadRgb332() => WriteAndRead(
         //    () => Rgb332.FromRGB(
         //        r: (byte)_random.Next(0, 256),
         //        g: (byte)_random.Next(0, 256),
@@ -162,7 +166,7 @@ namespace SDL2Sharp.Tests
         //);
 
         [Fact]
-        public static void WriteAndReadRgb565() => WriteAndRead(
+        public void WriteAndReadRgb565() => WriteAndRead(
             () => RGB565.FromRGB(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -170,13 +174,9 @@ namespace SDL2Sharp.Tests
             )
         );
 
-        private static void WriteAndRead<TPackedPixelFormat>(Func<TPackedPixelFormat> colorGenerator)
+        private void WriteAndRead<TPackedPixelFormat>(Func<TPackedPixelFormat> colorGenerator)
             where TPackedPixelFormat : struct, IPackedPixel<TPackedPixelFormat>
         {
-#pragma warning disable IDE1006 // Naming Styles
-            using var SDL = new SDL();
-#pragma warning restore IDE1006 // Naming Styles
-
             using var window = SDL.Video.CreateWindow("PackedTextureTests", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer(RendererFlags.Software | RendererFlags.TargetTexture);
             using var sourceTexture = renderer.CreatePackedTexture<TPackedPixelFormat>(TextureAccess.Streaming, renderer.OutputSize);
