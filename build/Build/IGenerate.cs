@@ -26,6 +26,7 @@ using Nuke.Common.Tools.ClangSharpPInvokeGenerator;
 using static System.Runtime.InteropServices.RuntimeInformation;
 using static Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorTasks;
 using static Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorConfigOption;
+using Nuke.Common.IO;
 
 interface IGenerate : IBuild
 {
@@ -36,38 +37,26 @@ interface IGenerate : IBuild
         .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            GenerateBindingsForSDL2();
-            GenerateBindingsForSDL2Image();
-            GenerateBindingsForSDL2TTF();
+            GenerateBindingsForSDL2(latest_codegen);
+            GenerateBindingsForSDL2Image(latest_codegen);
+            GenerateBindingsForSDL2TTF(latest_codegen);
         });
 
-    private void GenerateBindingsForSDL2()
+    private void GenerateBindingsForSDL2(ClangSharpPInvokeGeneratorConfigOption codegen)
     {
-        var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
-        var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
-        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.UnitTests";
-
-        const string packageId = "SDL2";
-        var packageFolder = packageId.ToLower();
-        var packageReferenceVersion = Solution.AllProjects
-            .Where(e => e.Name.Equals("SDL2Sharp.Interop"))
-            .Select(e => e.GetPackageReferenceVersion(packageId))
-            .Single(e => e is not null);
-        var fileDirectory = GlobalPackagesFolder / packageFolder / packageReferenceVersion / "lib" / "native" / "include";
-
         ClangSharpPInvokeGenerator(settings => settings
             .SetConfig
             (
-                compatible_codegen,
+                codegen,
                 generate_aggressive_inlining,
                 generate_macro_bindings,
                 generate_tests_xunit,
                 multi_file
             )
-            .SetHeaderFile(headerFile)
+            .SetHeaderFiles(RootDirectory / "build" / "Build" / "Header.txt")
             .SetNamespace("SDL2Sharp.Interop")
-            .SetOutput(outputDirectory)
-            .SetTestOutput(testOutputDirectory)
+            .SetOutput(OutputPath)
+            .SetTestOutput(TestOutputPath)
             .SetWithType
             (
                 "SDL_EventType=uint",
@@ -328,43 +317,25 @@ interface IGenerate : IBuild
             .SetLibraryPath("SDL2")
             .SetMethodClassName("SDL")
             .SetPrefixStrip("SDL_")
-            .SetFileDirectory(fileDirectory)
+            .SetFileDirectories(GetFileDirectory("SDL2"))
         );
     }
 
-    private void GenerateBindingsForSDL2Image()
+    private void GenerateBindingsForSDL2Image(ClangSharpPInvokeGeneratorConfigOption codegen)
     {
-        var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
-        var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
-        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.UnitTests";
-
-        const string basePackageId = "SDL2";
-        var basePackageFolder = basePackageId.ToLower();
-        var basePackageReferenceVersion = Solution.AllProjects
-            .Where(e => e.Name.Equals("SDL2Sharp.Interop"))
-            .Select(e => e.GetPackageReferenceVersion(basePackageId))
-            .Single(e => e is not null);
-        var includeDirectory = GlobalPackagesFolder / basePackageFolder / basePackageReferenceVersion / "lib" / "native" / "include";
-
-        const string packageId = "SDL2_image";
-        var packageFolder = packageId.ToLower();
-        var packageReferenceVersion = Solution.AllProjects
-            .Select(e => e.GetPackageReferenceVersion(packageId))
-            .Single(e => e is not null);
-        var fileDirectory = GlobalPackagesFolder / packageFolder / packageReferenceVersion / "lib" / "native" / "include";
-
         ClangSharpPInvokeGenerator(settings => settings
             .SetConfig
             (
-                compatible_codegen,
+                codegen,
                 generate_aggressive_inlining,
                 generate_macro_bindings,
-                generate_tests_xunit, multi_file
+                generate_tests_xunit,
+                multi_file
             )
-            .SetHeaderFile(headerFile)
+            .SetHeaderFiles(RootDirectory / "build" / "Build" / "Header.txt")
             .SetNamespace("SDL2Sharp.Interop")
-            .SetOutput(outputDirectory)
-            .SetTestOutput(testOutputDirectory)
+            .SetOutput(OutputPath)
+            .SetTestOutput(TestOutputPath)
             .SetWithType
             (
                 "SDL_EventType=uint",
@@ -382,44 +353,25 @@ interface IGenerate : IBuild
             .SetLibraryPath("SDL2_image")
             .SetMethodClassName("IMG")
             .SetPrefixStrip("IMG_")
-            .SetFileDirectory(fileDirectory)
-            .SetIncludeDirectory(includeDirectory)
+            .SetFileDirectories(GetFileDirectory("SDL2_image"))
+            .SetIncludeDirectory(GetIncludeDirectory("SDL2"))
         );
     }
 
-    private void GenerateBindingsForSDL2TTF()
+    private void GenerateBindingsForSDL2TTF(ClangSharpPInvokeGeneratorConfigOption codegen)
     {
-        var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
-        var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
-        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.UnitTests";
-
-        const string basePackageId = "SDL2";
-        var basePackageFolder = basePackageId.ToLower();
-        var basePackageReferenceVersion = Solution.AllProjects
-            .Where(e => e.Name.Equals("SDL2Sharp.Interop"))
-            .Select(e => e.GetPackageReferenceVersion(basePackageId))
-            .Single(e => e is not null);
-        var includeDirectory = GlobalPackagesFolder / basePackageFolder / basePackageReferenceVersion / "lib" / "native" / "include";
-
-        const string packageId = "SDL2_ttf";
-        var packageFolder = packageId.ToLower();
-        var packageReferenceVersion = Solution.AllProjects
-            .Select(e => e.GetPackageReferenceVersion(packageId))
-            .Single(e => e is not null);
-        var fileDirectory = GlobalPackagesFolder / packageFolder / packageReferenceVersion / "lib" / "native" / "include";
-
         ClangSharpPInvokeGenerator(settings => settings
             .SetConfig
             (
-                compatible_codegen,
+                codegen,
                 generate_aggressive_inlining,
                 generate_macro_bindings,
                 generate_tests_xunit, multi_file
             )
-            .SetHeaderFile(headerFile)
+            .SetHeaderFiles(RootDirectory / "build" / "Build" / "Header.txt")
             .SetNamespace("SDL2Sharp.Interop")
-            .SetOutput(outputDirectory)
-            .SetTestOutput(testOutputDirectory)
+            .SetOutput(OutputPath)
+            .SetTestOutput(TestOutputPath)
             .SetWithType
             (
                 "SDL_EventType=uint",
@@ -441,8 +393,25 @@ interface IGenerate : IBuild
             .SetLibraryPath("SDL2_ttf")
             .SetMethodClassName("TTF")
             .SetPrefixStrip("TTF_")
-            .SetFileDirectory(fileDirectory)
-            .SetIncludeDirectory(includeDirectory)
+            .SetFileDirectories(GetFileDirectory("SDL2_ttf"))
+            .SetIncludeDirectory(GetIncludeDirectory("SDL2"))
         );
+    }
+
+    private AbsolutePath OutputPath => RootDirectory / "sources" / "SDL2Sharp.Interop" / "codegen";
+
+    private AbsolutePath TestOutputPath => RootDirectory / "tests" / "SDL2Sharp.Interop.Tests" / "codegen";
+
+    private AbsolutePath GetFileDirectory(string packageId) => GetIncludeDirectory(packageId);
+
+    private AbsolutePath GetIncludeDirectory(string packageId)
+    {
+        var packageFolder = packageId.ToLower();
+        var packageReferenceVersion = Solution.AllProjects
+            .Where(e => e.Name.Equals("SDL2Sharp.Interop"))
+            .Select(e => e.GetPackageReferenceVersion(packageId))
+            .Single(e => e is not null);
+        var fileDirectory = GlobalPackagesFolder / packageFolder / packageReferenceVersion / "lib" / "native" / "include";
+        return fileDirectory;
     }
 }

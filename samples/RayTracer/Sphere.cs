@@ -20,45 +20,49 @@
 
 using System;
 using System.Numerics;
+using SDL2Sharp;
 
-namespace RayTracer
+internal sealed class Sphere : IObject
 {
-    internal sealed class Sphere : IObject
+    public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
+
+    public float Radius { get; set; }
+
+    public float AmbientCoefficient { get; set; } = 1f;
+
+    public float DiffuseCoefficient { get; set; } = 1f;
+
+    public RGB96f DiffuseColor { get; set; } = RGB96f.Black;
+
+    public Vector3 NormalAt(Vector3 point)
     {
-        public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
+        return Vector3.Normalize((point - Position) / Radius);
+    }
 
-        public float Radius { get; set; } = 1f;
-
-        public ISurface Surface { get; set; } = new MatteSurface();
-
-        public Vector3 NormalAt(Vector3 point)
+    public Intersection? Intersect(Ray ray)
+    {
+        var v = Position - ray.Origin;
+        var b = Vector3.Dot(v, ray.Direction);
+        var discriminant = b * b - Vector3.Dot(v, v) + Radius * Radius;
+        if (discriminant <= 0f)
         {
-            return Vector3.Normalize((point - Position) / Radius);
+            return null;
         }
 
-        public Intersection? Intersect(Ray ray)
+        discriminant = MathF.Sqrt(discriminant);
+
+        var t2 = b + discriminant;
+        if (t2 <= Ray.Epsilon)
         {
-            var v = ray.Origin - Position;
-            var b = Vector3.Dot(v, ray.Direction);
-            var c = Vector3.Dot(v, v) - Radius * Radius;
-            if (c > 0f && b > 0f)
-            {
-                return null;
-            }
-
-            var discriminant = b * b - c;
-            if (discriminant < 0f)
-            {
-                return null;
-            }
-
-            var t = -b - MathF.Sqrt(discriminant);
-            if (t < 0f)
-            {
-                t = 0f;
-            }
-
-            return new Intersection(this, ray, t);
+            return null;
         }
+
+        var t1 = b - discriminant;
+        if (t1 > Ray.Epsilon)
+        {
+            return new Intersection(this, ray, t1);
+        }
+
+        return new Intersection(this, ray, t2);
     }
 }

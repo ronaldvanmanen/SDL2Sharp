@@ -19,15 +19,17 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
+using SDL2Sharp;
 
-namespace RayTracer
+internal interface IObject
 {
-    internal interface IObject
-    {
-        ISurface Surface { get; }
+    float AmbientCoefficient { get; set; }
 
-        Intersection? Intersect(Ray ray);
+    float DiffuseCoefficient { get; set; }
 
-        Vector3 NormalAt(Vector3 surfacePoint);
-    }
+    RGB96f DiffuseColor { get; set; }
+
+    Intersection? Intersect(Ray ray);
+
+    Vector3 NormalAt(Vector3 surfacePoint);
 }

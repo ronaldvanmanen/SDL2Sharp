@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Description>Provides type safe wrappers for SDL2 bindings written in C#.</Description>
+    <PackageTags>SDL2</PackageTags>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Description>Provides type safe wrappers for SDL2 bindings written in C#.</Description>
-    <PackageTags>SDL2</PackageTags>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.HighPerformance" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
 
 </Project>

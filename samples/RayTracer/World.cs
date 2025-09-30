@@ -18,17 +18,59 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
 using System.Collections.Generic;
-using SDL2Sharp.Extensions;
+using System.Numerics;
+using SDL2Sharp;
 
-namespace RayTracer
+internal sealed class World
 {
-    internal sealed class World
+    public RGB96f Ambient { get; set; }
+
+    public ICollection<IObject> Objects { get; } = [];
+
+    public ICollection<PointLight> Lights { get; } = [];
+
+    public RGB96f Trace(Ray ray, int level, float weight)
     {
-        public Rgb32f Ambient { get; set; }
+        var nearestIntersection = ray.Intersect(Objects);
+        if (nearestIntersection is not null)
+        {
+            return Shade(nearestIntersection, level, weight);
+        }
+        return RGB96f.Black;
+    }
 
-        public ICollection<IObject> Objects { get; } = new List<IObject>();
+    private RGB96f Shade(Intersection intersection, int level, float weight)
+    {
+        var color = RGB96f.Black;
+        var @object = intersection.Object;
+        var surfaceNormal = intersection.Normal;
+        var surfacePoint = intersection.Point;
 
-        public ICollection<PointLight> Lights { get; } = new List<PointLight>();
+        foreach (var light in Lights)
+        {
+            var lightVector = Vector3.Normalize(light.Position - surfacePoint);
+            var illumination = Vector3.Dot(surfaceNormal, lightVector);
+            var shadowRay = new Ray(surfacePoint, lightVector);
+            var visibility = Shadow(shadowRay, MathF.Abs(Vector3.Distance(surfacePoint, light.Position)));
+            if (illumination > 0f && visibility > 0f)
+            {
+                var ambientCoefficient = intersection.Object.AmbientCoefficient;
+                var diffuseCoefficient = intersection.Object.DiffuseCoefficient;
+                color += Ambient * ambientCoefficient + light.Color * diffuseCoefficient * @object.DiffuseColor * illumination;
+            }
+        }
+        return color;
+    }
+
+    private float Shadow(Ray ray, float maxDistance)
+    {
+        var nearestIntersection = ray.Intersect(Objects);
+        if (nearestIntersection is null || nearestIntersection.Distance > (maxDistance - Ray.Epsilon))
+        {
+            return 1f;
+        }
+        return 0f;
     }
 }

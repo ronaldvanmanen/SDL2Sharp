@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using Nuke.Common;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
@@ -31,13 +30,12 @@ interface IRestore : IBuild
         .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            DotNetRestore(settings => settings
-                .SetProjectFile(Solution)
-                .SetVerbosity(Verbosity.ToDotNetVerbosity())
-                .SetProcessArgumentConfigurator(arguments => arguments
-                    .Add("--interactive", IsLocalBuild)
-                    .Add("/property:NuGetInteractive=false", IsLocalBuild)
-                )
-            );
+            DotNetRestore(settings =>
+            {
+                return settings.SetProjectFile(Solution)
+                               .SetVerbosity(Verbosity.ToDotNetVerbosity())
+                               .AddProcessAdditionalArguments(IsLocalBuild, "--interactive")
+                               .AddProcessAdditionalArguments(IsLocalBuild, "/property:NuGetInteractive=true");
+            });
         });
 }

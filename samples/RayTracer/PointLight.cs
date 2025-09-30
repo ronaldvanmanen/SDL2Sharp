@@ -19,14 +19,11 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Extensions;
+using SDL2Sharp;
 
-namespace RayTracer
+internal sealed class PointLight
 {
-    internal sealed class PointLight
-    {
-        public Vector3 Position { get; set; }
+    public Vector3 Position { get; set; }
 
-        public Rgb32f Color { get; set; }
-    }
+    public RGB96f Color { get; set; }
 }

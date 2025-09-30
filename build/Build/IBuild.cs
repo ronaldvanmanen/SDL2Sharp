@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -39,7 +39,7 @@ partial interface IBuild : INukeBuild
 
     [GitVersion]
     public GitVersion GitVersion => TryGetValue(() => GitVersion);
- 
+
     [Parameter("Configuration to build. Default is 'Debug' (local) or 'Release' (server).")]
     public Configuration Configuration => TryGetValue(() => Configuration) ?? GetDefaultConfiguration();
 
@@ -95,14 +95,8 @@ partial interface IBuild : INukeBuild
 
     protected IReadOnlyCollection<string> GetTargetFrameworks()
     {
-        return GetTargetFrameworks(_ => true);
-    }
-
-    protected IReadOnlyCollection<string> GetTargetFrameworks(Func<Project, bool> predicate)
-    {
         var targetFrameworkRegex = GetTargetFrameworkRegex();
         return Solution.AllProjects
-            .Where(predicate)
             .SelectMany((project) => project.GetTargetFrameworks())
             .Distinct()
             .Order()

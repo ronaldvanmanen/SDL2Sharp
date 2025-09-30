@@ -19,21 +19,15 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Collections.Generic;
+using System.Linq;
 
-namespace RayTracer
+internal static class RayExtensions
 {
-    internal static class RayExtensions
+    public static Intersection? Intersect(this Ray ray, IEnumerable<IObject> objects)
     {
-        public static IEnumerable<Intersection> Intersect(this Ray ray, IEnumerable<IObject> objects)
-        {
-            foreach (var @object in objects)
-            {
-                var intersection = @object.Intersect(ray);
-                if (intersection != null)
-                {
-                    yield return intersection;
-                }
-            }
-        }
+        return objects
+            .Select(@object => @object.Intersect(ray))
+            .Where(@intersection => @intersection is not null)
+            .MinBy(@intersection => @intersection!.Distance);
     }
 }
